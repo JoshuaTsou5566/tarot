@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>阿爾克納 & Chiikawa - 塔羅占卜</title>
+    <title>大阿爾克納 - 塔羅占卜</title>
     <!-- 載入 React 核心 -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -55,8 +55,33 @@
             </svg>
         );
 
+        const CHIIKAWA_IMAGES = {
+            0: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/0.jpg",
+            1: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/1.jpg",
+            2: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/2.jpg",
+            3: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/3.jpg",
+            4: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/4.jpg",
+            5: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/5.jpg",
+            6: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/6.jpg",
+            7: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/7.jpg",
+            8: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/8.jpg",
+            9: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/9.jpg",
+            10: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/10.jpg",
+            11: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/11.jpg",
+            12: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/12.jpg",
+            13: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/13.jpg",
+            14: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/14.jpg",
+            15: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/15.jpg",
+            16: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/16.jpg",
+            17: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/17.jpg",
+            18: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/18.jpg",
+            19: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/19.jpg",
+            20: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/20.jpg",
+            21: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/21.jpg"
+        };
+
         const TAROT_DATA = [
-            { id: 0, numeral: "0", title: "愚者", french: "Le Fou", meaning: "冒險與開端", astrology: "天王星", essence: "最初的虛無", uprightInsight: "全新的開始，勇敢踏出冒險的第一步。", reversedInsight: "過於魯莽不計後果，需謹慎觀察再行動。" },
+            { id: 0, numeral: "0", title: "愚者", french: "Le Fou", meaning: "冒險與開端", astrology: "天王星", essence: "最初的虛無", uprightInsight: "全新的開始，勇敢踏出冒險的第一步。", reversedInsight: "暗示過於魯莽不計後果，需謹慎觀察再行動。" },
             { id: 1, numeral: "I", title: "魔術師", french: "Le Bateleur", meaning: "創造與能力", astrology: "水星", essence: "萬物的開端", uprightInsight: "你已具備所有成功工具，現在正是實踐想法的時刻。", reversedInsight: "潛力受限或被浪費，需釐清目標重新導引能量。" },
             { id: 2, numeral: "II", title: "女祭司", french: "La Papesse", meaning: "直覺與神秘", astrology: "月球", essence: "陰陽", uprightInsight: "深度連結直覺，靜待真相與智慧自然浮現。", reversedInsight: "忽視內在聲音，陷入情緒困擾或表象迷惘。" },
             { id: 3, numeral: "III", title: "皇后", french: "L'Impératrice", meaning: "豐收與生命力", astrology: "金星", essence: "愛、生命、和平", uprightInsight: "創造力奔湧，生命充滿恩惠、豐饒與母性的溫柔。", reversedInsight: "成長停滯或過度控制，需找回環境與身心的平衡。" },
@@ -66,7 +91,7 @@
             { id: 7, numeral: "VII", title: "戰車", french: "Le Chariot", meaning: "意志與勝利", astrology: "巨蟹座", essence: "熱情", uprightInsight: "意志堅定，以強大的行動力克服眼前障礙。", reversedInsight: "失控或停滯不前，需重新找回行動方向。" },
             { id: 8, numeral: "VIII", title: "力量", french: "La Force", meaning: "勇氣與堅韌", astrology: "獅子座", essence: "穩定", uprightInsight: "以柔克剛，展現內在不屈的慈悲與心理強韌度。", reversedInsight: "軟弱無力，或者是被原始慾望與恐懼支配。" },
             { id: 9, numeral: "IX", title: "隱者", french: "L'Ermite", meaning: "內省與智慧", astrology: "處女座", essence: "調和大三角", uprightInsight: "向內探索，在孤獨的沉靜中遇見真實的自我。", reversedInsight: "過度疏離導致的孤立，需警惕偏激與固執。" },
-            { id: 10, numeral: "X", title: "命運之輪", french: "La Roue de fortune", meaning: "週期與轉機", astrology: "木星", essence: "宇宙基礎", uprightInsight: "轉機降臨，命運的齒輪正帶領你進入新階段。", reversedInsight: "運氣停滯或反覆，需學會順應自然循環。" },
+            { id: 10, numeral: "X", title: "命運之輪", french: "La Roue de fortune", meaning: "週期與轉機", astrology: "木星", essence: "宇宙基礎", uprightInsight: "轉機降臨，命運齒輪正帶領你進入新階段。", reversedInsight: "運氣停滯或反覆，需學會順應自然循環。" },
             { id: 11, numeral: "XI", title: "正義", french: "La Justice", meaning: "公平與客觀", astrology: "天秤座", essence: "不完整", uprightInsight: "誠實無私，事物正朝向因果平衡的良性發展。", reversedInsight: "面臨不公或偏見，需審視自身誠信與決策。" },
             { id: 12, numeral: "XII", title: "倒吊人", french: "Le Pendu", meaning: "犧牲與覺醒", astrology: "海王星", essence: "終點", uprightInsight: "轉換觀點，以暫時的靜止換取更高層次的覺醒。", reversedInsight: "徒勞無功的犧牲，或無止盡的拖延導致僵局。" },
             { id: 13, numeral: "XIII", title: "死神", french: "La Mort", meaning: "終結與轉化", astrology: "天蠍座", essence: "死亡人數", uprightInsight: "徹底捨棄舊有模式，迎接純淨且必然的新生。", reversedInsight: "恐懼改變，抗拒必然的轉化而使痛苦延長。" },
@@ -92,11 +117,23 @@
             const [copyStatus, setCopyStatus] = useState(false);
             const [secretClickCount, setSecretClickCount] = useState(0);
             
+            // 安全驗證狀態
             const [isKeySetupVisible, setIsKeySetupVisible] = useState(false);
             const [isAuthenticated, setIsAuthenticated] = useState(sessionStorage.getItem('arcanum_authenticated') === 'true');
             const [unlockPassInput, setUnlockPassInput] = useState('');
             const [masterKeyInput, setMasterKeyInput] = useState('');
             const [masterPasscodeInput, setMasterPasscodeInput] = useState('');
+
+            useEffect(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const queryKey = urlParams.get('k');
+                const queryPass = urlParams.get('p');
+                if (queryKey && queryPass) {
+                    localStorage.setItem('arcanum_gemini_key', queryKey.trim());
+                    localStorage.setItem('arcanum_access_pass', queryPass.trim());
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            }, []);
 
             const handleSecretClick = () => {
                 const nextCount = secretClickCount + 1;
@@ -135,15 +172,13 @@
                     'chiikawa-pink': {
                         bg: "bg-[#EFA5C9]", text: "text-[#5D2E46]", secondaryText: "text-[#8E4A6E]",
                         glow1: "bg-white/40", glow2: "bg-[#FADDE9]", navBg: "bg-white/70", cardBg: "bg-white",
-                        btnBg: "bg-[#D64E8B] text-white shadow-lg border-2 border-white/30",
-                        activeBtn: "bg-[#D64E8B] border-[#D64E8B] text-white", 
+                        btnBg: "bg-[#D64E8B] text-white shadow-lg", activeBtn: "bg-[#D64E8B] border-[#D64E8B] text-white",
                         panelBg: "bg-[#FFF0F6]/95", border: "border-[#F4C1D9]", inputBg: "bg-white/70", accent: "#D64E8B"
                     },
                     'chiikawa-blue': {
                         bg: "bg-[#91A8D0]", text: "text-[#1B2A4E]", secondaryText: "text-[#3D5A80]",
                         glow1: "bg-white/40", glow2: "bg-[#D1DCEE]", navBg: "bg-white/70", cardBg: "bg-white",
-                        btnBg: "bg-[#3D5A80] text-white shadow-lg border-2 border-white/30",
-                        activeBtn: "bg-[#3D5A80] border-[#3D5A80] text-white",
+                        btnBg: "bg-[#3D5A80] text-white shadow-lg", activeBtn: "bg-[#3D5A80] border-[#3D5A80] text-white",
                         panelBg: "bg-[#E8EEF8]/95", border: "border-[#B8C9E5]", inputBg: "bg-white/70", accent: "#3D5A80"
                     },
                     'chiikawa-yellow': {
@@ -169,8 +204,8 @@
                 const prompt = `你是一位專業、睿智且溫暖的塔羅大師。問題：${question || '求指引'}。牌陣內容：\n${cardDetails}\n\n請提供約 300 字深度解讀。深度結合各牌面間的連結與牌義，風格應溫暖大方，好結果鼓勵，壞結果轉化為溫柔的教導與具體建議。不要使用Markdown符號，直接繁體中文排版。`;
 
                 try {
-                    // 使用 v1beta 端點並確保路徑正確
-                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${savedKey}`;
+                    // 針對 Gemini 2.5 Flash 使用 v1beta 端點與對應模型名稱
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${savedKey}`;
                     const response = await fetch(url, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -184,7 +219,7 @@
                     const text = (data.candidates?.[0]?.content?.parts?.[0]?.text || "").replace(/[*#]/g, '').trim();
                     setAiResponse(text);
                 } catch (e) {
-                    setAiResponse(`宇宙感應發生錯誤：${e.message}。請確認您的 API Key 是否正確且具有 Gemini 1.5 的權限。`);
+                    setAiResponse(`宇宙感應發生錯誤：${e.message}。請確認您的 API Key 是否正確設定於 Google AI Studio，且具備 Gemini 2.5 的存取權限。`);
                 } finally {
                     setIsAiLoading(false);
                 }
@@ -205,7 +240,8 @@
 
             const handleUnlockInterpretation = () => {
                 const savedPass = (localStorage.getItem('arcanum_access_pass') || "").trim();
-                if (unlockPassInput.trim() === savedPass) {
+                const input = unlockPassInput.trim();
+                if (input === savedPass) {
                     setIsAuthenticated(true);
                     sessionStorage.setItem('arcanum_authenticated', 'true');
                     fetchAiInterpretation(userQuestion, selectedCards, spreadType);
@@ -234,9 +270,11 @@
             };
 
             const handleSetup = () => {
-                if (masterKeyInput.trim() && masterPasscodeInput.trim()) {
-                    localStorage.setItem('arcanum_gemini_key', masterKeyInput.trim());
-                    localStorage.setItem('arcanum_access_pass', masterPasscodeInput.trim());
+                const key = masterKeyInput.trim();
+                const pass = masterPasscodeInput.trim();
+                if (key && pass) {
+                    localStorage.setItem('arcanum_gemini_key', key);
+                    localStorage.setItem('arcanum_access_pass', pass);
                     setIsKeySetupVisible(false);
                     alert('系統設定成功！現在可以解鎖啟示了。');
                 } else {
@@ -328,7 +366,7 @@
                         </div>
                     )}
 
-                    <div className="relative z-10 max-w-lg mx-auto px-6 py-8">
+                    <div className="relative z-10 max-lg mx-auto px-6 py-8">
                         <header className="flex justify-between items-center mb-10 animate-in no-select transition-colors duration-1000">
                             <div className="flex items-center gap-2 cursor-pointer" onClick={handleSecretClick}>
                                 <div className="p-2 rounded-xl bg-white/20">
