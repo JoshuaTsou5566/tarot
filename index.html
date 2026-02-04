@@ -47,12 +47,12 @@
             ChevronDown: <polyline points="6 9 12 15 18 9" />,
             Lock: <><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></>,
             X: <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>,
-            Share: <><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></>,
             Heart: <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>,
+            Share: <><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></>,
             // --- 精修辨識度的剪影 ---
-            ChiikawaSilhouette: <path d="M12 22C6.5 22 2 18 2 12.5C2 9 4 6 7 5 V 2 A 1 1 0 0 1 10 2 V 4 C 11 4 13 4 14 4 V 2 A 1 1 0 0 1 17 2 V 5 C 20 6 22 9 22 12.5 C 22 18 18 22 12 22 Z" fill="currentColor" />,
-            HachiwareSilhouette: <path d="M12 22c-5 0-9-4-9-9 0-3.5 2-6.5 5-7.5 L 4.5 1 L 8 0 L 10 3.5 C 10.5 3.5 11.5 3.3 12 3.3 S 13.5 4 14 4 L 16 0 L 19.5 1 L 19 5 C 21 6 22 9 22 12.5 22 18 18 22 12 22 Z M 10 9 L 12 11 L 14 9" fill="currentColor" />,
-            UsagiSilhouette: <path d="M12 22c-5 0-9-4-9-9 0-4 1.5-7.5 4-8.5 V 0 a 1 1 0 0 1 2 0 v 4 c 1 -.1 2 -.2 3 -.2 s 2 .1 3 .2 v -4 a 1 1 0 0 1 2 0 v 4.5 c 2.5 1 4 4.5 4 8.5 0 5 -4 9 -9 9 Z" fill="currentColor" />
+            ChiikawaSilhouette: <path d="M12 22C6.5 22 2 17.5 2 12C2 8.5 4.5 5.5 8 4.5V2A1.5 1.5 0 0 1 11 2v2c.3-.1.6-.1.9-.1s.7 0 1 .1V2a1.5 1.5 0 0 1 3 0v2.5c3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" fill="currentColor" />,
+            HachiwareSilhouette: <path d="M12 22c-5.5 0-10-4.5-10-10 0-3.5 2-6.5 5-7.5 L 4.5 1 L 8 0 L 10 3.5 C 10.5 3.5 11.5 3.3 12 3.3 S 13.5 3.5 14 3.5 L 16 0 L 19.5 1 L 19 5 C 21 6 22 9 22 12.5 22 18 18 22 12 22 Z M 10 9 L 12 11 L 14 9" fill="currentColor" />,
+            UsagiSilhouette: <path d="M12 22c-5.5 0-10-4.5-10-10 0-4 1.5-7.5 4-8.5 V 0 a 1 1 0 0 1 2 0 v 4 c 1 -.1 2 -.2 3 -.2 s 2 .1 3 .2 v -4 a 1 1 0 0 1 2 0 v 4.5 c 2.5 1 4 4.5 4 8.5 0 5 -4 9 -9 9 Z" fill="currentColor" />
         };
 
         const Icon = ({ name, size = 24, className = "" }) => (
@@ -136,7 +136,7 @@
             const authRef = useRef(null);
             const appId = 'arcanum-divination';
 
-            // 超級智慧解析器：自動從亂碼中提取關鍵字
+            // 智慧解析器：處理無引號物件、代碼片段、分號等
             const extractFirebaseConfig = (input) => {
                 if (!input) return null;
                 const config = {};
@@ -291,13 +291,12 @@
               const textArea = document.createElement("textarea"); textArea.value = shareUrl;
               document.body.appendChild(textArea); textArea.select();
               document.execCommand('copy'); document.body.removeChild(textArea);
-              alert('分享連結已複製！傳給手機開啟一次即可完成連線同步。');
+              alert('授權連結已複製！傳給手機開啟即可自動連線資料庫。');
             };
 
             const handleSetup = async () => {
                 const key = masterKeyInput.trim(); const pass = masterPasscodeInput.trim(); const fbInput = masterFbConfigInput.trim();
                 
-                // 處理 Firebase 設定
                 if (fbInput) {
                     const config = extractFirebaseConfig(fbInput);
                     if (config) {
@@ -330,7 +329,7 @@
                         <div className="space-y-4">
                             <div className="glass-panel p-6 rounded-[2rem]">
                                 <p className="font-bold text-indigo-400 mb-2 uppercase tracking-widest font-serif">Cloud Share</p>
-                                <p className="text-xs opacity-70 leading-relaxed">設定完成後，點擊下方生成連結傳給親友。親友點開後手機會自動連上您的雲端，無須重設。</p>
+                                <p className="text-xs opacity-70 leading-relaxed italic text-justify">管理員設定後點擊下方生成授權連結。親友只需點開該連結，手機即會自動連線雲端，之後僅需輸入密碼即可解鎖占卜結果。</p>
                                 <button onClick={generateShareLink} className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-indigo-500/20 border border-indigo-500/30 rounded-full text-[10px] font-bold active:scale-95 transition-all"><Icon name="Share" size={12} /> 生成親友授權連結</button>
                             </div>
                         </div>
@@ -380,14 +379,14 @@
                                 <div className="text-center space-y-2"><h3 className="text-2xl font-serif font-bold">雲端系統初始化</h3><p className="text-[10px] opacity-50 italic text-indigo-300">連線後任何裝置輸入密碼即可解鎖</p></div>
                                 <div className="space-y-4 text-left">
                                     <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">Gemini API Key</label><input type="password" value={masterKeyInput} onChange={e=>setMasterKeyInput(e.target.value)} placeholder="貼入 API Key" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" /></div>
-                                    <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">解鎖密碼</label><input type="text" value={masterPasscodeInput} onChange={e=>setMasterPasscodeInput(e.target.value)} placeholder="給親友的解鎖密碼" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" /></div>
+                                    <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">訪問密碼</label><input type="text" value={masterPasscodeInput} onChange={e=>setMasterPasscodeInput(e.target.value)} placeholder="給親友的解鎖密碼" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" /></div>
                                     <div className="space-y-1">
                                         <label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">Firebase 配置代碼</label>
                                         <textarea value={masterFbConfigInput} onChange={e=>setMasterFbConfigInput(e.target.value)} placeholder='整疊貼入 Firebase 控制台代碼' className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-[10px] h-32 focus:outline-none focus:border-indigo-400 font-mono" />
                                     </div>
                                 </div>
                                 <button onClick={handleSetup} className="w-full py-5 bg-white text-slate-900 rounded-full font-bold text-sm shadow-xl active:scale-95 transition-all">同步並儲存</button>
-                                <button onClick={() => setIsKeySetupVisible(false)} className="w-full text-[10px] opacity-30 mt-4 font-bold tracking-widest uppercase">關閉視窗</button>
+                                <button onClick={() => setIsKeySetupVisible(false)} className="w-full text-[10px] opacity-30 uppercase font-bold tracking-widest mt-4">關閉視窗</button>
                             </div>
                         </div>
                     )}
@@ -401,8 +400,8 @@
                                 </h1>
                             </div>
                             <div className="flex gap-2">
-                                {isChiikawa && <button onClick={returnToClassic} className="w-10 h-10 rounded-full flex items-center justify-center border bg-white/10 shadow-sm btn-press"><Icon name="LogOut" size={16} /></button>}
-                                <button onClick={toggleTheme} className="w-12 h-12 rounded-full flex items-center justify-center border bg-white/10 shadow-sm btn-press">
+                                {isChiikawa && <button onClick={returnToClassic} className="w-10 h-10 rounded-full flex items-center justify-center border bg-white/10 shadow-sm btn-press transition-all"><Icon name="LogOut" size={16} /></button>}
+                                <button onClick={toggleTheme} className="w-12 h-12 rounded-full flex items-center justify-center border bg-white/10 shadow-sm btn-press transition-all">
                                     {theme === 'chiikawa-pink' ? <Icon name="ChiikawaSilhouette" size={28} /> :
                                      theme === 'chiikawa-blue' ? <Icon name="HachiwareSilhouette" size={28} /> :
                                      theme === 'chiikawa-yellow' ? <Icon name="UsagiSilhouette" size={28} /> :
@@ -426,7 +425,7 @@
                                 )}
 
                                 {gameState === 'shuffling' && (
-                                    <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-8"><div className="relative w-32 h-48 animate-pulse">{[0,1,2].map(i => <div key={i} className={`absolute inset-0 ${themeStyles.cardBg} rounded-xl border-2 ${themeStyles.border}`} style={{ transform: `rotate(${i*12-12}deg)` }} />)}</div><p className="text-xl font-serif italic animate-bounce tracking-[0.2em]">正在搜尋命運軌跡...</p></div>
+                                    <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-8 transition-colors duration-1000"><div className="relative w-32 h-48 animate-pulse">{[0,1,2].map(i => <div key={i} className={`absolute inset-0 ${themeStyles.cardBg} rounded-xl border-2 ${themeStyles.border}`} style={{ transform: `rotate(${i*12-12}deg)` }} />)}</div><p className="text-xl font-serif italic animate-bounce tracking-[0.2em]">正在搜尋命運軌跡...</p></div>
                                 )}
 
                                 {gameState === 'revealed' && (
@@ -448,16 +447,16 @@
                                         <div className="space-y-6">
                                             <div className="glass-panel rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden transition-colors duration-1000 min-h-[300px]">
                                                 <div className="flex items-center gap-3 mb-6 opacity-60 transition-colors duration-1000 font-bold tracking-widest italic uppercase"><Icon name="BrainCircuit" size={20} />宇宙的深層啟示</div>
-                                                {isAiLoading ? (<div className="flex flex-col items-center justify-center py-20 gap-4"><Icon name="RefreshCw" className="animate-spin opacity-30" size={32} /><p className="animate-pulse text-sm opacity-40 tracking-widest font-serif">正在感應...</p></div>) : aiResponse ? (<div className="leading-relaxed font-light text-justify whitespace-pre-wrap text-base animate-in">{aiResponse}</div>) : !isAuthenticated ? (
+                                                {isAiLoading ? (<div className="flex flex-col items-center justify-center py-20 gap-4"><Icon name="RefreshCw" className="animate-spin opacity-30" size={32} /><p className="animate-pulse text-sm opacity-40 tracking-widest font-serif">正在感應...</p></div>) : aiResponse ? (<div className="leading-relaxed font-light text-justify whitespace-pre-wrap text-base animate-in transition-colors duration-1000">{aiResponse}</div>) : !isAuthenticated ? (
                                                     <div className="py-10 flex flex-col items-center gap-6 animate-in">
                                                         <Icon name="Lock" size={40} className="opacity-20" /><div className="text-center space-y-2 mb-6"><p className="text-sm opacity-50 font-light tracking-wide">啟示已加密鎖定</p><p className="text-[10px] opacity-30 uppercase tracking-[0.2em]">請輸入密碼以解鎖</p></div>
                                                         {/* 手機版排版優化：垂直排列 */}
                                                         <div className="flex flex-col w-full gap-5 px-4 max-w-xs mb-12">
                                                             <input type="text" value={unlockPassInput} onChange={e=>setUnlockPassInput(e.target.value)} placeholder="輸入訪問密碼" className="w-full bg-white/5 border border-white/10 rounded-xl p-5 text-center text-sm focus:outline-none focus:border-indigo-400 shadow-inner" />
-                                                            <button onClick={handleUnlockInterpretation} className="w-full py-5 bg-white text-slate-900 rounded-xl font-bold text-xs btn-press shadow-xl uppercase">解鎖啟示內容</button>
+                                                            <button onClick={handleUnlockInterpretation} className="w-full py-5 bg-white text-slate-900 rounded-xl font-bold text-xs btn-press shadow-xl uppercase transition-colors duration-1000">解鎖啟示內容</button>
                                                         </div>
                                                     </div>
-                                                ) : <div className="text-center py-20 opacity-30 italic text-sm">正在擷取訊息...</div>}
+                                                ) : <div className="text-center py-20 opacity-30 italic text-sm transition-colors duration-1000">正在擷取訊息...</div>}
                                             </div>
                                         </div>
                                         <div className="flex flex-col gap-5 pt-4 mb-20"><button onClick={resetGame} className={`w-full py-5 border-2 ${themeStyles.border} rounded-full text-base font-bold flex items-center justify-center gap-2 active:scale-95 transition-all uppercase tracking-widest opacity-60 transition-colors duration-1000`}><Icon name="RefreshCw" size={20} /> 重新占卜</button></div>
@@ -468,7 +467,7 @@
                         {activeTab === 'guide' && <GuidePage />}
                     </div>
 
-                    <nav className={`fixed bottom-0 left-0 w-full ${themeStyles.navBg} backdrop-blur-2xl border-t ${themeStyles.border} px-16 py-6 flex justify-around items-center z-50 shadow-[0_-10px_30px_rgba(0,0,0,0.2)]`}>
+                    <nav className={`fixed bottom-0 left-0 w-full ${themeStyles.navBg} backdrop-blur-2xl border-t ${themeStyles.border} px-16 py-6 flex justify-around items-center z-50 shadow-[0_-10px_30px_rgba(0,0,0,0.2)] transition-colors duration-1000`}>
                         <button onClick={() => setActiveTab('divination')} className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === 'divination' ? 'opacity-100 scale-110' : 'opacity-100'}`} style={{color: activeTab === 'divination' ? themeStyles.accent : '#64748b'}}><Icon name="Sparkles" size={24} /><span className="text-[10px] font-bold uppercase tracking-widest mt-1">占卜</span></button>
                         <button onClick={() => setActiveTab('guide')} className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === 'guide' ? 'opacity-100 scale-110' : 'opacity-100'}`} style={{color: activeTab === 'guide' ? themeStyles.accent : '#64748b'}}><Icon name="BookOpen" size={24} /><span className="text-[10px] font-bold uppercase tracking-widest mt-1">指南</span></button>
                     </nav>
