@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>大阿爾克納 - 塔羅占卜</title>
+    <title>阿爾克納 & Chiikawa - 塔羅占卜</title>
     <!-- 載入 React 核心 -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -46,7 +46,9 @@
             Check: <polyline points="20 6 9 17 4 12"/>,
             ChevronDown: <polyline points="6 9 12 15 18 9" />,
             Settings: <><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></>,
-            Lock: <><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></>
+            Lock: <><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></>,
+            X: <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>,
+            Heart: <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
         };
 
         const Icon = ({ name, size = 24, className = "" }) => (
@@ -88,13 +90,13 @@
             { id: 4, numeral: "IV", title: "皇帝", french: "L'Emperuer", meaning: "秩序與權威", astrology: "白羊座", essence: "四大元素", uprightInsight: "展現領導力，建立穩定且有秩序的長期結構。", reversedInsight: "僵化專制或缺乏自控，容易導致局勢失衡。" },
             { id: 5, numeral: "V", title: "教皇", french: "Le Pape", meaning: "知識與傳統", astrology: "金牛座", essence: "平均力量", uprightInsight: "尋求智慧引導，遵循正統價值或靈性傳統。", reversedInsight: "挑戰權威或陳規，尋求獨立思考與非正統的新路。" },
             { id: 6, numeral: "VI", title: "戀人", french: "L'Amant", meaning: "祝福與契合", astrology: "雙子座", essence: "天地調和", uprightInsight: "完美契合的關係，面臨忠於心靈的關鍵選擇。", reversedInsight: "價值觀分歧，需檢視內在矛盾與外在誘惑。" },
-            { id: 7, numeral: "VII", title: "戰車", french: "Le Chariot", meaning: "意志與勝利", astrology: "巨蟹座", essence: "熱情", uprightInsight: "意志堅定，以強大的行動力克服眼前障礙。", reversedInsight: "失控或停滯不前，需重新找回行動方向。" },
+            { id: 7, numeral: "VII", title: "戰車", french: "Le Chariot", meaning: "意志與勝利", astrology: "巨蟹座", essence: "熱情", uprightInsight: "意志堅定，以強大的行動力克服眼前障礙。", reversedInsight: "失控或停滯不前，需重新找回核心動力方向。" },
             { id: 8, numeral: "VIII", title: "力量", french: "La Force", meaning: "勇氣與堅韌", astrology: "獅子座", essence: "穩定", uprightInsight: "以柔克剛，展現內在不屈的慈悲與心理強韌度。", reversedInsight: "軟弱無力，或者是被原始慾望與恐懼支配。" },
             { id: 9, numeral: "IX", title: "隱者", french: "L'Ermite", meaning: "內省與智慧", astrology: "處女座", essence: "調和大三角", uprightInsight: "向內探索，在孤獨的沉靜中遇見真實的自我。", reversedInsight: "過度疏離導致的孤立，需警惕偏激與固執。" },
-            { id: 10, numeral: "X", title: "命運之輪", french: "La Roue de fortune", meaning: "週期與轉機", astrology: "木星", essence: "宇宙基礎", uprightInsight: "轉機降臨，命運齒輪正帶領你進入新階段。", reversedInsight: "運氣停滯或反覆，需學會順應自然循環。" },
+            { id: 10, numeral: "X", title: "命運之輪", french: "La Roue de fortune", meaning: "週期與轉機", astrology: "木星", essence: "宇宙基礎", uprightInsight: "轉機降臨，命運的齒輪正帶領你進入新階段。", reversedInsight: "運氣停滯或反覆，需學會順應自然循環。" },
             { id: 11, numeral: "XI", title: "正義", french: "La Justice", meaning: "公平與客觀", astrology: "天秤座", essence: "不完整", uprightInsight: "誠實無私，事物正朝向因果平衡的良性發展。", reversedInsight: "面臨不公或偏見，需審視自身誠信與決策。" },
             { id: 12, numeral: "XII", title: "倒吊人", french: "Le Pendu", meaning: "犧牲與覺醒", astrology: "海王星", essence: "終點", uprightInsight: "轉換觀點，以暫時的靜止換取更高層次的覺醒。", reversedInsight: "徒勞無功的犧牲，或無止盡的拖延導致僵局。" },
-            { id: 13, numeral: "XIII", title: "死神", french: "La Mort", meaning: "終結與轉化", astrology: "天蠍座", essence: "死亡人數", uprightInsight: "徹底捨棄舊有模式，迎接純淨且必然的新生。", reversedInsight: "恐懼改變，抗拒必然的轉化而使痛苦延長。" },
+            { id: 13, numeral: "XIII", title: "死神", french: "La Mort", meaning: "終結與轉化", astrology: "天蠍座", essence: "死亡人數", uprightInsight: "徹底捨棄舊有模式，迎接純淨且必然的新生。", reversedInsight: "恐懼改變，抗拒必然的結束與轉化。" },
             { id: 14, numeral: "XIV", title: "節制", french: "Tempérance", meaning: "平衡與調和", astrology: "射手座", essence: "適當", uprightInsight: "融合不同元素，在耐心等待中事物趨於完美。", reversedInsight: "能量失衡，過度極端導致身心狀態紊換。" },
             { id: 15, numeral: "XV", title: "惡魔", french: "Le Diable", meaning: "慾望與制約", astrology: "魔羯座", essence: "野性", uprightInsight: "面對影子，覺察制約你的物質執迷與慾望。", reversedInsight: "意識到制約存在，即將從執迷中解脫重獲自由。" },
             { id: 16, numeral: "XVI", title: "塔", french: "La Maison Dieu", meaning: "劇變與啟示", astrology: "火星", essence: "惡意基盤", uprightInsight: "劇烈瓦解舊有偽裝，真相即將在廢墟中顯現。", reversedInsight: "緩慢的衰敗，或是剛躲過一場重大的人生意震盪。" },
@@ -123,6 +125,9 @@
             const [unlockPassInput, setUnlockPassInput] = useState('');
             const [masterKeyInput, setMasterKeyInput] = useState('');
             const [masterPasscodeInput, setMasterPasscodeInput] = useState('');
+
+            // 圖片放大功能狀態
+            const [zoomedImage, setZoomedImage] = useState(null);
 
             useEffect(() => {
                 const urlParams = new URLSearchParams(window.location.search);
@@ -204,7 +209,6 @@
                 const prompt = `你是一位專業、睿智且溫暖的塔羅大師。問題：${question || '求指引'}。牌陣內容：\n${cardDetails}\n\n請提供約 300 字深度解讀。深度結合各牌面間的連結與牌義，風格應溫暖大方，好結果鼓勵，壞結果轉化為溫柔的教導與具體建議。不要使用Markdown符號，直接繁體中文排版。`;
 
                 try {
-                    // 針對 Gemini 2.5 Flash 使用 v1beta 端點與對應模型名稱
                     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${savedKey}`;
                     const response = await fetch(url, {
                         method: 'POST',
@@ -349,6 +353,16 @@
                         <div className={`absolute bottom-[-10%] right-[-10%] w-[80%] h-[40%] ${themeStyles.glow2} rounded-full blur-[120px] transition-colors duration-1000`} />
                     </div>
 
+                    {/* 圖片放大檢視 */}
+                    {zoomedImage && (
+                        <div className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4 animate-in fade-in" onClick={() => setZoomedImage(null)}>
+                            <img src={zoomedImage} className="max-w-full max-h-full rounded-2xl shadow-2xl animate-in zoom-in duration-300" alt="Zoomed Tarot" />
+                            <button className="absolute top-8 right-8 text-white/50 hover:text-white transition-colors" onClick={() => setZoomedImage(null)}>
+                                <Icon name="X" size={40} />
+                            </button>
+                        </div>
+                    )}
+
                     {isKeySetupVisible && (
                         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md animate-in no-select">
                             <div className="w-full max-w-sm glass-panel rounded-[3rem] p-10 space-y-8 shadow-2xl">
@@ -420,14 +434,36 @@
                                         <div className="flex flex-wrap justify-center gap-6">
                                             {selectedCards.map((c, i) => (
                                                 <div key={i} className="flex flex-col items-center gap-3">
-                                                    <div className={`relative w-40 h-64 rounded-xl p-1 bg-gradient-to-br from-white/80 to-white/20 shadow-2xl ${c.isReversed ? 'rotate-180' : ''}`}>
-                                                        <div className={`w-full h-full ${themeStyles.cardBg} rounded-lg flex flex-col items-center justify-between p-3 relative overflow-hidden transition-colors duration-1000`}>
-                                                            <div className="text-xs opacity-30 font-serif">{c.numeral}</div>
-                                                            <div className="flex-1 w-full flex flex-col items-center justify-center z-10 space-y-3">
-                                                                {isChiikawa ? <img src={CHIIKAWA_IMAGES[c.id]} className="w-full h-32 object-contain" /> : <Icon name={c.id === 19 ? "Sun" : (c.id === 18 ? "Moon" : "Star")} size={48} className="opacity-40" />}
-                                                                <div className="text-center font-bold tracking-widest">{c.title}</div>
+                                                    <div className={`relative w-44 h-72 rounded-xl p-0.5 bg-gradient-to-br from-white/80 to-white/20 shadow-2xl ${c.isReversed ? 'rotate-180' : ''}`}>
+                                                        <div className={`w-full h-full ${themeStyles.cardBg} rounded-lg flex flex-col items-center justify-between relative overflow-hidden transition-colors duration-1000`}>
+                                                            {/* 頂部編號 */}
+                                                            <div className="absolute top-2 left-3 text-[10px] opacity-30 font-serif z-10">{c.numeral}</div>
+                                                            
+                                                            {/* 核心內容區：吉伊卡哇模式下佔據絕大部分空間 */}
+                                                            <div className="flex-1 w-full relative group">
+                                                                {isChiikawa ? (
+                                                                    <div className="w-full h-full cursor-zoom-in" onClick={() => setZoomedImage(CHIIKAWA_IMAGES[c.id])}>
+                                                                        <img src={CHIIKAWA_IMAGES[c.id]} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" alt={c.title} />
+                                                                        {/* 懸浮放大提示 */}
+                                                                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                                                            <div className="bg-black/40 p-2 rounded-full backdrop-blur-sm">
+                                                                                <Icon name="Compass" size={20} className="text-white animate-pulse" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="w-full h-full flex flex-col items-center justify-center space-y-3 pt-6">
+                                                                        <Icon name={c.id === 19 ? "Sun" : (c.id === 18 ? "Moon" : "Star")} size={48} className="opacity-40" />
+                                                                        <div className="text-center font-bold tracking-widest">{c.title}</div>
+                                                                    </div>
+                                                                )}
                                                             </div>
-                                                            <div className="text-[9px] opacity-20 uppercase font-mono tracking-tighter">{c.essence}</div>
+
+                                                            {/* 底部資訊區 */}
+                                                            <div className={`w-full py-2 px-3 text-center z-10 ${isChiikawa ? 'bg-black/60 backdrop-blur-md' : ''}`}>
+                                                                {isChiikawa && <div className="text-[11px] font-bold tracking-widest text-white">{c.title}</div>}
+                                                                <div className={`text-[8px] uppercase font-mono tracking-tighter ${isChiikawa ? 'text-white/50' : 'opacity-20'}`}>{c.essence}</div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <span className="text-[10px] uppercase opacity-60 font-bold tracking-widest">{c.isReversed ? '逆位' : '正位'}</span>
