@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>大阿爾克納 - 塔羅占卜</title>
+    <title>阿爾克納 & Chiikawa - 塔羅占卜</title>
     <!-- 載入 React 核心 -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -43,14 +43,15 @@
             Copy: <><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></>,
             Check: <polyline points="20 6 9 17 4 12"/>,
             ChevronDown: <polyline points="6 9 12 15 18 9" />,
-            Settings: <><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></>,
+            Settings: <><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1-2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></>,
             Lock: <><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></>,
             X: <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>,
             Heart: <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>,
             // 自定義角色剪影
             ChiikawaSilhouette: <path d="M12 22C6.5 22 2 17.5 2 12C2 8.5 4 5.5 7 4.2C7.3 3 8.3 2 9.5 2C10.2 2 10.8 2.4 11.2 3C11.5 3 11.7 3 12 3C12.3 3 12.5 3 12.8 3C13.2 2.4 13.8 2 14.5 2C15.7 2 16.7 3 17 4.2C20 5.5 22 8.5 22 12C22 17.5 17.5 22 12 22Z" fill="currentColor" />,
             HachiwareSilhouette: <path d="M12 22C6.5 22 2 17.5 2 12C2 8.5 4 6 6 4.5L8 2.5L10 4.5C10.5 4.2 11.2 4 12 4C12.8 4 13.5 4.2 14 4.5L16 2.5L18 4.5C20 6 22 8.5 22 12C22 17.5 17.5 22 12 22Z" fill="currentColor" />,
-            UsagiSilhouette: <path d="M12 22C6.5 22 2 17.5 2 12C2 9.5 3.5 7.5 5.5 6.5L6 2L9 2L8.5 6.1C9.5 5.5 10.7 5 12 5C13.3 5 14.5 5.5 15.5 6.1L15 2L18 2L18.5 6.5C20.5 7.5 22 9.5 22 12C22 17.5 17.5 22 12 22Z" fill="currentColor" />
+            UsagiSilhouette: <path d="M12 22C6.5 22 2 17.5 2 12C2 9.5 3.5 7.5 5.5 6.5L6 2L9 2L8.5 6.1C9.5 5.5 10.7 5 12 5C13.3 5 14.5 5.5 15.5 6.1L15 2L18 2L18.5 6.5C20.5 7.5 22 9.5 22 12C22 17.5 17.5 22 12 22Z" fill="currentColor" />,
+            Compass: <><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></>
         };
 
         const Icon = ({ name, size = 24, className = "" }) => (
@@ -122,11 +123,22 @@
             const [secretClickCount, setSecretClickCount] = useState(0);
             
             const [isKeySetupVisible, setIsKeySetupVisible] = useState(false);
-            const [isAuthenticated, setIsAuthenticated] = useState(sessionStorage.getItem('arcanum_authenticated') === 'true');
+            const [isAuthenticated, setIsAuthenticated] = useState(false);
             const [unlockPassInput, setUnlockPassInput] = useState('');
             const [masterKeyInput, setMasterKeyInput] = useState('');
             const [masterPasscodeInput, setMasterPasscodeInput] = useState('');
             const [zoomedImage, setZoomedImage] = useState(null);
+
+            useEffect(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const queryKey = urlParams.get('k');
+                const queryPass = urlParams.get('p');
+                if (queryKey && queryPass) {
+                    localStorage.setItem('arcanum_gemini_key', queryKey.trim());
+                    localStorage.setItem('arcanum_access_pass', queryPass.trim());
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            }, []);
 
             const handleSecretClick = () => {
                 const nextCount = secretClickCount + 1;
@@ -196,7 +208,6 @@
                 const prompt = `你是一位專業、睿智且溫暖的塔羅大師。問題：${question || '求指引'}。牌陣內容：\n${cardDetails}\n\n請提供約 300 字深度解讀。深度結合各牌面間的連結與牌義，風格應溫暖大方，好結果鼓勵，壞結果轉化為溫柔的教導與具體建議。不要使用Markdown符號，直接繁體中文排版。`;
 
                 try {
-                    // 使用 Gemini 2.5 Flash 專屬模型名稱
                     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${savedKey}`;
                     const response = await fetch(url, {
                         method: 'POST',
@@ -216,6 +227,11 @@
             };
 
             const drawCards = () => {
+                // 每次抽新牌前，重設認證與解讀
+                setIsAuthenticated(false);
+                setAiResponse('');
+                setUnlockPassInput('');
+                
                 setGameState('shuffling');
                 setTimeout(() => {
                     const count = spreadType === 'one' ? 1 : 3;
@@ -224,7 +240,6 @@
                     }));
                     setSelectedCards(drawn);
                     setGameState('revealed');
-                    if (isAuthenticated) fetchAiInterpretation(userQuestion, drawn, spreadType);
                 }, 2000);
             };
 
@@ -232,7 +247,6 @@
                 const savedPass = (localStorage.getItem('arcanum_access_pass') || "").trim();
                 if (unlockPassInput.trim() === savedPass) {
                     setIsAuthenticated(true);
-                    sessionStorage.setItem('arcanum_authenticated', 'true');
                     fetchAiInterpretation(userQuestion, selectedCards, spreadType);
                 } else {
                     alert('密碼不正確。');
@@ -244,6 +258,8 @@
                 setSelectedCards([]);
                 setAiResponse('');
                 setUserQuestion('');
+                setIsAuthenticated(false);
+                setUnlockPassInput('');
             };
 
             const copyToClipboard = () => {
@@ -263,7 +279,7 @@
                     localStorage.setItem('arcanum_gemini_key', masterKeyInput.trim());
                     localStorage.setItem('arcanum_access_pass', masterPasscodeInput.trim());
                     setIsKeySetupVisible(false);
-                    alert('系統設定成功！');
+                    alert('系統設定成功！現在可以解鎖啟示了。');
                 } else {
                     alert('請填寫完整資訊');
                 }
@@ -286,11 +302,11 @@
                                 <div className="space-y-4 text-sm leading-relaxed opacity-70">
                                     <div className="glass-panel p-6 rounded-[2rem]">
                                         <p className="font-bold text-indigo-400 mb-2 font-serif tracking-widest transition-colors duration-1000">● 尋找牌靈</p>
-                                        <p>選擇一張在此刻最令你產生共鳴的牌作為您的「牌靈」，它代表您此時的靈魂投射。</p>
+                                        <p>建議您在首次使用前，靜心觀察全牌組。選擇一張在此刻最令你產生共鳴的牌作為您的「牌靈」，它代表您此時的靈魂投射。</p>
                                     </div>
                                     <div className="glass-panel p-6 rounded-[2rem]">
                                         <p className="font-bold text-amber-400 mb-2 font-serif tracking-widest transition-colors duration-1000">● 每日抽牌</p>
-                                        <p>每天晨間詢問「我今日需要注意什麼？」。透過日常的反思練習直覺力。</p>
+                                        <p>每天晨間帶著一個問題抽一張牌。透過日常的反思練習直覺力。</p>
                                     </div>
                                 </div>
                             </section>
@@ -322,7 +338,7 @@
                             </section>
 
                             <button onClick={() => setIsKeySetupVisible(true)} className="w-full py-4 border border-dashed border-white/20 rounded-2xl opacity-40 text-xs hover:opacity-100 transition-all font-bold">
-                                {localStorage.getItem('arcanum_gemini_key') ? '管理員設定更新' : '管理員初始設定'}
+                                {localStorage.getItem('arcanum_gemini_key') ? '變更管理員金鑰/密碼' : '管理員初始設定'}
                             </button>
                         </div>
                     </div>
@@ -351,11 +367,11 @@
                             <div className="w-full max-w-sm glass-panel rounded-[3rem] p-10 space-y-8 shadow-2xl">
                                 <div className="text-center space-y-2">
                                     <h3 className="text-2xl font-serif font-bold">系統初始化</h3>
-                                    <p className="text-[10px] opacity-50 leading-relaxed">設定 Gemini API Key 與解鎖啟示用的密碼</p>
+                                    <p className="text-[10px] opacity-50 leading-relaxed">請填入管理用 API Key 與親友用的訪問密碼</p>
                                 </div>
                                 <div className="space-y-4">
                                     <input type="password" value={masterKeyInput} onChange={e=>setMasterKeyInput(e.target.value)} placeholder="Gemini API Key" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" />
-                                    <input type="text" value={masterPasscodeInput} onChange={e=>setMasterPasscodeInput(e.target.value)} placeholder="親友用的解鎖密碼" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" />
+                                    <input type="text" value={masterPasscodeInput} onChange={e=>setMasterPasscodeInput(e.target.value)} placeholder="設定解鎖密碼" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" />
                                 </div>
                                 <button onClick={handleSetup} className="w-full py-4 bg-white text-slate-900 rounded-full font-bold text-sm btn-press transition-all shadow-xl">完成設定</button>
                                 <button onClick={() => setIsKeySetupVisible(false)} className="w-full text-[10px] opacity-30 uppercase font-bold tracking-widest mt-4">取消</button>
@@ -452,6 +468,7 @@
                                         </div>
 
                                         <div className="space-y-6">
+                                            {/* AI 解讀面板：每次都需要解鎖 */}
                                             <div className="glass-panel rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden transition-colors duration-1000">
                                                 <div className="flex items-center gap-3 mb-6 opacity-60 transition-colors duration-1000"><Icon name="BrainCircuit" size={20} /><h3 className="font-bold tracking-widest uppercase italic">宇宙的深層啟示</h3></div>
                                                 
