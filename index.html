@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>阿爾克納 - 塔羅占卜</title>
+    <title>阿爾克納 & Chiikawa - 雲端塔羅占卜</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -30,29 +30,6 @@
     <script type="text/babel">
         const { useState, useEffect, useRef, useMemo } = React;
 
-        // --- 安全的 Firebase 初始化 ---
-        let db = null;
-        let auth = null;
-        let appId = 'arcanum-divination';
-
-        try {
-            // 優先嘗試從 Canvas 環境變數讀取，若無則嘗試從 LocalStorage 讀取用戶自定義設定
-            const rawConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : localStorage.getItem('arcanum_fb_config');
-            const firebaseConfig = rawConfig ? JSON.parse(rawConfig) : null;
-            appId = typeof __app_id !== 'undefined' ? __app_id : 'arcanum-divination';
-
-            if (firebaseConfig && firebase.apps.length === 0) {
-                firebase.initializeApp(firebaseConfig);
-                db = firebase.firestore();
-                auth = firebase.auth();
-            } else if (firebase.apps.length > 0) {
-                db = firebase.firestore();
-                auth = firebase.auth();
-            }
-        } catch (e) {
-            console.error("Firebase 初始化失敗:", e);
-        }
-
         // --- SVG 圖示定義 ---
         const ICONS = {
             Sparkles: <><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></>,
@@ -67,12 +44,12 @@
             Copy: <><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></>,
             Check: <polyline points="20 6 9 17 4 12"/>,
             ChevronDown: <polyline points="6 9 12 15 18 9" />,
-            Settings: <><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></>,
             Lock: <><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></>,
             X: <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>,
-            ChiikawaSilhouette: <path d="M12 22c-5 0-9-4-9-9 0-3.5 3-6.5 6-7V4a2 2 0 0 1 4 0v2c3 .5 6 3.5 6 7 0 5-4 9-9 9z" fill="currentColor" />,
-            HachiwareSilhouette: <path d="M12 22c-5 0-9-4-9-9 0-3 2-6 5-7L6 2l3-1 2 2c.3-.1.7-.1 1-.1s.7 0 1 .1l2-2 3 1-2 4c3 1 5 4 5 7 0 5-4 9-9 9z M9 10l3 3 3-3" fill="currentColor" />,
-            UsagiSilhouette: <path d="M12 22c-5 0-9-4-9-9 0-3 2-6 5-7V1a2 2 0 0 1 4 0v4c1 0 1 .1 2 .1V1a2 2 0 0 1 4 0v5c3 1 5 4 5 7 0 5-4 9-9 9z" fill="currentColor" />
+            // 強化辨識度的剪影 (優化特徵)
+            ChiikawaSilhouette: <path d="M12 22c-5.5 0-10-4.5-10-10C2 8.5 4.5 5.5 8 4.5V3a1.5 1.5 0 0 1 3 0v1.1c.3-.1.7-.1 1-.1s.7 0 1 .1V3a1.5 1.5 0 0 1 3 0v1.5c3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" fill="currentColor" />,
+            HachiwareSilhouette: <path d="M12 22c-5.5 0-10-4.5-10-10 0-3.5 2.5-6.5 6-7.5L6 2l3-1 2 2.5c.3-.1.7-.2 1-.2s.7.1 1 .2L15 1l3 1-2 2.5c3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z M9 9l3 3 3-3" fill="currentColor" />,
+            UsagiSilhouette: <path d="M12 22c-5.5 0-10-4.5-10-10 0-3.5 2-6.5 5-7.5V1a1.5 1.5 0 0 1 3 0v3.2c.6-.1 1.3-.2 2-.2s1.4.1 2 .2V1a1.5 1.5 0 0 1 3 0v3.5c3 1 5 4 5 7.5 0 5.5-4.5 10-10 10z" fill="currentColor" />
         };
 
         const Icon = ({ name, size = 24, className = "" }) => (
@@ -82,13 +59,13 @@
         );
 
         const TAROT_DATA = [
-            { id: 0, numeral: "0", title: "愚者", french: "Le Fou", meaning: "開端與冒險", astrology: "天王星", essence: "最初的虛無", uprightInsight: "全新的開始，勇敢踏出冒險的第一步。", reversedInsight: "過於魯莽不計後果，需謹慎觀察再行動。" },
+            { id: 0, numeral: "0", title: "愚者", french: "Le Fou", meaning: "開端與冒險", astrology: "天王星", essence: "最初的虛無", uprightInsight: "全新的開始，勇敢踏出冒險的第一步。", reversedInsight: "暗示過於魯莽不計後果，需謹慎觀察再行動。" },
             { id: 1, numeral: "I", title: "魔術師", french: "Le Bateleur", meaning: "創造與能力", astrology: "水星", essence: "萬物的開端", uprightInsight: "你已具備所有成功工具，現在正是實踐想法的時刻。", reversedInsight: "潛力受限或被浪費，需釐清目標重新導引能量。" },
             { id: 2, numeral: "II", title: "女祭司", french: "La Papesse", meaning: "直覺與神秘", astrology: "月球", essence: "陰陽", uprightInsight: "深度連結直覺，靜待真相與智慧自然浮現。", reversedInsight: "忽視內在聲音，陷入情緒困擾或表象迷惘。" },
             { id: 3, numeral: "III", title: "皇后", french: "L'Impératrice", meaning: "豐收與生命力", astrology: "金星", essence: "愛、生命、和平", uprightInsight: "創造力奔湧，生命充滿恩惠、豐饒與母性的溫柔。", reversedInsight: "成長停滯或過度控制，需找回環境與身心的平衡。" },
             { id: 4, numeral: "IV", title: "皇帝", french: "L'Emperuer", meaning: "秩序與權威", astrology: "白羊座", essence: "四大元素", uprightInsight: "展現領導力，建立穩定且有秩序的長期結構。", reversedInsight: "僵化專制或缺乏自控，容易導致局勢失衡。" },
             { id: 5, numeral: "V", title: "教皇", french: "Le Pape", meaning: "知識與傳統", astrology: "金牛座", essence: "平均力量", uprightInsight: "尋求智慧引導，遵循正統價值或靈性傳統。", reversedInsight: "挑戰權威或陳規，尋求獨立思考與非正統的新路。" },
-            { id: 6, numeral: "VI", title: "戀人", french: "L'Amant", meaning: "祝福與契合", astrology: "雙子座", essence: "天地調和", uprightInsight: "完美契合的關係，面臨忠於心靈的關鍵選擇。", reversedInsight: "價值觀分歧，需檢視內在矛盾與外在誘惑。" },
+            { id: 6, numeral: "VI", title: "戀人", french: "L'Amant", meaning: "祝福與契合", astrology: "雙子座", essence: "天地的調和", uprightInsight: "完美契合的關係，面臨忠於心靈的關鍵選擇。", reversedInsight: "價值觀分歧，需檢視內在矛盾與外在誘惑。" },
             { id: 7, numeral: "VII", title: "戰車", french: "Le Chariot", meaning: "意志與勝利", astrology: "巨蟹座", essence: "熱情", uprightInsight: "意志堅定，以強大的行動力克服眼前障礙。", reversedInsight: "失控或停滯不前，需重新找回核心動力方向。" },
             { id: 8, numeral: "VIII", title: "力量", french: "La Force", meaning: "勇氣與堅韌", astrology: "獅子座", essence: "穩定", uprightInsight: "以柔克剛，展現內在不屈的慈悲與心理強韌度。", reversedInsight: "軟弱無力，或者是被原始慾望與恐懼支配。" },
             { id: 9, numeral: "IX", title: "隱者", french: "L'Ermite", meaning: "內省與智慧", astrology: "處女座", essence: "調和大三角", uprightInsight: "向內探索，在孤獨的沉靜中遇見真實的自我。", reversedInsight: "過度疏離導致的孤立，需警惕偏激與固執。" },
@@ -99,7 +76,7 @@
             { id: 14, numeral: "XIV", title: "節制", french: "Tempérance", meaning: "平衡與調和", astrology: "射手座", essence: "適當", uprightInsight: "融合不同元素，在耐心等待中事物趨於完美。", reversedInsight: "能量失衡，過度極端導致身心狀態紊換。" },
             { id: 15, numeral: "XV", title: "惡魔", french: "Le Diable", meaning: "慾望與制約", astrology: "魔羯座", essence: "野性", uprightInsight: "面對影子，覺察制約你的物質執迷與慾望。", reversedInsight: "意識到制約存在，即將從執迷中解脫重獲自由。" },
             { id: 16, numeral: "XVI", title: "塔", french: "La Maison Dieu", meaning: "劇變與啟示", astrology: "火星", essence: "惡意基盤", uprightInsight: "劇烈瓦解舊有偽裝，真相即將在廢墟中顯現。", reversedInsight: "緩慢的衰敗，或是剛躲過一場重大的人生意震盪。" },
-            { id: 17, numeral: "XVII", title: "星星", french: "L'Étoile", meaning: "希望與療癒", astrology: "水瓶座", essence: "治癒", uprightInsight: "希望湧現，心靈在暴風雨過後獲得寧靜療癒。", reversedInsight: "暫時迷失願景，需重新點燃內在微弱的星光。" },
+            { id: 17, numeral: "XVII", title: "星星", french: "L'Étoile", meaning: "希望與療癒", astrology: "水瓶座", essence: "治癒", uprightInsight: "希望湧現，心靈在暴風雨過後獲得寧靜療癒。", reversedInsight: "暫時迷失願景，需重新找回內在星光。" },
             { id: 18, numeral: "XVIII", title: "月亮", french: "La Lune", meaning: "不安與潛意識", astrology: "雙魚座", essence: "不安淨化", uprightInsight: "警惕幻覺，傾聽不安表象下的深層潛意識引導。", reversedInsight: "迷霧逐漸散去，從混亂與恐懼中看清事實真相。" },
             { id: 19, numeral: "XIX", title: "太陽", french: "Le Soleil", meaning: "光明與成功", astrology: "太陽", essence: "新生命", uprightInsight: "成功在望，所有努力都將獲得圓滿的豐碩喜悅。", reversedInsight: "暫時的陰影，提防過度樂觀導致的虛榮盲點。" },
             { id: 20, numeral: "XX", title: "審判", french: "Le Juge", meaning: "復活與感召", astrology: "冥王星", essence: "極限", uprightInsight: "靈魂覺醒，原諒過去，迎接生命進階的時刻。", reversedInsight: "拒絕面對真實自我，延誤了蛻變與成長契機。" },
@@ -152,22 +129,36 @@
             const [masterFbConfigInput, setMasterFbConfigInput] = useState('');
             const [zoomedImage, setZoomedImage] = useState(null);
             
-            // 初始化 Firebase Auth
-            useEffect(() => {
-                const initAuth = async () => {
-                  try {
-                    if (auth) {
-                      if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await auth.signInWithCustomToken(__initial_auth_token);
-                      } else {
-                        await auth.signInAnonymously();
-                      }
+            // Firebase 實例參考
+            const dbRef = useRef(null);
+            const authRef = useRef(null);
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'arcanum-divination';
+
+            // 動態初始化或重新初始化 Firebase
+            const initFirebase = (config) => {
+                try {
+                    if (firebase.apps.length > 0) {
+                        firebase.app().delete();
                     }
-                  } catch (e) {
-                    console.warn("Auth 初始化失敗，部分雲端功能將受限");
-                  }
-                };
-                initAuth();
+                    firebase.initializeApp(config);
+                    dbRef.current = firebase.firestore();
+                    authRef.current = firebase.auth();
+                    authRef.current.signInAnonymously().catch(e => console.warn("匿名登入失敗"));
+                    return true;
+                } catch (e) {
+                    console.error("Firebase 初始化失敗:", e);
+                    return false;
+                }
+            };
+
+            // 網頁載入時嘗試初始化
+            useEffect(() => {
+                const rawConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : localStorage.getItem('arcanum_fb_config');
+                if (rawConfig) {
+                    try {
+                        initFirebase(JSON.parse(rawConfig));
+                    } catch (e) {}
+                }
             }, []);
 
             const handleSecretClick = () => {
@@ -248,7 +239,7 @@
                     const text = (data.candidates?.[0]?.content?.parts?.[0]?.text || "").replace(/[*#]/g, '').trim();
                     setAiResponse(text);
                 } catch (e) {
-                    setAiResponse(`宇宙感應發生錯誤：${e.message}。請確認您的管理員已正確設定 API Key。`);
+                    setAiResponse(`宇宙感應發生錯誤：${e.message}。請確認管理員已設定 API Key。`);
                 } finally {
                     setIsAiLoading(false);
                 }
@@ -270,16 +261,16 @@
             };
 
             const handleUnlockInterpretation = async () => {
-                if (!db || !auth) {
-                  alert('雲端系統尚未配置，請先點擊左上角標題5次，於指南分頁進行雲端初始化。');
+                if (!dbRef.current) {
+                  alert('目前尚未連線至雲端系統。請先點擊左上角標題 5 次，於指南頁面最下方貼入您的 Firebase Config。');
                   return;
                 }
 
                 try {
-                  const configDoc = await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('config').doc('settings').get();
+                  const configDoc = await dbRef.current.collection('artifacts').doc(appId).collection('public').doc('data').collection('config').doc('settings').get();
                   
                   if (!configDoc.exists) {
-                    alert('雲端尚未設定金鑰。請管理員先行設定。');
+                    alert('雲端尚未初始化。請管理員先行設定。');
                     return;
                   }
 
@@ -289,7 +280,7 @@
                       setIsAuthenticated(true);
                       fetchAiInterpretation(userQuestion, selectedCards, spreadType, cloudKey);
                   } else {
-                      alert('訪問密碼不正確。');
+                      alert('密碼不正確。');
                   }
                 } catch (err) {
                   alert('連線失敗：' + err.message);
@@ -306,7 +297,7 @@
             };
 
             const copyToClipboard = () => {
-                const text = `【阿爾克納啟示】\n問題：${userQuestion || '指引'}\n\n${aiResponse}\n\n— 命運之鍵由你掌握`;
+                const text = `【阿爾克納啟示】\n問題：${userQuestion || '指引'}\n\n${aiResponse}`;
                 const textArea = document.createElement("textarea");
                 textArea.value = text;
                 document.body.appendChild(textArea);
@@ -322,32 +313,42 @@
                 const pass = masterPasscodeInput.trim();
                 const fb = masterFbConfigInput.trim();
 
+                if (fb) {
+                    try {
+                        const config = JSON.parse(fb);
+                        const success = initFirebase(config);
+                        if (success) {
+                            localStorage.setItem('arcanum_fb_config', fb);
+                        } else {
+                            throw new Error("Firebase 設定格式正確但初始化失敗");
+                        }
+                    } catch (e) {
+                        alert('Firebase Config 格式錯誤，請貼入完整的 JSON 對象。');
+                        return;
+                    }
+                }
+
+                if (!dbRef.current) {
+                    alert('請先在下方欄位貼入 Firebase Config JSON 以建立雲端連線。');
+                    return;
+                }
+
                 if (key && pass) {
                     try {
-                      // 如果輸入了新的 Firebase Config，先存入本地並刷新
-                      if (fb) {
-                        localStorage.setItem('arcanum_fb_config', fb);
-                        alert('Firebase 設定已存入本地，請在設定完成後手動重新整理網頁以生效。');
-                      }
-
-                      if (db) {
-                        await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('config').doc('settings').set({
-                          apiKey: key,
-                          password: pass,
-                          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                        localStorage.setItem('arcanum_gemini_key', key);
-                        localStorage.setItem('arcanum_access_pass', pass);
-                        setIsKeySetupVisible(false);
-                        alert('雲端同步設定成功！');
-                      } else {
-                        alert('目前無法連線雲端，僅存入本地設定。');
-                      }
+                      await dbRef.current.collection('artifacts').doc(appId).collection('public').doc('data').collection('config').doc('settings').set({
+                        apiKey: key,
+                        password: pass,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                      });
+                      localStorage.setItem('arcanum_gemini_key', key);
+                      localStorage.setItem('arcanum_access_pass', pass);
+                      setIsKeySetupVisible(false);
+                      alert('雲端同步設定成功！現在任何裝置輸入該密碼即可解鎖。');
                     } catch (e) {
-                      alert('設定失敗: ' + e.message);
+                      alert('雲端儲存失敗: ' + e.message);
                     }
                 } else {
-                    alert('請填寫金鑰與解鎖密碼');
+                    alert('請填寫 Gemini API 金鑰與解鎖密碼');
                 }
             };
 
@@ -404,7 +405,7 @@
                                 {localStorage.getItem('arcanum_gemini_key') ? '管理員變更雲端設定' : '管理員雲端初始設定'}
                             </button>
                             
-                            <button onClick={() => { if(confirm('確定要清除此裝置的本地紀錄並重設嗎？')){localStorage.clear(); location.reload();} }} className="w-full text-[10px] opacity-20 text-center">重置此裝置本地快取</button>
+                            <button onClick={() => { if(confirm('確定要重置此裝置的本地快取嗎？')){localStorage.clear(); location.reload();} }} className="w-full text-[10px] opacity-20 text-center uppercase tracking-widest">重置本地快取</button>
                         </div>
                     </div>
                 );
@@ -443,7 +444,7 @@
                                       <input type="text" value={masterPasscodeInput} onChange={e=>setMasterPasscodeInput(e.target.value)} placeholder="例如: hello888" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" />
                                     </div>
                                     <div className="space-y-1">
-                                      <label className="text-[10px] opacity-40 ml-2">Firebase Config JSON (僅限 GitHub 部署)</label>
+                                      <label className="text-[10px] opacity-40 ml-2">Firebase Config JSON (GitHub 部署必填)</label>
                                       <textarea value={masterFbConfigInput} onChange={e=>setMasterFbConfigInput(e.target.value)} placeholder='{"apiKey": "...", "authDomain": "..."}' className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-[10px] h-24 focus:outline-none focus:border-indigo-400 font-mono" />
                                     </div>
                                 </div>
@@ -567,7 +568,7 @@
                                                         </div>
                                                     </div>
                                                 ) : (
-                                                    <div className="text-center py-10 opacity-30 italic text-sm">正在準備內容...</div>
+                                                    <div className="text-center py-10 opacity-30 italic text-sm">正在從星圖中擷取訊息...</div>
                                                 )}
                                             </div>
                                             {selectedCards.map((c, i) => (
