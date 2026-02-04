@@ -30,12 +30,28 @@
     <script type="text/babel">
         const { useState, useEffect, useRef, useMemo } = React;
 
-        // --- Firebase 配置 ---
-        const firebaseConfig = JSON.parse(__firebase_config);
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'arcanum-divination';
+        // --- 安全的 Firebase 初始化 ---
+        let db = null;
+        let auth = null;
+        let appId = 'arcanum-divination';
+
+        try {
+            // 優先嘗試從 Canvas 環境變數讀取，若無則嘗試從 LocalStorage 讀取用戶自定義設定
+            const rawConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : localStorage.getItem('arcanum_fb_config');
+            const firebaseConfig = rawConfig ? JSON.parse(rawConfig) : null;
+            appId = typeof __app_id !== 'undefined' ? __app_id : 'arcanum-divination';
+
+            if (firebaseConfig && firebase.apps.length === 0) {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                auth = firebase.auth();
+            } else if (firebase.apps.length > 0) {
+                db = firebase.firestore();
+                auth = firebase.auth();
+            }
+        } catch (e) {
+            console.error("Firebase 初始化失敗:", e);
+        }
 
         // --- SVG 圖示定義 ---
         const ICONS = {
@@ -133,15 +149,22 @@
             const [unlockPassInput, setUnlockPassInput] = useState('');
             const [masterKeyInput, setMasterKeyInput] = useState('');
             const [masterPasscodeInput, setMasterPasscodeInput] = useState('');
+            const [masterFbConfigInput, setMasterFbConfigInput] = useState('');
             const [zoomedImage, setZoomedImage] = useState(null);
             
             // 初始化 Firebase Auth
             useEffect(() => {
                 const initAuth = async () => {
-                  if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await auth.signInWithCustomToken(__initial_auth_token);
-                  } else {
-                    await auth.signInAnonymously();
+                  try {
+                    if (auth) {
+                      if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await auth.signInWithCustomToken(__initial_auth_token);
+                      } else {
+                        await auth.signInAnonymously();
+                      }
+                    }
+                  } catch (e) {
+                    console.warn("Auth 初始化失敗，部分雲端功能將受限");
                   }
                 };
                 initAuth();
@@ -247,15 +270,16 @@
             };
 
             const handleUnlockInterpretation = async () => {
-                const user = auth.currentUser;
-                if (!user) return;
+                if (!db || !auth) {
+                  alert('雲端系統尚未配置，請先點擊左上角標題5次，於指南分頁進行雲端初始化。');
+                  return;
+                }
 
                 try {
-                  // 從雲端獲取設定
                   const configDoc = await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('config').doc('settings').get();
                   
                   if (!configDoc.exists) {
-                    alert('管理員尚未在雲端進行初始化設定。');
+                    alert('雲端尚未設定金鑰。請管理員先行設定。');
                     return;
                   }
 
@@ -268,7 +292,7 @@
                       alert('訪問密碼不正確。');
                   }
                 } catch (err) {
-                  alert('雲端連線失敗，請檢查網路狀態。');
+                  alert('連線失敗：' + err.message);
                 }
             };
 
@@ -294,25 +318,36 @@
             };
 
             const handleSetup = async () => {
-                const user = auth.currentUser;
-                if (!user) return;
-
                 const key = masterKeyInput.trim();
                 const pass = masterPasscodeInput.trim();
+                const fb = masterFbConfigInput.trim();
+
                 if (key && pass) {
                     try {
-                      await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('config').doc('settings').set({
-                        apiKey: key,
-                        password: pass,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                      });
-                      setIsKeySetupVisible(false);
-                      alert('雲端同步設定成功！現在任何裝置輸入該密碼即可解鎖。');
+                      // 如果輸入了新的 Firebase Config，先存入本地並刷新
+                      if (fb) {
+                        localStorage.setItem('arcanum_fb_config', fb);
+                        alert('Firebase 設定已存入本地，請在設定完成後手動重新整理網頁以生效。');
+                      }
+
+                      if (db) {
+                        await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('config').doc('settings').set({
+                          apiKey: key,
+                          password: pass,
+                          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        localStorage.setItem('arcanum_gemini_key', key);
+                        localStorage.setItem('arcanum_access_pass', pass);
+                        setIsKeySetupVisible(false);
+                        alert('雲端同步設定成功！');
+                      } else {
+                        alert('目前無法連線雲端，僅存入本地設定。');
+                      }
                     } catch (e) {
-                      alert('雲端存儲失敗，請確認資料庫權限。');
+                      alert('設定失敗: ' + e.message);
                     }
                 } else {
-                    alert('請填寫完整資訊');
+                    alert('請填寫金鑰與解鎖密碼');
                 }
             };
 
@@ -366,8 +401,10 @@
                             </section>
 
                             <button onClick={() => setIsKeySetupVisible(true)} className="w-full py-4 border border-dashed border-white/20 rounded-2xl opacity-40 text-xs hover:opacity-100 transition-all font-bold">
-                                管理員雲端初始設定
+                                {localStorage.getItem('arcanum_gemini_key') ? '管理員變更雲端設定' : '管理員雲端初始設定'}
                             </button>
+                            
+                            <button onClick={() => { if(confirm('確定要清除此裝置的本地紀錄並重設嗎？')){localStorage.clear(); location.reload();} }} className="w-full text-[10px] opacity-20 text-center">重置此裝置本地快取</button>
                         </div>
                     </div>
                 );
@@ -390,18 +427,28 @@
                     )}
 
                     {isKeySetupVisible && (
-                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md animate-in no-select">
-                            <div className="w-full max-w-sm glass-panel rounded-[3rem] p-10 space-y-8 shadow-2xl">
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/95 backdrop-blur-md animate-in no-select">
+                            <div className="w-full max-w-sm glass-panel rounded-[3.5rem] p-10 space-y-6 shadow-2xl overflow-y-auto max-h-[90vh]">
                                 <div className="text-center space-y-2">
                                     <h3 className="text-2xl font-serif font-bold">雲端系統初始化</h3>
-                                    <p className="text-[10px] opacity-50 leading-relaxed text-indigo-300">設定後，任何裝置輸入訪問密碼即可解鎖占卜。</p>
+                                    <p className="text-[10px] opacity-50 leading-relaxed text-indigo-300 italic">讓任何裝置輸入密碼即刻解鎖</p>
                                 </div>
                                 <div className="space-y-4">
-                                    <input type="password" value={masterKeyInput} onChange={e=>setMasterKeyInput(e.target.value)} placeholder="Gemini API Key" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" />
-                                    <input type="text" value={masterPasscodeInput} onChange={e=>setMasterPasscodeInput(e.target.value)} placeholder="設定給親友的解鎖密碼" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" />
+                                    <div className="space-y-1">
+                                      <label className="text-[10px] opacity-40 ml-2">Google Gemini API Key</label>
+                                      <input type="password" value={masterKeyInput} onChange={e=>setMasterKeyInput(e.target.value)} placeholder="貼上 API Key" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" />
+                                    </div>
+                                    <div className="space-y-1">
+                                      <label className="text-[10px] opacity-40 ml-2">設定給親友的解鎖密碼</label>
+                                      <input type="text" value={masterPasscodeInput} onChange={e=>setMasterPasscodeInput(e.target.value)} placeholder="例如: hello888" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" />
+                                    </div>
+                                    <div className="space-y-1">
+                                      <label className="text-[10px] opacity-40 ml-2">Firebase Config JSON (僅限 GitHub 部署)</label>
+                                      <textarea value={masterFbConfigInput} onChange={e=>setMasterFbConfigInput(e.target.value)} placeholder='{"apiKey": "...", "authDomain": "..."}' className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-[10px] h-24 focus:outline-none focus:border-indigo-400 font-mono" />
+                                    </div>
                                 </div>
-                                <button onClick={handleSetup} className="w-full py-4 bg-white text-slate-900 rounded-full font-bold text-sm btn-press transition-all shadow-xl">上傳設定至雲端</button>
-                                <button onClick={() => setIsKeySetupVisible(false)} className="w-full text-[10px] opacity-30 uppercase font-bold tracking-widest mt-4">取消</button>
+                                <button onClick={handleSetup} className="w-full py-5 bg-white text-slate-900 rounded-full font-bold text-sm btn-press transition-all shadow-xl">同步至雲端並儲存</button>
+                                <button onClick={() => setIsKeySetupVisible(false)} className="w-full text-[10px] opacity-30 uppercase font-bold tracking-widest">關閉視窗</button>
                             </div>
                         </div>
                     )}
@@ -508,7 +555,6 @@
                                                             <p className="text-sm opacity-50 font-light">深度啟示已被加密鎖定</p>
                                                             <p className="text-[10px] opacity-30 uppercase tracking-widest">請輸入密碼以解鎖深度解析</p>
                                                         </div>
-                                                        {/* 手機直式排列優化：改為垂直佈局 */}
                                                         <div className="flex flex-col w-full gap-4 px-4 max-w-xs">
                                                             <input 
                                                                 type="text" 
