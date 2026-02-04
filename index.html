@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>阿爾克納 & Chiikawa - 塔羅占卜</title>
-    <!-- 載入 React 核心 -->
+    <title>阿爾克納 & Chiikawa - 雲端塔羅占卜</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- 載入 Babel 編譯器 -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- 載入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; transition: background-color 0.8s ease; margin: 0; padding: 0; overflow-x: hidden; }
+        body { font-family: 'Noto Sans TC', sans-serif; transition: background-color 0.8s ease; margin: 0; padding: 0; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         .font-serif { font-family: 'Noto Serif TC', serif; }
         ::-webkit-scrollbar { display: none; }
         .animate-in { animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .btn-press:active { transform: scale(0.92); transition: transform 0.1s; }
         .glass-panel { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        /* 確保背景不會擋住點擊 */
         .decoration-layer { pointer-events: none; z-index: -1; }
     </style>
 </head>
@@ -29,6 +29,13 @@
 
     <script type="text/babel">
         const { useState, useEffect, useRef, useMemo } = React;
+
+        // --- Firebase 配置 ---
+        const firebaseConfig = JSON.parse(__firebase_config);
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'arcanum-divination';
 
         // --- SVG 圖示定義 ---
         const ICONS = {
@@ -47,11 +54,9 @@
             Settings: <><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></>,
             Lock: <><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></>,
             X: <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>,
-            Heart: <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>,
-            // 強化辨識度的剪影
-            ChiikawaSilhouette: <path d="M12 22c-5.5 0-10-4.5-10-10C2 8.5 4.5 5.5 8 4.5V3a1.5 1.5 0 0 1 3 0v1.1c.3-.1.7-.1 1-.1s.7 0 1 .1V3a1.5 1.5 0 0 1 3 0v1.5c3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" fill="currentColor" />,
-            HachiwareSilhouette: <path d="M12 22c-5.5 0-10-4.5-10-10 0-3.5 2.5-6.5 6-7.5L6 2l3-1 2 2.5c.3-.1.7-.2 1-.2s.7.1 1 .2L15 1l3 1-2 2.5c3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z M9 9l3 3 3-3" fill="currentColor" stroke="currentColor" strokeWidth="1" />,
-            UsagiSilhouette: <path d="M12 22c-5.5 0-10-4.5-10-10 0-3.5 2-6.5 5-7.5V1a1.5 1.5 0 0 1 3 0v3.2c.6-.1 1.3-.2 2-.2s1.4.1 2 .2V1a1.5 1.5 0 0 1 3 0v3.5c3 1 5 4 5 7.5 0 5.5-4.5 10-10 10z" fill="currentColor" />
+            ChiikawaSilhouette: <path d="M12 22c-5 0-9-4-9-9 0-3.5 3-6.5 6-7V4a2 2 0 0 1 4 0v2c3 .5 6 3.5 6 7 0 5-4 9-9 9z" fill="currentColor" />,
+            HachiwareSilhouette: <path d="M12 22c-5 0-9-4-9-9 0-3 2-6 5-7L6 2l3-1 2 2c.3-.1.7-.1 1-.1s.7 0 1 .1l2-2 3 1-2 4c3 1 5 4 5 7 0 5-4 9-9 9z M9 10l3 3 3-3" fill="currentColor" />,
+            UsagiSilhouette: <path d="M12 22c-5 0-9-4-9-9 0-3 2-6 5-7V1a2 2 0 0 1 4 0v4c1 0 1 .1 2 .1V1a2 2 0 0 1 4 0v5c3 1 5 4 5 7 0 5-4 9-9 9z" fill="currentColor" />
         };
 
         const Icon = ({ name, size = 24, className = "" }) => (
@@ -61,7 +66,7 @@
         );
 
         const TAROT_DATA = [
-            { id: 0, numeral: "0", title: "愚者", french: "Le Fou", meaning: "開端與冒險", astrology: "天王星", essence: "最初的虛無", uprightInsight: "全新的開始，勇敢踏出冒險的第一步。", reversedInsight: "暗示過於魯莽不計後果，需謹慎觀察再行動。" },
+            { id: 0, numeral: "0", title: "愚者", french: "Le Fou", meaning: "開端與冒險", astrology: "天王星", essence: "最初的虛無", uprightInsight: "全新的開始，勇敢踏出冒險的第一步。", reversedInsight: "過於魯莽不計後果，需謹慎觀察再行動。" },
             { id: 1, numeral: "I", title: "魔術師", french: "Le Bateleur", meaning: "創造與能力", astrology: "水星", essence: "萬物的開端", uprightInsight: "你已具備所有成功工具，現在正是實踐想法的時刻。", reversedInsight: "潛力受限或被浪費，需釐清目標重新導引能量。" },
             { id: 2, numeral: "II", title: "女祭司", french: "La Papesse", meaning: "直覺與神秘", astrology: "月球", essence: "陰陽", uprightInsight: "深度連結直覺，靜待真相與智慧自然浮現。", reversedInsight: "忽視內在聲音，陷入情緒困擾或表象迷惘。" },
             { id: 3, numeral: "III", title: "皇后", french: "L'Impératrice", meaning: "豐收與生命力", astrology: "金星", essence: "愛、生命、和平", uprightInsight: "創造力奔湧，生命充滿恩惠、豐饒與母性的溫柔。", reversedInsight: "成長停滯或過度控制，需找回環境與身心的平衡。" },
@@ -122,23 +127,24 @@
             const [copyStatus, setCopyStatus] = useState(false);
             const [secretClickCount, setSecretClickCount] = useState(0);
             
-            // 安全驗證狀態
+            // 安全與雲端狀態
             const [isKeySetupVisible, setIsKeySetupVisible] = useState(false);
             const [isAuthenticated, setIsAuthenticated] = useState(false);
             const [unlockPassInput, setUnlockPassInput] = useState('');
             const [masterKeyInput, setMasterKeyInput] = useState('');
             const [masterPasscodeInput, setMasterPasscodeInput] = useState('');
             const [zoomedImage, setZoomedImage] = useState(null);
-
+            
+            // 初始化 Firebase Auth
             useEffect(() => {
-                const urlParams = new URLSearchParams(window.location.search);
-                const queryKey = urlParams.get('k');
-                const queryPass = urlParams.get('p');
-                if (queryKey && queryPass) {
-                    localStorage.setItem('arcanum_gemini_key', queryKey.trim());
-                    localStorage.setItem('arcanum_access_pass', queryPass.trim());
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                }
+                const initAuth = async () => {
+                  if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await auth.signInWithCustomToken(__initial_auth_token);
+                  } else {
+                    await auth.signInAnonymously();
+                  }
+                };
+                initAuth();
             }, []);
 
             const handleSecretClick = () => {
@@ -199,9 +205,7 @@
                 return styles[theme];
             }, [theme]);
 
-            const fetchAiInterpretation = async (question, cards, type) => {
-                const savedKey = (localStorage.getItem('arcanum_gemini_key') || "").trim();
-                if (!savedKey) return;
+            const fetchAiInterpretation = async (question, cards, type, key) => {
                 setIsAiLoading(true);
                 setAiResponse('');
                 const cardDetails = cards.map((c, i) => `${type === 'triangle' ? ['過去','現在','未來'][i] : '核心'}: ${c.title}(${c.isReversed ? '逆位' : '正位'}) - ${c.meaning}`).join('\n');
@@ -209,7 +213,7 @@
                 const prompt = `你是一位專業、睿智且溫暖的塔羅大師。問題：${question || '求指引'}。牌陣內容：\n${cardDetails}\n\n請提供約 300 字深度解讀。深度結合各牌面間的連結與牌義，風格應溫暖大方，好結果鼓勵，壞結果轉化為溫柔的教導與具體建議。不要使用Markdown符號，直接繁體中文排版。`;
 
                 try {
-                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${savedKey}`;
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`;
                     const response = await fetch(url, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -221,18 +225,16 @@
                     const text = (data.candidates?.[0]?.content?.parts?.[0]?.text || "").replace(/[*#]/g, '').trim();
                     setAiResponse(text);
                 } catch (e) {
-                    setAiResponse(`宇宙感應發生錯誤：${e.message}。請確認您的 API Key 設定及權限。`);
+                    setAiResponse(`宇宙感應發生錯誤：${e.message}。請確認您的管理員已正確設定 API Key。`);
                 } finally {
                     setIsAiLoading(false);
                 }
             };
 
             const drawCards = () => {
-                // 每次抽新牌前，重設認證與解讀
                 setIsAuthenticated(false);
                 setAiResponse('');
                 setUnlockPassInput('');
-                
                 setGameState('shuffling');
                 setTimeout(() => {
                     const count = spreadType === 'one' ? 1 : 3;
@@ -244,14 +246,29 @@
                 }, 2000);
             };
 
-            const handleUnlockInterpretation = () => {
-                const savedPass = (localStorage.getItem('arcanum_access_pass') || "").trim();
-                const input = unlockPassInput.trim();
-                if (input === savedPass) {
-                    setIsAuthenticated(true);
-                    fetchAiInterpretation(userQuestion, selectedCards, spreadType);
-                } else {
-                    alert('密碼不正確。');
+            const handleUnlockInterpretation = async () => {
+                const user = auth.currentUser;
+                if (!user) return;
+
+                try {
+                  // 從雲端獲取設定
+                  const configDoc = await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('config').doc('settings').get();
+                  
+                  if (!configDoc.exists) {
+                    alert('管理員尚未在雲端進行初始化設定。');
+                    return;
+                  }
+
+                  const { apiKey: cloudKey, password: cloudPass } = configDoc.data();
+
+                  if (unlockPassInput.trim() === cloudPass) {
+                      setIsAuthenticated(true);
+                      fetchAiInterpretation(userQuestion, selectedCards, spreadType, cloudKey);
+                  } else {
+                      alert('訪問密碼不正確。');
+                  }
+                } catch (err) {
+                  alert('雲端連線失敗，請檢查網路狀態。');
                 }
             };
 
@@ -276,12 +293,24 @@
                 setTimeout(() => setCopyStatus(false), 2000);
             };
 
-            const handleSetup = () => {
-                if (masterKeyInput.trim() && masterPasscodeInput.trim()) {
-                    localStorage.setItem('arcanum_gemini_key', masterKeyInput.trim());
-                    localStorage.setItem('arcanum_access_pass', masterPasscodeInput.trim());
-                    setIsKeySetupVisible(false);
-                    alert('系統設定成功！現在可以解鎖啟示了。');
+            const handleSetup = async () => {
+                const user = auth.currentUser;
+                if (!user) return;
+
+                const key = masterKeyInput.trim();
+                const pass = masterPasscodeInput.trim();
+                if (key && pass) {
+                    try {
+                      await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('config').doc('settings').set({
+                        apiKey: key,
+                        password: pass,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                      });
+                      setIsKeySetupVisible(false);
+                      alert('雲端同步設定成功！現在任何裝置輸入該密碼即可解鎖。');
+                    } catch (e) {
+                      alert('雲端存儲失敗，請確認資料庫權限。');
+                    }
                 } else {
                     alert('請填寫完整資訊');
                 }
@@ -293,28 +322,25 @@
                     <div className="animate-in space-y-8 pb-10">
                         <div className="flex justify-between items-end">
                             <h2 className="text-3xl font-serif font-bold tracking-widest transition-colors duration-1000">占卜指南</h2>
-                            <button onClick={() => { if(confirm('確定要重設系統嗎？')){localStorage.clear(); location.reload();} }} className="text-[10px] flex items-center gap-1 font-bold opacity-30 hover:opacity-100 transition-opacity">
-                                <Icon name="RefreshCw" size={10} /> 重設系統
-                            </button>
                         </div>
                         
                         <div className="space-y-8">
                             <section className="space-y-4">
-                                <h3 className="font-bold text-lg opacity-80 border-l-4 border-indigo-500 pl-3 transition-colors duration-1000">基本說明</h3>
+                                <h3 className="font-bold text-lg opacity-80 border-l-4 border-indigo-500 pl-3">基本說明</h3>
                                 <div className="space-y-4 text-sm leading-relaxed opacity-70">
                                     <div className="glass-panel p-6 rounded-[2rem]">
-                                        <p className="font-bold text-indigo-400 mb-2 font-serif tracking-widest transition-colors duration-1000">● 尋找牌靈</p>
-                                        <p>建議您在首次使用前，靜心觀察全牌組。選擇一張在此刻最令你產生共鳴的牌作為您的「牌靈」，它代表您此時的靈魂投射。</p>
+                                        <p className="font-bold text-indigo-400 mb-2 font-serif tracking-widest">● 尋找牌靈</p>
+                                        <p>建議您在首次使用前，靜心觀察全牌組。選擇一張在此刻最令你產生共鳴的牌作為您的「牌靈」。</p>
                                     </div>
                                     <div className="glass-panel p-6 rounded-[2rem]">
-                                        <p className="font-bold text-amber-400 mb-2 font-serif tracking-widest transition-colors duration-1000">● 每日抽牌</p>
-                                        <p>每天晨間帶著一個問題抽一張牌。透過日常的反思練習直覺力。</p>
+                                        <p className="font-bold text-amber-400 mb-2 font-serif tracking-widest">● 每日抽牌</p>
+                                        <p>每天晨間洗牌，問自己：「我今日的課題是什麼？」。紀錄心得能有效練習直覺。</p>
                                     </div>
                                 </div>
                             </section>
 
                             <section className="space-y-4">
-                                <h3 className="font-bold text-lg opacity-80 border-l-4 border-rose-500 pl-3 transition-colors duration-1000">大阿爾克那圖鑑</h3>
+                                <h3 className="font-bold text-lg opacity-80 border-l-4 border-rose-500 pl-3">大阿爾克那圖鑑</h3>
                                 <div className="space-y-2">
                                     {TAROT_DATA.map(c => (
                                         <div key={c.id} className="border border-white/5 rounded-2xl overflow-hidden glass-panel">
@@ -340,7 +366,7 @@
                             </section>
 
                             <button onClick={() => setIsKeySetupVisible(true)} className="w-full py-4 border border-dashed border-white/20 rounded-2xl opacity-40 text-xs hover:opacity-100 transition-all font-bold">
-                                {localStorage.getItem('arcanum_gemini_key') ? '變更管理員金鑰/密碼' : '管理員初始設定'}
+                                管理員雲端初始設定
                             </button>
                         </div>
                     </div>
@@ -349,13 +375,11 @@
 
             return (
                 <div className={`min-h-screen ${themeStyles.bg} ${themeStyles.text} transition-colors duration-1000 pb-24 relative`}>
-                    {/* 背景裝飾層 - 設定 Z-index 為負值確保不擋點擊 */}
                     <div className="decoration-layer fixed inset-0 overflow-hidden opacity-20">
                         <div className={`absolute top-[-10%] left-[-10%] w-[80%] h-[40%] ${themeStyles.glow1} rounded-full blur-[120px] transition-colors duration-1000`} />
                         <div className={`absolute bottom-[-10%] right-[-10%] w-[80%] h-[40%] ${themeStyles.glow2} rounded-full blur-[120px] transition-colors duration-1000`} />
                     </div>
 
-                    {/* 圖片放大檢視 */}
                     {zoomedImage && (
                         <div className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4" onClick={() => setZoomedImage(null)}>
                             <img src={zoomedImage} className="max-w-full max-h-full rounded-2xl shadow-2xl animate-in" alt="Tarot" />
@@ -369,14 +393,14 @@
                         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md animate-in no-select">
                             <div className="w-full max-w-sm glass-panel rounded-[3rem] p-10 space-y-8 shadow-2xl">
                                 <div className="text-center space-y-2">
-                                    <h3 className="text-2xl font-serif font-bold">系統初始化</h3>
-                                    <p className="text-[10px] opacity-50">請填入管理用 API Key 與訪問密碼</p>
+                                    <h3 className="text-2xl font-serif font-bold">雲端系統初始化</h3>
+                                    <p className="text-[10px] opacity-50 leading-relaxed text-indigo-300">設定後，任何裝置輸入訪問密碼即可解鎖占卜。</p>
                                 </div>
                                 <div className="space-y-4">
                                     <input type="password" value={masterKeyInput} onChange={e=>setMasterKeyInput(e.target.value)} placeholder="Gemini API Key" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" />
-                                    <input type="text" value={masterPasscodeInput} onChange={e=>setMasterPasscodeInput(e.target.value)} placeholder="設定解鎖密碼" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" />
+                                    <input type="text" value={masterPasscodeInput} onChange={e=>setMasterPasscodeInput(e.target.value)} placeholder="設定給親友的解鎖密碼" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" />
                                 </div>
-                                <button onClick={handleSetup} className="w-full py-4 bg-white text-slate-900 rounded-full font-bold text-sm btn-press shadow-xl">完成設定</button>
+                                <button onClick={handleSetup} className="w-full py-4 bg-white text-slate-900 rounded-full font-bold text-sm btn-press transition-all shadow-xl">上傳設定至雲端</button>
                                 <button onClick={() => setIsKeySetupVisible(false)} className="w-full text-[10px] opacity-30 uppercase font-bold tracking-widest mt-4">取消</button>
                             </div>
                         </div>
@@ -410,7 +434,7 @@
                                         <h2 className="text-4xl font-serif font-bold leading-tight transition-colors duration-1000">
                                             {isChiikawa ? '嘿！現在\n想問什麼？' : '現在\n你想問什麼？'}
                                         </h2>
-                                        <textarea value={userQuestion} onChange={e => setUserQuestion(e.target.value)} placeholder="在此輸入您的問題..." className={`w-full h-36 ${themeStyles.inputBg} border ${themeStyles.border} rounded-3xl p-6 focus:outline-none transition-all resize-none shadow-xl text-lg transition-colors duration-1000 placeholder:opacity-30`} />
+                                        <textarea value={userQuestion} onChange={e => setUserQuestion(e.target.value)} placeholder="在此輸入您的問題..." className="w-full h-36 border border-white/10 bg-white/5 rounded-3xl p-6 focus:outline-none transition-all resize-none shadow-xl text-lg placeholder:opacity-30" />
                                         <div className="flex gap-4">
                                             <button onClick={() => setSpreadType('one')} className={`flex-1 p-5 rounded-3xl border-2 transition-all group btn-press ${spreadType === 'one' ? themeStyles.activeBtn : 'border-white/5 bg-white/5 opacity-40'}`}>
                                                 <Icon name="Compass" size={24} className="mx-auto mb-2 opacity-50" />
@@ -466,8 +490,10 @@
                                         </div>
 
                                         <div className="space-y-6">
+                                            {/* AI 解讀面板 */}
                                             <div className="glass-panel rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden transition-colors duration-1000">
                                                 <div className="flex items-center gap-3 mb-6 opacity-60 transition-colors duration-1000"><Icon name="BrainCircuit" size={20} /><h3 className="font-bold tracking-widest uppercase italic">宇宙的深層啟示</h3></div>
+                                                
                                                 {isAiLoading ? (
                                                     <div className="flex flex-col items-center py-10 gap-4">
                                                         <Icon name="RefreshCw" className="animate-spin opacity-30" size={32} />
@@ -482,13 +508,20 @@
                                                             <p className="text-sm opacity-50 font-light">深度啟示已被加密鎖定</p>
                                                             <p className="text-[10px] opacity-30 uppercase tracking-widest">請輸入密碼以解鎖深度解析</p>
                                                         </div>
-                                                        <div className="flex w-full gap-2 px-4 max-w-xs">
-                                                            <input type="text" value={unlockPassInput} onChange={e=>setUnlockPassInput(e.target.value)} placeholder="輸入密碼" className="flex-1 bg-white/5 border border-white/10 rounded-xl p-3 text-center text-sm focus:outline-none focus:border-indigo-400" />
-                                                            <button onClick={handleUnlockInterpretation} className="bg-white text-slate-900 px-6 rounded-xl font-bold text-xs btn-press shadow-lg">解鎖</button>
+                                                        {/* 手機直式排列優化：改為垂直佈局 */}
+                                                        <div className="flex flex-col w-full gap-4 px-4 max-w-xs">
+                                                            <input 
+                                                                type="text" 
+                                                                value={unlockPassInput} 
+                                                                onChange={e=>setUnlockPassInput(e.target.value)} 
+                                                                placeholder="輸入訪問密碼" 
+                                                                className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-center text-sm focus:outline-none focus:border-indigo-400" 
+                                                            />
+                                                            <button onClick={handleUnlockInterpretation} className="w-full py-4 bg-white text-slate-900 rounded-xl font-bold text-xs btn-press shadow-lg transition-all active:bg-indigo-50">解鎖啟示</button>
                                                         </div>
                                                     </div>
                                                 ) : (
-                                                    <div className="text-center py-10 opacity-30 italic text-sm">正在準備啟示內容...</div>
+                                                    <div className="text-center py-10 opacity-30 italic text-sm">正在準備內容...</div>
                                                 )}
                                             </div>
                                             {selectedCards.map((c, i) => (
@@ -507,11 +540,12 @@
 
                                         <div className="flex flex-col gap-5 pt-4">
                                             {aiResponse && (
-                                                <button onClick={copyToClipboard} className={`${isChiikawa ? themeStyles.btnBg : 'bg-indigo-600 text-white shadow-xl'} py-6 rounded-full font-bold flex items-center justify-center gap-3 text-lg btn-press transition-all border-2 border-white/20 shadow-2xl animate-in`}>
-                                                    <Icon name={copyStatus ? "Check" : "Copy"} size={20} /> {copyStatus ? "已複製內容" : "複製這份啟示"}
+                                                <button onClick={copyToClipboard} className={`${isChiikawa ? themeStyles.btnBg : 'bg-indigo-600 text-white shadow-xl'} py-6 rounded-full font-bold flex items-center justify-center gap-3 text-lg btn-press transition-all border-2 border-white/20 shadow-2xl animate-in transition-colors duration-1000`}>
+                                                    <Icon name={copyStatus ? "Check" : "Copy"} size={20} /> 
+                                                    {copyStatus ? "已複製內容" : "複製這份啟示"}
                                                 </button>
                                             )}
-                                            <button onClick={resetGame} className={`w-full py-5 border-2 ${themeStyles.border} rounded-full text-base font-bold flex items-center justify-center gap-2 active:scale-95 transition-all uppercase tracking-widest opacity-60`}>
+                                            <button onClick={resetGame} className={`w-full py-5 border-2 ${themeStyles.border} rounded-full text-base font-bold flex items-center justify-center gap-2 active:scale-95 transition-all uppercase tracking-widest opacity-60 transition-colors duration-1000`}>
                                                 <Icon name="RefreshCw" size={20} /> 重新占卜
                                             </button>
                                         </div>
@@ -519,15 +553,18 @@
                                 )}
                             </div>
                         )}
+
                         {activeTab === 'guide' && <GuidePage />}
                     </div>
 
-                    <nav className={`fixed bottom-0 left-0 w-full ${themeStyles.navBg} backdrop-blur-2xl border-t ${themeStyles.border} px-16 py-5 flex justify-around items-center z-50 transition-colors duration-1000`}>
+                    <nav className={`fixed bottom-0 left-0 w-full ${themeStyles.navBg} backdrop-blur-2xl border-t ${themeStyles.border} px-16 py-5 flex justify-around items-center z-50 transition-colors duration-1000 no-select`}>
                         <button onClick={() => setActiveTab('divination')} className={`flex flex-col items-center gap-1 transition-all ${activeTab === 'divination' ? 'opacity-100 scale-110' : 'opacity-100'}`} style={{color: activeTab === 'divination' ? themeStyles.accent : '#64748b'}}>
-                            <Icon name="Sparkles" size={24} /><span className="text-[10px] font-bold uppercase tracking-widest mt-1">占卜</span>
+                            <Icon name="Sparkles" size={24} />
+                            <span className="text-[10px] font-bold uppercase tracking-widest mt-1">占卜</span>
                         </button>
                         <button onClick={() => setActiveTab('guide')} className={`flex flex-col items-center gap-1 transition-all ${activeTab === 'guide' ? 'opacity-100 scale-110' : 'opacity-100'}`} style={{color: activeTab === 'guide' ? themeStyles.accent : '#64748b'}}>
-                            <Icon name="BookOpen" size={24} /><span className="text-[10px] font-bold uppercase tracking-widest mt-1">指南</span>
+                            <Icon name="BookOpen" size={24} />
+                            <span className="text-[10px] font-bold uppercase tracking-widest mt-1">指南</span>
                         </button>
                     </nav>
                 </div>
