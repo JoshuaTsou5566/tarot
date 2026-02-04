@@ -18,7 +18,7 @@
         .btn-press:active { transform: scale(0.92); transition: transform 0.1s; }
         .glass-panel { backdrop-filter: blur(12px); border-width: 1px; }
         .decoration-layer { pointer-events: none; z-index: -1; }
-        input, textarea { font-size: 16px !important; } /* 避免手機端自動縮放 */
+        input, textarea { font-size: 16px !important; }
         .no-select { -webkit-user-select: none; user-select: none; }
     </style>
 </head>
@@ -43,36 +43,168 @@
             Layout: <><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></>,
             BrainCircuit: <><path d="M12 4.5V2"/><path d="M18 11h2.5"/><path d="M12 19.5V22"/><path d="M5.5 11H3"/><path d="M12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/><path d="M16 12.5V11a4 4 0 0 0-8 0v1.5"/><path d="M16 8a4 4 0 0 0-8 0"/></>,
             Heart: <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>,
+            ChevronDown: <polyline points="6 9 12 15 18 9" />,
             LogOut: <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></>,
-            Copy: <><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></>,
             ChiikawaHead: <path d="M12 22C6.5 22 2 17.5 2 12C2 8.5 4.5 5.5 8 4.5V2A1.5 1.5 0 0 1 11 2v2c.3-.1.6-.1.9-.1s.7 0 1 .1V2a1.5 1.5 0 0 1 3 0v2.5c3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" fill="currentColor" />,
             HachiwareHead: <path d="M12 22c-5.5 0-10-4.5-10-10 0-3.5 2.5-6.5 6-7.5L6 1l3-1 2 2.5c.3-.1.7-.2 1-.2s.7.1 1 .2L15 0l3 1-2 2.5c3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z M9 9l3 3 3-3" fill="currentColor" />,
             UsagiHead: <path d="M12 22c-5.5 0-10-4.5-10-10 0-3.5 2-6.5 5-7.5V0a1.5 1.5 0 0 1 3 0v3.2c.6-.1 1.3-.2 2-.2s1.4.1 2 .2V0a1.5 1.5 0 0 1 3 0v3.5c3 1 5 4 5 7.5 0 5.5-4.5 10-10 10z" fill="currentColor" />
         };
 
         const TAROT_DATA = [
-            { id: 0, numeral: "0", title: "愚者", meaning: "開端與冒險", insight: "全新的開始，勇敢踏出冒險的第一步。信任宇宙，前方有無限可能。" },
-            { id: 1, numeral: "I", title: "魔術師", meaning: "創造與能力", insight: "你已具備成功工具，現在正是實踐想法的時刻。展現你的才華吧。" },
-            { id: 2, numeral: "II", title: "女祭司", meaning: "直覺與神秘", insight: "深度連結直覺，靜待真相浮現。保持內心的寧靜與冷靜。" },
-            { id: 3, numeral: "III", title: "皇后", meaning: "豐收與生命力", insight: "生命充滿恩惠與溫柔，正是享受生活與創造的時刻。" },
-            { id: 4, numeral: "IV", title: "皇帝", meaning: "秩序與權威", insight: "展現領導力，建立穩定結構。這是一個掌握掌控權的時期。" },
-            { id: 5, numeral: "V", title: "教皇", meaning: "知識與傳統", insight: "適合向專業人士諮詢。傳統價值將為你提供方向。" },
-            { id: 6, numeral: "VI", title: "戀人", meaning: "祝福與契合", insight: "完美契合的關係，面臨忠於心靈的選擇。信任你的心。" },
-            { id: 7, numeral: "VII", title: "戰車", meaning: "意志與勝利", insight: "意志堅定，以行動力克服困難。這是一場必定勝利的遠征。" },
-            { id: 8, numeral: "VIII", title: "力量", meaning: "勇氣與堅韌", insight: "以柔克剛，展現內在不屈的慈悲與強韌。你比想像中更強大。" },
-            { id: 9, numeral: "IX", title: "隱者", meaning: "內省與智慧", insight: "向內探索，在孤獨中遇見真實的自我。你需要一段寧靜的時光。" },
-            { id: 10, numeral: "X", title: "命運之輪", meaning: "週期與轉機", insight: "轉機降臨，命運齒輪正帶領你前進。接受變動與好運。" },
-            { id: 11, numeral: "XI", title: "正義", meaning: "公平與客觀", insight: "誠實無私，事物朝向平衡發展。真相將會大白。" },
-            { id: 12, numeral: "XII", title: "倒吊人", meaning: "犧牲與覺醒", insight: "換個角度看世界。暫時的靜止是為了換取更高的覺醒。" },
-            { id: 13, numeral: "XIII", title: "死神", meaning: "終結與轉化", insight: "捨棄舊模式，迎接新生。結束是另一個偉大開始的序幕。" },
-            { id: 14, numeral: "XIV", title: "節制", meaning: "平衡與調和", insight: "融合不同元素，保持平和。事物正以和諧的節奏趨於完美。" },
-            { id: 15, numeral: "XV", title: "惡魔", meaning: "慾望與制約", insight: "覺察束縛你的物質執迷。意識到問題是解脫的第一步。" },
-            { id: 16, numeral: "XVI", title: "塔", meaning: "劇變與啟示", insight: "劇烈瓦解虛偽，真相在廢墟中顯現。這是一個必要的重整。" },
-            { id: 17, numeral: "XVII", title: "星星", meaning: "希望與療癒", insight: "希望湧現，心靈獲得寧靜療癒。跟隨那道引導的光芒。" },
-            { id: 18, numeral: "XVIII", title: "月亮", meaning: "不安與潛意識", insight: "警惕幻覺，傾聽潛意識引導。真相隱藏在迷霧之後。" },
-            { id: 19, numeral: "XIX", title: "太陽", meaning: "光明與成功", insight: "成功在望，喜悅圓滿。這是一個充滿活力與榮耀的時刻。" },
-            { id: 20, numeral: "XX", title: "審判", meaning: "復活與感召", insight: "靈魂覺醒，原諒過去。這是一個邁向生命新階段的時刻。" },
-            { id: 21, numeral: "XXI", title: "世界", meaning: "完美與圓滿", insight: "旅程功德圓滿，完美的整合。祝賀你達成心願。" }
+            { 
+              id: 0, numeral: "0", title: "愚者", meaning: "純真與開端", 
+              love: ["新戀情的開端，純粹且無拘無束。", "過於魯莽，對關係缺乏承諾。"],
+              social: ["結交新朋友，氣氛輕鬆愉快。", "容易被視為不靠譜或過於任性。"],
+              work: ["適合轉職或開發新創意，充滿熱情。", "缺乏紀律與計畫，容易出錯。"],
+              finance: ["對金錢抱持樂觀，可能會有意外開銷。", "財務狀況不穩定，需防範過度消費。"]
+            },
+            { 
+              id: 1, numeral: "I", title: "魔術師", meaning: "創造力與掌握",
+              love: ["充滿吸引力的開端，溝通順暢。", "甜言蜜語背後的虛偽，缺乏真心。"],
+              social: ["展現個人才華，成為團體核心。", "可能給人油腔滑調、不誠實的印象。"],
+              work: ["具備解決問題的能力，計畫順利推進。", "技術不成熟或能力不足卻硬撐。"],
+              finance: ["有能力創造財富，善於理財規劃。", "投資陷阱或財務資訊不對稱。"]
+            },
+            { 
+              id: 2, numeral: "II", title: "女祭司", meaning: "直覺與寧靜",
+              love: ["靈魂層面的契合，靜待發展。", "情緒壓抑，關係中存在隔閡。"],
+              social: ["被視為明智、冷靜的傾聽者。", "過於孤僻或神祕，讓人難以接近。"],
+              work: ["憑直覺做出正確決策，適合研究。", "忽視細節或過於感情用事。"],
+              finance: ["保守理財，財務狀況平穩。", "理財資訊模糊，存在隱藏虧損。"]
+            },
+            { 
+              id: 3, numeral: "III", title: "皇后", meaning: "豐饒與愛",
+              love: ["感情甜蜜、豐收，可能迎來新生命。", "情感需求過大，產生依賴或控制感。"],
+              social: ["氣氛和諧，充滿女性力量的關懷。", "過於嘮叨或干涉他人私生活。"],
+              work: ["創意泉湧，環境充滿包容力。", "進度停滯不前，過於追求安逸。"],
+              finance: ["財運極佳，享受優渥生活。", "揮霍無度，入不敷出。"]
+            },
+            { 
+              id: 4, numeral: "IV", title: "皇帝", meaning: "權威與秩序",
+              love: ["關係穩定，給予對方極大的安全感。", "專制霸道，缺乏情感交流與柔軟。"],
+              social: ["擔任領導者角色，受人景仰。", "權力鬥爭或過於僵化、難相處。"],
+              work: ["建立系統，事業根基穩固。", "管理失敗，計畫被僵化的規則束縛。"],
+              finance: ["穩定收入，專業的理財架構。", "過於保守或因控制欲導致財務損失。"]
+            },
+            { 
+              id: 5, numeral: "V", title: "教皇", meaning: "傳統與智慧",
+              love: ["重視承諾，適合步入婚姻或穩定關係。", "觀念分歧，被社會規範束縛的壓抑。"],
+              social: ["尋求長輩或導師的指引，受惠良多。", "容易因觀念保守與人發生口角。"],
+              work: ["遵循專業流程，獲得前輩提拔。", "排斥創新，計畫過於老舊無力。"],
+              finance: ["信譽良好，適合穩健長期投資。", "財務糾紛，需小心信託合約問題。"]
+            },
+            { 
+              id: 6, numeral: "VI", title: "戀人", meaning: "選擇與契合",
+              love: ["完美和諧的愛情，做出正確的結合。", "面臨選擇困難，感情中出現第三者誘惑。"],
+              social: ["建立深厚的友誼，合作無間。", "價值觀衝突，容易發生爭吵。"],
+              work: ["適合合夥或團隊協作，目標一致。", "決策猶豫，團隊內部產生嫌隙。"],
+              finance: ["正確的投資決策，財運平順。", "因情感因素導致不智的財務決定。"]
+            },
+            { 
+              id: 7, numeral: "VII", title: "戰車", meaning: "意志與勝利",
+              love: ["積極主動，成功克服情感上的障礙。", "情緒失控，關係中出現激烈的爭執。"],
+              social: ["極具個人魅力，帶領團隊前進。", "剛愎自用，容易招致他人的反感。"],
+              work: ["意志堅定，事業取得重大突破。", "目標迷失，因焦躁而導致計畫失敗。"],
+              finance: ["積極開源，短期內會有顯著收益。", "收支失衡，因魯莽擴張而負債。"]
+            },
+            { 
+              id: 8, numeral: "VIII", title: "力量", meaning: "勇氣與慈悲",
+              love: ["以柔克剛，成功導引對方的情緒。", "信心動搖，感到無力維持這段關係。"],
+              social: ["待人真誠，擁有強大的親和力。", "容易受他人情緒勒索而感到疲憊。"],
+              work: ["不畏挑戰，以耐性化解危機。", "能力受限，面對壓力時顯得軟弱。"],
+              finance: ["量入為出，擁有良好的財務自制力。", "財務失控，被慾望牽著鼻子走。"]
+            },
+            { 
+              id: 9, numeral: "IX", title: "隱者", meaning: "內省與智慧",
+              love: ["享受獨處，或與伴侶進行深度心靈對話。", "過度孤立，拒絕對外溝通而產生隔閡。"],
+              social: ["淡泊社交，專注於內在的成長。", "被邊緣化或感到寂寞，拒絕社交。"],
+              work: ["深耕專業領域，智慧將帶來成功。", "進度遲緩，過於專注細節而忽略大局。"],
+              finance: ["淡欲理財，財務狀況尚可。", "過於小氣或因封閉資訊錯失商機。"]
+            },
+            { 
+              id: 10, numeral: "X", title: "命運之輪", meaning: "週期與轉機",
+              love: ["命運的安排，關係迎來正向轉折。", "運氣不佳，情感進入停滯的低潮期。"],
+              social: ["社交圈更迭，迎來有助益的新朋友。", "人際關係反覆無常，難以捉摸。"],
+              work: ["時來運轉，掌握關鍵的晉升機會。", "阻礙重重，現狀難以被自己掌控。"],
+              finance: ["財運回升，有意外的中獎機會。", "投資虧損，財務週期陷入不順。"]
+            },
+            { 
+              id: 11, numeral: "XI", title: "正義", meaning: "公平與平衡",
+              love: ["誠實對待彼此，做出公平的決策。", "面臨冷戰，關係中存在明顯的不平等。"],
+              social: ["處事公正，成為朋友間的調解人。", "遭受偏見或誤解，感到委屈。"],
+              work: ["一切照制度執行，獲得應有的回饋。", "決策失準，需承擔過去錯誤的後果。"],
+              finance: ["財務平衡，收支帳目清晰。", "財務爭議，可能面臨官司或合約問題。"]
+            },
+            { 
+              id: 12, numeral: "XII", title: "倒吊人", meaning: "犧牲與覺醒",
+              love: ["換位思考，在等待中獲得情感昇華。", "徒勞無功的犧牲，被動接受痛苦。"],
+              social: ["寧願吃虧也要成就大局的慷慨。", "感到被周圍的人利用，內心抑鬱。"],
+              work: ["暫時的沉寂是為了蓄積更大的能量。", "計畫停滯，做再多也看不到回報。"],
+              finance: ["財務緩慢發展，需保持耐心。", "資金凍結，因錯誤判斷導致財務困境。"]
+            },
+            { 
+              id: 13, numeral: "XIII", title: "死神", meaning: "終結與新生",
+              love: ["徹底告別過去，迎接全新的戀愛觀。", "死守一段有害的關係，拒絕改變。"],
+              social: ["人際圈大洗牌，重新審視朋友圈。", "對社交感到絕望，內心充滿陰影。"],
+              work: ["舊計畫終結，事業迎來重大轉機。", "被迫轉職或倒閉，內心極度不安。"],
+              finance: ["結算舊帳，重新規劃理財方向。", "財務崩潰，突如其來的嚴重虧損。"]
+            },
+            { 
+              id: 14, numeral: "XIV", title: "節制", meaning: "平衡與調和",
+              love: ["心靈交流順暢，情感溫和且長久。", "溝通失靈，情緒起伏過大影響關係。"],
+              social: ["人際關係圓融，善於整合資源。", "頻率不對，與周遭的人格格不入。"],
+              work: ["協作順利，事物正穩定成長。", "資源浪費，各部門之間缺乏默契。"],
+              finance: ["穩健理財，財富穩定累積中。", "開支混亂，無法達到收支平衡。"]
+            },
+            { 
+              id: 15, numeral: "XV", title: "惡魔", meaning: "慾望與束縛",
+              love: ["強烈吸引力，但伴隨著肉慾與制約。", "意識到關係的有害，正尋求解脫。"],
+              social: ["沈溺於玩樂社交，容易被帶壞。", "看穿他人的虛偽，遠離不健康的社交。"],
+              work: ["對權力有極大執念，可能採取極端手法。", "從繁重的工作壓力中獲得釋放。"],
+              finance: ["財富慾望強大，可能會有橫財。", "陷入財務陷阱或債務泥沼。"]
+            },
+            { 
+              id: 16, numeral: "XVI", title: "塔", meaning: "劇變與啟示",
+              love: ["感情發生劇烈衝擊，真相大白。", "僥倖逃過一劫，但關係已出現裂痕。"],
+              social: ["朋友圈發生重大爭執，關係崩解。", "緩慢的衰敗，感覺朋友間漸行漸遠。"],
+              work: ["計畫突然告吹，必須從廢墟重起。", "意識到危機存在，需立即調整防禦。"],
+              finance: ["突如其來的破產或重大損失。", "勉強維持平衡，但已是強弩之末。"]
+            },
+            { 
+              id: 17, numeral: "XVII", title: "星星", meaning: "希望與療癒",
+              love: ["充滿未來的憧憬，感情得到治癒。", "願景破裂，對愛情感到失望與疲憊。"],
+              social: ["展現真實自我，吸引志同道合者。", "感到孤傲或被外界忽視，失去光芒。"],
+              work: ["靈感豐沛，找到長遠發展的方向。", "計畫不切實際，淪為空談。"],
+              finance: ["財運平順，理財方向充滿希望。", "財務願景遙不可及，需回歸現實。"]
+            },
+            { 
+              id: 18, numeral: "XVIII", title: "月亮", meaning: "不安與潛意識",
+              love: ["情感模糊不清，存在隱瞞或幻覺。", "迷霧散去，看清了感情中的真相。"],
+              social: ["小人作祟，人際關係充滿猜忌。", "內心的焦慮減輕，不再疑神疑鬼。"],
+              work: ["資訊不明，需警惕隱藏的陷阱。", "解決了工作中的曖昧地帶。"],
+              finance: ["財務狀況模糊，不宜進行投資。", "發現帳目上的漏洞或欺詐。"]
+            },
+            { 
+              id: 19, numeral: "XIX", title: "太陽", meaning: "光明與成就",
+              love: ["戀情公開受祝福，關係充滿活力。", "過於自負，光芒刺眼讓伴侶感到壓抑。"],
+              social: ["廣受歡迎，人際關係燦爛奪目。", "為了面子而強顏歡笑，內心疲累。"],
+              work: ["事業如日中天，獲得顯著的成就感。", "成功後的倦怠，或遭遇短暫的挫敗。"],
+              finance: ["收入豐厚，財運旺盛且穩定。", "暫時性的財務吃緊，需開節約流。"]
+            },
+            { 
+              id: 20, numeral: "XX", title: "審判", meaning: "覺醒與感召",
+              love: ["破鏡重圓，或關係升級到新高度。", "拒絕面對過去的錯誤，重蹈覆轍。"],
+              social: ["透過自我反省，改善了與人的關係。", "遭受舆論批評或他人的負面指點。"],
+              work: ["獲知關鍵消息，事業獲得新生機會。", "錯失良機，無法從過去的失敗中學習。"],
+              finance: ["財務狀況結算，獲得正向果實。", "財務審計出問題，需承擔過去後果。"]
+            },
+            { 
+              id: 21, numeral: "XXI", title: "世界", meaning: "圓滿與整合",
+              love: ["靈魂伴侶，情感生活達到完美境地。", "差一點點就圓滿，存在未竟之志。"],
+              social: ["擁有廣闊的人脈，社交無往不利。", "人際圈雖然大，但感到心靈空虛。"],
+              work: ["計畫圓滿達成，贏得業界極高聲譽。", "進度即將完成但最後關頭產生拖延。"],
+              finance: ["財富達到預期目標，財務自由。", "財富累積受阻，無法突破最後瓶頸。"]
+            }
         ];
 
         const CHIIKAWA_IMAGES = {
@@ -100,6 +232,7 @@
             21: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/21.jpg"
         };
 
+        // --- 4. 主程式 App ---
         const App = () => {
             const [activeTab, setActiveTab] = useState('divination');
             const [theme, setTheme] = useState('night');
@@ -119,7 +252,7 @@
             const [zoomedImage, setZoomedImage] = useState(null);
             const [message, setMessage] = useState(null);
 
-            // 加密與授權連結邏輯
+            // 加密授權工具
             const encodeKey = (key, pass) => btoa(unescape(encodeURIComponent(key + "|" + pass)));
             const decodeKey = (encoded) => {
                 try {
@@ -129,7 +262,6 @@
                 } catch (e) { return null; }
             };
 
-            // 組件生命週期：檢測授權連結
             useEffect(() => {
                 const params = new URLSearchParams(window.location.search);
                 const authData = params.get('auth');
@@ -146,28 +278,27 @@
                 }
             }, []);
 
-            // --- 樣式設定 (新增 inputBorder 以修復不明顯問題) ---
             const themeStyles = useMemo(() => {
                 const styles = {
                     night: { 
                         bg: "bg-[#020617]", text: "text-slate-100", glow1: "bg-indigo-900", glow2: "bg-purple-900", navBg: "bg-slate-900/80", cardBg: "bg-slate-900", btnBg: "bg-white text-slate-950", 
-                        inputBg: "bg-white/5", inputBorder: "border-white/10", focusBorder: "focus:border-indigo-500", accent: "#818cf8" 
+                        inputBg: "bg-white/5", inputBorder: "border-white/20", focusBorder: "focus:border-indigo-500", accent: "#818cf8" 
                     },
                     day: { 
                         bg: "bg-[#fffbeb]", text: "text-slate-800", glow1: "bg-amber-200", glow2: "bg-orange-200", navBg: "bg-white/80", cardBg: "bg-white", btnBg: "bg-slate-900 text-white", 
                         inputBg: "bg-black/5", inputBorder: "border-slate-300", focusBorder: "focus:border-orange-500", accent: "#ea580c" 
                     },
                     'chiikawa-pink': { 
-                        bg: "bg-[#EFA5C9]", text: "text-[#5D2E46]", glow1: "bg-white/40", glow2: "bg-[#FADDE9]", navBg: "bg-white/70", cardBg: "bg-white", btnBg: "bg-[#D64E8B] text-white shadow-lg", 
-                        inputBg: "bg-white/50", inputBorder: "border-[#D64E8B]/30", focusBorder: "focus:border-[#D64E8B]", accent: "#D64E8B" 
+                        bg: "bg-[#EFA5C9]", text: "text-[#5D2E46]", glow1: "bg-white/40", glow2: "bg-[#FADDE9]", navBg: "bg-white/70", cardBg: "bg-white", btnBg: "bg-[#D64E8B] text-white", 
+                        inputBg: "bg-white/60", inputBorder: "border-[#D64E8B]/40", focusBorder: "focus:border-[#D64E8B]", accent: "#D64E8B" 
                     },
                     'chiikawa-blue': { 
-                        bg: "bg-[#91A8D0]", text: "text-[#1B2A4E]", glow1: "bg-white/40", glow2: "bg-[#D1DCEE]", navBg: "bg-white/70", cardBg: "bg-white", btnBg: "bg-[#3D5A80] text-white shadow-lg", 
-                        inputBg: "bg-white/50", inputBorder: "border-[#3D5A80]/30", focusBorder: "focus:border-[#3D5A80]", accent: "#3D5A80" 
+                        bg: "bg-[#91A8D0]", text: "text-[#1B2A4E]", glow1: "bg-white/40", glow2: "bg-[#D1DCEE]", navBg: "bg-white/70", cardBg: "bg-white", btnBg: "bg-[#3D5A80] text-white", 
+                        inputBg: "bg-white/60", inputBorder: "border-[#3D5A80]/40", focusBorder: "focus:border-[#3D5A80]", accent: "#3D5A80" 
                     },
                     'chiikawa-yellow': { 
-                        bg: "bg-[#FFF9D4]", text: "text-[#4D432A]", glow1: "bg-white/50", glow2: "bg-[#FEF5BC]", navBg: "bg-white/70", cardBg: "bg-white", btnBg: "bg-[#96831A] text-white shadow-xl", 
-                        inputBg: "bg-white/50", inputBorder: "border-[#96831A]/30", focusBorder: "focus:border-[#96831A]", accent: "#96831A" 
+                        bg: "bg-[#FFF9D4]", text: "text-[#4D432A]", glow1: "bg-white/50", glow2: "bg-[#FEF5BC]", navBg: "bg-white/70", cardBg: "bg-white", btnBg: "bg-[#96831A] text-white", 
+                        inputBg: "bg-white/60", inputBorder: "border-[#96831A]/40", focusBorder: "focus:border-[#96831A]", accent: "#96831A" 
                     }
                 };
                 return styles[theme];
@@ -175,7 +306,6 @@
 
             const isChiMode = theme.startsWith('chiikawa');
 
-            // --- 核心邏輯 ---
             const handleSecretClick = () => {
                 const next = secretClickCount + 1;
                 if (next >= 5) {
@@ -212,14 +342,14 @@
 
             const handleUnlock = async () => {
                 if (!masterApiKey || !masterPass) { 
-                    setMessage({text: "裝置未授權。請從原始電腦端生成連結傳給手機開啟一次。", type: 'error'}); 
+                    setMessage({text: "裝置未授權。請從原始電腦端生成連結傳給手機點開一次。", type: 'error'}); 
                     return; 
                 }
                 if (unlockPassInput.trim() === masterPass) {
                     setIsAuthenticated(true);
                     setIsAiLoading(true);
                     const details = selectedCards.map(c => `${c.title}(${c.isReversed?'逆位':'正位'})`).join(',');
-                    const prompt = `你是一位塔羅大師。問題：${userQuestion || '指引'}。牌組：${details}。給予300字暖心解讀，嚴禁Markdown符號。`;
+                    const prompt = `你是一位專業塔羅大師。問題：${userQuestion || '求指引'}。牌組：${details}。給予300字暖心解讀，嚴禁使用 Markdown 符號。`;
                     try {
                         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${masterApiKey}`, {
                             method: 'POST', headers: {'Content-Type': 'application/json'},
@@ -230,20 +360,10 @@
                     } catch (e) { setAiResponse("能量感應稍有延遲，請看基本解析。"); }
                     finally { setIsAiLoading(false); }
                 } else { 
-                    setMessage({text: "密碼錯誤。", type: 'error'});
+                    setMessage({text: "訪問密碼錯誤。", type: 'error'});
                 }
             };
 
-            const handleSaveMaster = () => {
-                if (masterApiKey && masterPass) {
-                    localStorage.setItem('arcanum_master_key', masterApiKey);
-                    localStorage.setItem('arcanum_master_pass', masterPass);
-                    setIsSetupVisible(false);
-                    setMessage({text: "加密設定已儲存！現在您可以生成分享連結了。", type: 'success'});
-                }
-            };
-
-            // --- 內部組件 (修復 ReferenceError) ---
             const Icon = ({ name, size = 24, className = "" }) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
                     {ICONS[name] || null}
@@ -274,20 +394,61 @@
                 </div>
             );
 
-            const MessageModal = () => message && (
-                <div className="fixed inset-0 z-[300] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in no-select">
-                    <div className="w-full max-w-xs bg-slate-900 border border-white/10 rounded-[2rem] p-8 space-y-6 text-center shadow-2xl">
-                        <Icon name="AlertCircle" className={`mx-auto ${message.type==='error'?'text-rose-400':'text-emerald-400'}`} />
-                        <p className="text-sm text-white/80 leading-relaxed font-light">{message.text}</p>
-                        <button onClick={() => setMessage(null)} className="w-full py-3 bg-white text-slate-900 rounded-full font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-all shadow-lg">確定</button>
+            const EncyclopediaCard = ({card}) => {
+                const [isOpen, setIsOpen] = useState(false);
+                return (
+                    <div className={`${themeStyles.cardBg} border ${themeStyles.inputBorder} rounded-3xl overflow-hidden transition-all shadow-md`}>
+                        <button onClick={() => setIsOpen(!isOpen)} className="w-full p-5 flex items-center justify-between text-left active:bg-white/10">
+                            <div className="flex items-center gap-4">
+                                <span className="text-xs font-serif opacity-30 w-5">{card.numeral}</span>
+                                <span className="font-bold tracking-widest text-base">{card.title}</span>
+                                <span className="text-[10px] opacity-40 italic">{card.meaning}</span>
+                            </div>
+                            <Icon name="ChevronDown" size={16} className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                        {isOpen && (
+                            <div className="p-6 bg-white/5 border-t border-white/5 space-y-6 animate-in">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {[
+                                        { label: '💕 戀愛關係', key: 'love' },
+                                        { label: '🤝 人際社交', key: 'social' },
+                                        { label: '💼 工作學業', key: 'work' },
+                                        { label: '💰 財務狀況', key: 'finance' }
+                                    ].map(area => (
+                                        <div key={area.key} className="space-y-3 p-4 rounded-2xl bg-black/10">
+                                            <h5 className="text-xs font-bold opacity-80 border-b border-white/10 pb-2">{area.label}</h5>
+                                            <div className="space-y-2">
+                                                <div className="flex gap-2">
+                                                    <span className="text-[8px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold h-fit mt-0.5">正</span>
+                                                    <p className="text-xs opacity-70 leading-relaxed">{card[area.key][0]}</p>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    <span className="text-[8px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold h-fit mt-0.5">逆</span>
+                                                    <p className="text-xs opacity-50 leading-relaxed italic">{card[area.key][1]}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
-                </div>
-            );
+                );
+            };
 
             return (
                 <div className={`min-h-screen ${themeStyles.bg} ${themeStyles.text} transition-colors duration-1000 pb-32 relative`}>
-                    <MessageModal />
-                    <div className="decoration-layer fixed inset-0 overflow-hidden opacity-20">
+                    {message && (
+                        <div className="fixed inset-0 z-[300] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in no-select">
+                            <div className="w-full max-w-xs bg-slate-900 border border-white/10 rounded-[2rem] p-8 space-y-6 text-center shadow-2xl">
+                                <Icon name="AlertCircle" className={`mx-auto ${message.type==='error'?'text-rose-400':'text-emerald-400'}`} />
+                                <p className="text-sm text-white/80 leading-relaxed">{message.text}</p>
+                                <button onClick={() => setMessage(null)} className="w-full py-3 bg-white text-slate-900 rounded-full font-bold uppercase tracking-widest text-[10px]">確定</button>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="decoration-layer fixed inset-0 opacity-20">
                         <div className={`absolute top-[-10%] left-[-10%] w-[80%] h-[40%] ${themeStyles.glow1} rounded-full blur-[120px] transition-colors duration-1000`} />
                         <div className={`absolute bottom-[-10%] right-[-10%] w-[80%] h-[40%] ${themeStyles.glow2} rounded-full blur-[120px] transition-colors duration-1000`} />
                     </div>
@@ -321,23 +482,22 @@
                                 {gameState === 'idle' && (
                                     <div className="space-y-10">
                                         <h2 className="text-4xl font-serif font-bold leading-tight">現在，你想問什麼？</h2>
-                                        {/* 輸入框優化：動態背景與邊框 */}
                                         <textarea 
                                             value={userQuestion} 
                                             onChange={e=>setUserQuestion(e.target.value)} 
                                             placeholder="在此輸入您的疑惑..." 
-                                            className={`w-full h-40 ${themeStyles.inputBg} border ${themeStyles.inputBorder} ${themeStyles.focusBorder} rounded-[2rem] p-6 focus:outline-none transition-all resize-none shadow-xl text-lg placeholder:opacity-30 transition-colors duration-1000`} 
+                                            className={`w-full h-40 ${themeStyles.inputBg} border ${themeStyles.inputBorder} ${themeStyles.focusBorder} rounded-[2rem] p-6 focus:outline-none transition-all resize-none shadow-xl text-lg placeholder:opacity-30`} 
                                         />
                                         <div className="flex gap-4">
-                                            <button onClick={()=>setSpreadType('one')} className={`flex-1 p-6 rounded-3xl border-2 transition-all ${spreadType==='one' ? (isChiMode ? themeStyles.btnBg : 'border-indigo-400 bg-white/10 shadow-lg scale-105') : (themeStyles.inputBorder + ' opacity-40')}`}><Icon name="Compass" className="mx-auto mb-2 opacity-50" /><span className="text-sm font-bold block uppercase tracking-widest">一牌直覺</span></button>
-                                            <button onClick={()=>setSpreadType('triangle')} className={`flex-1 p-6 rounded-3xl border-2 transition-all ${spreadType==='triangle' ? (isChiMode ? themeStyles.btnBg : 'border-indigo-400 bg-white/10 shadow-lg scale-105') : (themeStyles.inputBorder + ' opacity-40')}`}><Icon name="Layout" className="mx-auto mb-2 opacity-50" /><span className="text-sm font-bold block uppercase tracking-widest">聖三角</span></button>
+                                            <button onClick={()=>setSpreadType('one')} className={`flex-1 p-6 rounded-3xl border-2 transition-all ${spreadType==='one' ? (isChiMode ? themeStyles.btnBg : 'border-indigo-400 bg-white/10 shadow-lg') : (themeStyles.inputBorder + ' opacity-40')}`}><Icon name="Compass" className="mx-auto mb-2 opacity-50" /><span className="text-sm font-bold block uppercase tracking-widest">一牌直覺</span></button>
+                                            <button onClick={()=>setSpreadType('triangle')} className={`flex-1 p-6 rounded-3xl border-2 transition-all ${spreadType==='triangle' ? (isChiMode ? themeStyles.btnBg : 'border-indigo-400 bg-white/10 shadow-lg') : (themeStyles.inputBorder + ' opacity-40')}`}><Icon name="Layout" className="mx-auto mb-2 opacity-50" /><span className="text-sm font-bold block uppercase tracking-widest">聖三角</span></button>
                                         </div>
-                                        <button onClick={drawCards} className={`w-full py-6 ${themeStyles.btnBg} rounded-full font-bold tracking-[0.3em] shadow-2xl active:scale-95 transition-all text-xl uppercase transition-colors duration-1000`}>啟動靈性感應</button>
+                                        <button onClick={drawCards} className={`w-full py-6 ${themeStyles.btnBg} rounded-full font-bold tracking-[0.3em] active:scale-95 transition-all text-xl uppercase`}>啟動靈性感應</button>
                                     </div>
                                 )}
 
                                 {gameState === 'shuffling' && (
-                                    <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-8 transition-colors duration-1000"><div className="w-32 h-48 bg-white/10 rounded-xl border-2 border-white/20 animate-pulse" /><p className="text-xl font-serif italic animate-bounce tracking-widest">正在搜尋命運軌跡...</p></div>
+                                    <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-8"><div className="w-32 h-48 bg-white/10 rounded-xl border-2 border-white/20 animate-pulse" /><p className="text-xl font-serif italic animate-bounce tracking-widest">正在搜尋命運軌跡...</p></div>
                                 )}
 
                                 {gameState === 'revealed' && (
@@ -351,22 +511,20 @@
                                         <div className="space-y-6">
                                             <div className="glass-panel rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden transition-colors duration-1000 min-h-[350px] border-white/10">
                                                 <div className="flex items-center gap-3 mb-8 opacity-60 font-bold tracking-widest uppercase italic transition-colors duration-1000"><Icon name="BrainCircuit" size={20} />宇宙的深層啟示</div>
-                                                {isAiLoading ? (<div className="flex flex-col items-center justify-center py-20 gap-4 text-center transition-colors duration-1000"><Icon name="RefreshCw" className="animate-spin opacity-30" size={32} /><p className="animate-pulse text-sm opacity-40 tracking-widest font-serif">同步能量中...</p></div>) : aiResponse ? (
-                                                    <div className="leading-relaxed font-light text-justify whitespace-pre-wrap text-base animate-in transition-colors duration-1000">{aiResponse}</div>
+                                                {isAiLoading ? (<div className="flex flex-col items-center justify-center py-20 gap-4 text-center"><Icon name="RefreshCw" className="animate-spin opacity-30" size={32} /><p className="animate-pulse text-sm opacity-40 tracking-widest font-serif">同步能量中...</p></div>) : aiResponse ? (
+                                                    <div className="leading-relaxed font-light text-justify whitespace-pre-wrap text-base animate-in">{aiResponse}</div>
                                                 ) : !isAuthenticated ? (
                                                     <div className="py-10 flex flex-col items-center gap-6">
                                                         <Icon name="Lock" size={40} className="opacity-20" />
-                                                        <div className="text-center space-y-2 mb-6 text-sm opacity-50 transition-colors duration-1000"><p>啟示內容已鎖定</p><p className="text-[10px] uppercase font-bold tracking-widest">請輸入密碼以解鎖</p></div>
-                                                        {/* 手機直式堆疊優化 */}
+                                                        <div className="text-center space-y-2 mb-6 text-sm opacity-50"><p>啟示內容已鎖定</p><p className="text-[10px] uppercase font-bold tracking-widest">請輸入密碼以解鎖</p></div>
                                                         <div className="flex flex-col w-full gap-5 px-4 max-w-xs mb-16">
-                                                            <input type="text" value={unlockPassInput} onChange={e=>setUnlockPassInput(e.target.value)} placeholder="訪問密碼" className={`w-full ${themeStyles.inputBg} border ${themeStyles.inputBorder} rounded-xl p-5 text-center text-sm focus:outline-none ${themeStyles.focusBorder} shadow-inner transition-all duration-1000`} />
+                                                            <input type="text" value={unlockPassInput} onChange={e=>setUnlockPassInput(e.target.value)} placeholder="訪問密碼" className={`w-full ${themeStyles.inputBg} border ${themeStyles.inputBorder} rounded-xl p-5 text-center text-sm focus:outline-none ${themeStyles.focusBorder} shadow-inner transition-all`} />
                                                             <button onClick={handleUnlock} className={`w-full py-5 ${themeStyles.btnBg} rounded-xl font-bold text-xs shadow-xl active:bg-indigo-50 uppercase tracking-widest transition-all`}>解鎖啟示內容</button>
                                                         </div>
                                                     </div>
                                                 ) : <div className="text-center py-20 opacity-30 italic text-sm">連線中...</div>}
                                             </div>
-                                            {selectedCards.map((c, i) => (<div key={i} className={`p-7 rounded-[2.5rem] border ${themeStyles.border} bg-white/5 text-sm space-y-4 shadow-md animate-in`} style={{animationDelay: `${i*100}ms`}}><div className="flex justify-between items-center mb-5"><h4 className="font-bold flex items-center gap-2 transition-colors duration-1000"><span className="w-1.5 h-1.5 bg-current opacity-20 rounded-full" />{c.title} 基本解析</h4></div><div className="space-y-2 opacity-80 leading-relaxed text-justify transition-colors duration-1000"><p className="font-bold">{c.meaning}</p><p className="italic opacity-60 text-xs leading-relaxed transition-colors duration-1000">{c.insight}</p></div></div>))}
-                                            <div className="flex flex-col gap-5 pt-4 mb-24"><button onClick={resetGame} className={`w-full py-5 border-2 ${themeStyles.border} rounded-full text-base font-bold flex items-center justify-center gap-2 active:scale-95 transition-all uppercase tracking-widest opacity-60 transition-colors duration-1000`}><Icon name="RefreshCw" size={16} /> 重新占卜</button></div>
+                                            <div className="flex flex-col gap-5 pt-4 mb-24"><button onClick={resetGame} className={`w-full py-5 border-2 ${themeStyles.border} rounded-full text-base font-bold flex items-center justify-center gap-2 active:scale-95 transition-all uppercase tracking-widest opacity-60 transition-colors`}><Icon name="RefreshCw" size={16} /> 重新占卜</button></div>
                                         </div>
                                     </div>
                                 )}
@@ -374,37 +532,44 @@
                         )}
 
                         {activeTab === 'guide' && (
-                            <div className="animate-in space-y-8 pb-10">
-                                <h2 className="text-3xl font-serif font-bold tracking-widest transition-colors duration-1000">占卜指南</h2>
-                                <div className="glass-panel p-6 rounded-[2rem] border-white/10">
-                                    <p className="font-bold text-indigo-400 mb-2 uppercase text-sm">授權分享連結</p>
-                                    <p className="text-[11px] opacity-70 leading-relaxed italic text-justify">管理員在原始裝置完成「加密設定」後，點擊下方按鈕生成連結。親友手機點開一次連結後即可連線，之後只需輸入密碼解鎖占卜結果。</p>
-                                    <button onClick={() => {
-                                        if (!masterApiKey || !masterPass) { setMessage({text: "請先完成管理員加密設定。", type: 'error'}); return; }
-                                        const encrypted = encodeKey(masterApiKey, masterPass);
-                                        const url = `${window.location.origin}${window.location.pathname}?auth=${encrypted}`;
-                                        const el = document.createElement('textarea'); el.value = url;
-                                        document.body.appendChild(el); el.select();
-                                        document.execCommand('copy'); document.body.removeChild(el);
-                                        setMessage({text: "授權連結已複製！傳給親友點開一次即可同步。", type: 'success'});
-                                    }} className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-indigo-500/20 border border-indigo-500/30 rounded-full text-[10px] font-bold active:scale-95 transition-all shadow-xl transition-colors duration-1000"><Icon name="Share" size={12} /> 生成親友授權連結</button>
-                                </div>
+                            <div className="animate-in space-y-10 pb-10">
                                 <section className="space-y-4">
-                                    <h3 className="font-bold text-lg opacity-80 border-l-4 border-rose-500 pl-3">大阿爾克那圖鑑</h3>
-                                    <div className="space-y-2">
-                                        {TAROT_DATA.map(c => (
-                                            <div key={c.id} className="border border-white/5 rounded-2xl overflow-hidden glass-panel p-5 border-white/10">
-                                                <div className="flex items-center gap-4"><span className="font-mono text-xs opacity-40">{c.numeral}</span><span className="font-bold tracking-widest">{c.title}</span></div>
-                                            </div>
+                                    <h2 className="text-3xl font-serif font-bold tracking-widest">占卜指南</h2>
+                                    <div className={`glass-panel p-6 rounded-[2rem] ${themeStyles.inputBorder}`}>
+                                        <p className="font-bold text-indigo-400 mb-2 uppercase text-sm">授權分享連結</p>
+                                        <p className="text-[11px] opacity-70 leading-relaxed italic mb-4">管理員設定後生成連結傳給親友。手機開啟連結後即可同步您的雲端金鑰。</p>
+                                        <button onClick={() => {
+                                            if (!masterApiKey || !masterPass) { setMessage({text: "請先完成管理員加密設定。", type: 'error'}); return; }
+                                            const encrypted = encodeKey(masterApiKey, masterPass);
+                                            const url = `${window.location.origin}${window.location.pathname}?auth=${encrypted}`;
+                                            const el = document.createElement('textarea'); el.value = url;
+                                            document.body.appendChild(el); el.select();
+                                            document.execCommand('copy'); document.body.removeChild(el);
+                                            setMessage({text: "授權連結已複製！傳給親友開啟一次即可同步。", type: 'success'});
+                                        }} className={`px-5 py-2.5 ${themeStyles.btnBg} rounded-full text-[10px] font-bold active:scale-95 transition-all flex items-center gap-2 shadow-xl`}>
+                                            <Icon name="Share" size={14} /> 生成授權分享連結
+                                        </button>
+                                    </div>
+                                </section>
+
+                                <section className="space-y-6">
+                                    <div className="flex items-center gap-3">
+                                        <Icon name="BookOpen" size={20} className="opacity-50" />
+                                        <h3 className="font-bold text-lg border-l-4 border-indigo-500 pl-3">大阿爾克納圖鑑</h3>
+                                    </div>
+                                    <div className="grid grid-cols-1 gap-3">
+                                        {TAROT_DATA.map(card => (
+                                            <EncyclopediaCard key={card.id} card={card} />
                                         ))}
                                     </div>
                                 </section>
+                                
                                 <button onClick={() => setIsSetupVisible(true)} className="w-full py-4 border border-dashed border-white/20 rounded-2xl opacity-40 text-xs hover:opacity-100 transition-all font-bold uppercase tracking-widest">管理員加密設定</button>
                             </div>
                         )}
                     </div>
 
-                    <nav className={`fixed bottom-0 left-0 w-full bg-slate-900/80 backdrop-blur-2xl border-t border-white/10 px-16 py-6 flex justify-around items-center z-50 shadow-[0_-10px_30px_rgba(0,0,0,0.2)] transition-colors duration-1000 no-select`}>
+                    <nav className={`fixed bottom-0 left-0 w-full bg-slate-900/80 backdrop-blur-2xl border-t border-white/10 px-16 py-6 flex justify-around items-center z-50 shadow-[0_-10px_30px_rgba(0,0,0,0.2)] no-select`}>
                         <button onClick={()=>setActiveTab('divination')} className={`flex flex-col items-center gap-1.5 transition-all ${activeTab==='divination'?'opacity-100 scale-110' : 'opacity-30'}`} style={{color: activeTab === 'divination' ? themeStyles.accent : '#64748b'}}><Icon name="Sparkles" size={26} /><span className="text-[10px] font-bold mt-1 uppercase tracking-widest">占卜</span></button>
                         <button onClick={()=>setActiveTab('guide')} className={`flex flex-col items-center gap-1.5 transition-all ${activeTab==='guide'?'opacity-100 scale-110' : 'opacity-30'}`} style={{color: activeTab === 'guide' ? themeStyles.accent : '#64748b'}}><Icon name="BookOpen" size={26} /><span className="text-[10px] font-bold mt-1 uppercase tracking-widest">指南</span></button>
                     </nav>
@@ -412,10 +577,10 @@
                     {isSetupVisible && (
                         <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/95 backdrop-blur-md no-select">
                             <div className="w-full max-w-sm glass-panel rounded-[3.5rem] p-10 space-y-8 shadow-2xl border-white/10">
-                                <div className="text-center space-y-2"><h3 className="text-2xl font-serif font-bold transition-colors duration-1000">管理加密設定</h3><p className="text-[10px] opacity-50 italic text-indigo-300">完成後即可生成授權連結給親友</p></div>
+                                <div className="text-center space-y-2"><h3 className="text-2xl font-serif font-bold">管理加密設定</h3></div>
                                 <div className="space-y-4">
-                                    <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">Gemini API Key</label><input type="password" value={masterApiKey} onChange={e=>setMasterApiKey(e.target.value)} placeholder="API Key" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400 shadow-inner" /></div>
-                                    <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">設定解鎖密碼</label><input type="text" value={masterPass} onChange={e=>setMasterPass(e.target.value)} placeholder="解鎖密碼" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400 shadow-inner" /></div>
+                                    <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">Gemini API Key</label><input type="password" value={masterApiKey} onChange={e=>setMasterApiKey(e.target.value)} placeholder="API Key" className={`w-full ${themeStyles.inputBg} border ${themeStyles.inputBorder} rounded-2xl p-4 text-sm focus:outline-none shadow-inner`} /></div>
+                                    <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">設定解鎖密碼</label><input type="text" value={masterPass} onChange={e=>setMasterPass(e.target.value)} placeholder="解鎖密碼" className={`w-full ${themeStyles.inputBg} border ${themeStyles.inputBorder} rounded-2xl p-4 text-sm focus:outline-none shadow-inner`} /></div>
                                 </div>
                                 <button onClick={handleSaveMaster} className="w-full py-5 bg-white text-slate-900 rounded-full font-bold shadow-xl active:scale-95 transition-all uppercase text-[10px] tracking-widest">儲存本地設定</button>
                                 <button onClick={() => setIsSetupVisible(false)} className="w-full text-[10px] opacity-30 mt-4 font-bold tracking-widest uppercase text-center">取消</button>
