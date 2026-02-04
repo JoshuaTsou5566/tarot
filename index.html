@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Firebase SDK (Compat version for simplicity) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
@@ -18,11 +18,10 @@
         .font-serif { font-family: 'Noto Serif TC', serif; }
         ::-webkit-scrollbar { display: none; }
         .animate-in { animation: fadeIn 0.4s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .btn-press:active { transform: scale(0.92); transition: transform 0.1s; }
         .glass-panel { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .decoration-layer { pointer-events: none; z-index: -1; }
-        /* 確保手機輸入時不會縮放 */
         input, textarea { font-size: 16px !important; }
     </style>
 </head>
@@ -48,11 +47,11 @@
             ChevronDown: <polyline points="6 9 12 15 18 9" />,
             Lock: <><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></>,
             X: <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>,
-            Heart: <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>,
             Share: <><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></>,
-            // --- 強化辨識度的剪影 ---
-            ChiikawaSilhouette: <path d="M12 22C6 22 2 18 2 12.5C2 9 4 6 7 5 V 2 A 1 1 0 0 1 10 2 V 4 C 11 4 13 4 14 4 V 2 A 1 1 0 0 1 17 2 V 5 C 20 6 22 9 22 12.5 C 22 18 18 22 12 22 Z" fill="currentColor" />,
-            HachiwareSilhouette: <path d="M12 22c-5 0-9-4-9-9 0-3 2-6.5 5-7.5 L 4.5 1 L 8 0 L 10 3.5 C 10.5 3.5 11.5 3.3 12 3.3 S 13.5 4 14 4 L 16 0 L 19.5 1 L 19 5 C 21 6 22 9 22 12.5 22 18 18 22 12 22 Z M 10 9 L 12 11 L 14 9" fill="currentColor" />,
+            Heart: <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>,
+            // --- 精修辨識度的剪影 ---
+            ChiikawaSilhouette: <path d="M12 22C6.5 22 2 18 2 12.5C2 9 4 6 7 5 V 2 A 1 1 0 0 1 10 2 V 4 C 11 4 13 4 14 4 V 2 A 1 1 0 0 1 17 2 V 5 C 20 6 22 9 22 12.5 C 22 18 18 22 12 22 Z" fill="currentColor" />,
+            HachiwareSilhouette: <path d="M12 22c-5 0-9-4-9-9 0-3.5 2-6.5 5-7.5 L 4.5 1 L 8 0 L 10 3.5 C 10.5 3.5 11.5 3.3 12 3.3 S 13.5 4 14 4 L 16 0 L 19.5 1 L 19 5 C 21 6 22 9 22 12.5 22 18 18 22 12 22 Z M 10 9 L 12 11 L 14 9" fill="currentColor" />,
             UsagiSilhouette: <path d="M12 22c-5 0-9-4-9-9 0-4 1.5-7.5 4-8.5 V 0 a 1 1 0 0 1 2 0 v 4 c 1 -.1 2 -.2 3 -.2 s 2 .1 3 .2 v -4 a 1 1 0 0 1 2 0 v 4.5 c 2.5 1 4 4.5 4 8.5 0 5 -4 9 -9 9 Z" fill="currentColor" />
         };
 
@@ -135,43 +134,40 @@
             // Firebase 參考
             const dbRef = useRef(null);
             const authRef = useRef(null);
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'arcanum-divination';
+            const appId = 'arcanum-divination';
 
-            // 超級解析器：支援「無引號標籤」的 JS 物件格式
-            const parseLooseConfig = (input) => {
-              if (!input) return null;
-              const trimmed = input.trim();
-              try {
-                // 優先嘗試正規 JSON 解析
-                if (trimmed.startsWith('{') && trimmed.includes('"apiKey"')) {
-                    return JSON.parse(trimmed);
-                }
-                // 使用容錯解析 (支援控制台直接複製的無引號格式)
-                return new Function(`return ${trimmed}`)();
-              } catch (e) {
-                console.error("解析失敗:", e);
-                throw new Error("格式錯誤");
-              }
+            // 超級智慧解析器：自動從亂碼中提取關鍵字
+            const extractFirebaseConfig = (input) => {
+                if (!input) return null;
+                const config = {};
+                const keys = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId', 'measurementId'];
+                
+                keys.forEach(key => {
+                    const regex = new RegExp(`${key}\\s*[:=]\\s*["']([^"']+)["']`);
+                    const match = input.match(regex);
+                    if (match) config[key] = match[1];
+                });
+
+                // 基本檢查：至少要有 apiKey 和 projectId
+                return (config.apiKey && config.projectId) ? config : null;
             };
 
-            // 初始化 Firebase
+            // 初始化 Firebase 實例
             const initFirebase = (config) => {
                 try {
-                    if (firebase.apps.length > 0) {
-                        firebase.app().delete();
-                    }
+                    if (firebase.apps.length > 0) firebase.app().delete();
                     firebase.initializeApp(config);
                     dbRef.current = firebase.firestore();
                     authRef.current = firebase.auth();
                     authRef.current.signInAnonymously().catch(() => {});
                     return true;
                 } catch (e) {
-                    console.error("Firebase 初始化失敗:", e);
+                    console.error("Firebase 連線失敗:", e);
                     return false;
                 }
             };
 
-            // 處理 URL 分享連結參數
+            // 處理分享連結與自動載入
             useEffect(() => {
                 const urlParams = new URLSearchParams(window.location.search);
                 const encodedConfig = urlParams.get('c');
@@ -183,23 +179,17 @@
                   } catch(e) {}
                 }
 
-                const rawConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : localStorage.getItem('arcanum_fb_config');
+                const rawConfig = localStorage.getItem('arcanum_fb_config');
                 if (rawConfig) {
-                    try { 
-                        const config = parseLooseConfig(rawConfig);
-                        if (config) initFirebase(config); 
-                    } catch (e) {}
+                    const config = extractFirebaseConfig(rawConfig);
+                    if (config) initFirebase(config);
                 }
             }, []);
 
             const handleSecretClick = () => {
                 const nextCount = secretClickCount + 1;
-                if (nextCount >= 5) {
-                    setTheme('chiikawa-pink');
-                    setSecretClickCount(0);
-                } else {
-                    setSecretClickCount(nextCount);
-                }
+                if (nextCount >= 5) { setTheme('chiikawa-pink'); setSecretClickCount(0); }
+                else { setSecretClickCount(nextCount); }
             };
 
             const toggleTheme = () => {
@@ -229,7 +219,8 @@
                     'chiikawa-pink': {
                         bg: "bg-[#EFA5C9]", text: "text-[#5D2E46]", secondaryText: "text-[#8E4A6E]",
                         glow1: "bg-white/40", glow2: "bg-[#FADDE9]", navBg: "bg-white/70", cardBg: "bg-white",
-                        btnBg: "bg-[#D64E8B] text-white shadow-lg", activeBtn: "bg-[#D64E8B] border-[#D64E8B] text-white", 
+                        btnBg: "bg-[#D64E8B] text-white shadow-lg border-2 border-white/30",
+                        activeBtn: "bg-[#D64E8B] border-[#D64E8B] text-white", 
                         panelBg: "bg-[#FFF0F6]/95", border: "border-[#F4C1D9]", inputBg: "bg-white/70", accent: "#D64E8B"
                     },
                     'chiikawa-blue': {
@@ -252,7 +243,7 @@
             const fetchAiInterpretation = async (question, cards, type, key) => {
                 setIsAiLoading(true); setAiResponse('');
                 const cardDetails = cards.map((c, i) => `${type === 'triangle' ? ['過去','現在','未來'][i] : '核心建議'}: ${c.title}(${c.isReversed ? '逆位' : '正位'}) - ${c.meaning}`).join('\n');
-                const prompt = `你是一位專業、睿智且溫暖的塔羅大師。問題：${question || '當前指引'}。牌陣：\n${cardDetails}\n\n請給予 300 字深度解讀與建議。嚴禁使用 Markdown。`;
+                const prompt = `你是一位睿智溫暖的塔羅大師。問題：${question || '當前指引'}。牌陣：\n${cardDetails}\n\n請提供約 300 字深度解讀。語氣親切，不使用 Markdown。`;
 
                 try {
                     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`;
@@ -276,7 +267,7 @@
             };
 
             const handleUnlockInterpretation = async () => {
-                if (!dbRef.current) { alert('裝置未連線雲端。請管理員重新生成授權連結並點開。'); return; }
+                if (!dbRef.current) { alert('裝置未連線雲端。請管理員在原始裝置生成授權連結傳給此裝置開啟。'); return; }
                 try {
                   const configDoc = await dbRef.current.collection('artifacts').doc(appId).collection('public').doc('data').collection('config').doc('settings').get();
                   if (!configDoc.exists) { alert('雲端設定遺失。'); return; }
@@ -284,7 +275,7 @@
                   if (unlockPassInput.trim() === cloudPass) {
                       setIsAuthenticated(true); fetchAiInterpretation(userQuestion, selectedCards, spreadType, cloudKey);
                   } else { alert('訪問密碼不正確。'); }
-                } catch (err) { alert('雲端連線失敗，請檢查網路。'); }
+                } catch (err) { alert('連線失敗。'); }
             };
 
             const resetGame = () => {
@@ -294,36 +285,41 @@
 
             const generateShareLink = () => {
               const rawConfig = localStorage.getItem('arcanum_fb_config');
-              if (!rawConfig) { alert('請先設定 Firebase Config。'); return; }
+              if (!rawConfig) { alert('請先設定 Firebase 並完成同步。'); return; }
               const encoded = btoa(rawConfig);
               const shareUrl = `${window.location.origin}${window.location.pathname}?c=${encoded}`;
               const textArea = document.createElement("textarea"); textArea.value = shareUrl;
               document.body.appendChild(textArea); textArea.select();
               document.execCommand('copy'); document.body.removeChild(textArea);
-              alert('授權連結已複製！傳給手機開啟一次即可自動連線資料庫。');
+              alert('分享連結已複製！傳給手機開啟一次即可完成連線同步。');
             };
 
             const handleSetup = async () => {
                 const key = masterKeyInput.trim(); const pass = masterPasscodeInput.trim(); const fbInput = masterFbConfigInput.trim();
+                
+                // 處理 Firebase 設定
                 if (fbInput) {
-                    try {
-                        const config = parseLooseConfig(fbInput);
+                    const config = extractFirebaseConfig(fbInput);
+                    if (config) {
                         if (initFirebase(config)) {
                             localStorage.setItem('arcanum_fb_config', fbInput);
-                            alert('Firebase 雲端連線已建立！');
-                        }
-                        else throw new Error();
-                    } catch (e) { alert('格式不正確，請貼入完整物件。'); return; }
+                            alert('Firebase 雲端連線成功！正在儲存設定...');
+                        } else { alert('連線失敗，請檢查配置正確性。'); return; }
+                    } else { alert('無法識別 Firebase 代碼，請整疊貼入控制台代碼。'); return; }
                 }
-                if (!dbRef.current) { alert('請先貼入 Firebase Config 以建立雲端連線。'); return; }
+
+                if (!dbRef.current) { alert('請先貼入 Firebase 配置代碼建立連線。'); return; }
+
                 if (key && pass) {
                     try {
                       await dbRef.current.collection('artifacts').doc(appId).collection('public').doc('data').collection('config').doc('settings').set({
                         apiKey: key, password: pass, updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                       });
-                      setIsKeySetupVisible(false); alert('雲端同步設定成功！');
-                    } catch (e) { alert('雲端儲存失敗: ' + e.message); }
-                } else { alert('請填寫 Gemini API 金鑰與解鎖密碼'); }
+                      localStorage.setItem('arcanum_gemini_key', key);
+                      localStorage.setItem('arcanum_access_pass', pass);
+                      setIsKeySetupVisible(false); alert('雲端儲存成功！');
+                    } catch (e) { alert('儲存失敗: ' + e.message); }
+                } else { alert('請填寫 API Key 與密碼'); }
             };
 
             const GuidePage = () => {
@@ -333,8 +329,8 @@
                         <h2 className="text-3xl font-serif font-bold tracking-widest transition-colors duration-1000">占卜指南</h2>
                         <div className="space-y-4">
                             <div className="glass-panel p-6 rounded-[2rem]">
-                                <p className="font-bold text-indigo-400 mb-2 font-serif tracking-widest uppercase">Cloud Sync</p>
-                                <p className="text-xs opacity-70 leading-relaxed italic">設定後生成「親友連結」傳給手機。手機開啟後即可永久連線資料庫。</p>
+                                <p className="font-bold text-indigo-400 mb-2 uppercase tracking-widest font-serif">Cloud Share</p>
+                                <p className="text-xs opacity-70 leading-relaxed">設定完成後，點擊下方生成連結傳給親友。親友點開後手機會自動連上您的雲端，無須重設。</p>
                                 <button onClick={generateShareLink} className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-indigo-500/20 border border-indigo-500/30 rounded-full text-[10px] font-bold active:scale-95 transition-all"><Icon name="Share" size={12} /> 生成親友授權連結</button>
                             </div>
                         </div>
@@ -383,12 +379,15 @@
                             <div className="w-full max-w-sm glass-panel rounded-[3.5rem] p-10 space-y-6 shadow-2xl overflow-y-auto max-h-[90vh]">
                                 <div className="text-center space-y-2"><h3 className="text-2xl font-serif font-bold">雲端系統初始化</h3><p className="text-[10px] opacity-50 italic text-indigo-300">連線後任何裝置輸入密碼即可解鎖</p></div>
                                 <div className="space-y-4 text-left">
-                                    <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">Gemini API Key</label><input type="password" value={masterKeyInput} onChange={e=>setMasterKeyInput(e.target.value)} placeholder="API Key" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" /></div>
-                                    <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">訪問密碼</label><input type="text" value={masterPasscodeInput} onChange={e=>setMasterPasscodeInput(e.target.value)} placeholder="解鎖用密碼" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" /></div>
-                                    <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">Firebase Config</label><textarea value={masterFbConfigInput} onChange={e=>setMasterFbConfigInput(e.target.value)} placeholder='{ apiKey: "...", ... }' className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-[10px] h-32 focus:outline-none focus:border-indigo-400 font-mono" /></div>
+                                    <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">Gemini API Key</label><input type="password" value={masterKeyInput} onChange={e=>setMasterKeyInput(e.target.value)} placeholder="貼入 API Key" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" /></div>
+                                    <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">解鎖密碼</label><input type="text" value={masterPasscodeInput} onChange={e=>setMasterPasscodeInput(e.target.value)} placeholder="給親友的解鎖密碼" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400" /></div>
+                                    <div className="space-y-1">
+                                        <label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">Firebase 配置代碼</label>
+                                        <textarea value={masterFbConfigInput} onChange={e=>setMasterFbConfigInput(e.target.value)} placeholder='整疊貼入 Firebase 控制台代碼' className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-[10px] h-32 focus:outline-none focus:border-indigo-400 font-mono" />
+                                    </div>
                                 </div>
-                                <button onClick={handleSetup} className="w-full py-5 bg-white text-slate-900 rounded-full font-bold text-sm btn-press shadow-xl uppercase tracking-widest">建立雲端同步</button>
-                                <button onClick={() => setIsKeySetupVisible(false)} className="w-full text-[10px] opacity-30 uppercase font-bold tracking-widest mt-4">取消</button>
+                                <button onClick={handleSetup} className="w-full py-5 bg-white text-slate-900 rounded-full font-bold text-sm shadow-xl active:scale-95 transition-all">同步並儲存</button>
+                                <button onClick={() => setIsKeySetupVisible(false)} className="w-full text-[10px] opacity-30 mt-4 font-bold tracking-widest uppercase">關閉視窗</button>
                             </div>
                         </div>
                     )}
@@ -402,8 +401,8 @@
                                 </h1>
                             </div>
                             <div className="flex gap-2">
-                                {isChiikawa && <button onClick={returnToClassic} className="w-10 h-10 rounded-full flex items-center justify-center border bg-white/10 shadow-sm btn-press transition-all"><Icon name="LogOut" size={16} /></button>}
-                                <button onClick={toggleTheme} className="w-12 h-12 rounded-full flex items-center justify-center border bg-white/10 shadow-sm btn-press transition-all">
+                                {isChiikawa && <button onClick={returnToClassic} className="w-10 h-10 rounded-full flex items-center justify-center border bg-white/10 shadow-sm btn-press"><Icon name="LogOut" size={16} /></button>}
+                                <button onClick={toggleTheme} className="w-12 h-12 rounded-full flex items-center justify-center border bg-white/10 shadow-sm btn-press">
                                     {theme === 'chiikawa-pink' ? <Icon name="ChiikawaSilhouette" size={28} /> :
                                      theme === 'chiikawa-blue' ? <Icon name="HachiwareSilhouette" size={28} /> :
                                      theme === 'chiikawa-yellow' ? <Icon name="UsagiSilhouette" size={28} /> :
@@ -426,6 +425,10 @@
                                     </div>
                                 )}
 
+                                {gameState === 'shuffling' && (
+                                    <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-8"><div className="relative w-32 h-48 animate-pulse">{[0,1,2].map(i => <div key={i} className={`absolute inset-0 ${themeStyles.cardBg} rounded-xl border-2 ${themeStyles.border}`} style={{ transform: `rotate(${i*12-12}deg)` }} />)}</div><p className="text-xl font-serif italic animate-bounce tracking-[0.2em]">正在搜尋命運軌跡...</p></div>
+                                )}
+
                                 {gameState === 'revealed' && (
                                     <div className="space-y-10 animate-in">
                                         <div className="flex flex-wrap justify-center gap-6">
@@ -438,16 +441,18 @@
                                                             <div className={`w-full py-2 px-3 text-center z-10 ${isChiikawa ? 'bg-black/60 backdrop-blur-md' : ''}`}>{isChiikawa && <div className="text-[11px] font-bold tracking-widest text-white">{c.title}</div>}<div className={`text-[8px] uppercase font-mono tracking-tighter ${isChiikawa ? 'text-white/50' : 'opacity-20'}`}>{c.essence}</div></div>
                                                         </div>
                                                     </div>
+                                                    <span className="text-[10px] uppercase opacity-60 font-bold tracking-widest">{c.isReversed ? '逆位' : '正位'}</span>
                                                 </div>
                                             ))}
                                         </div>
                                         <div className="space-y-6">
                                             <div className="glass-panel rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden transition-colors duration-1000 min-h-[300px]">
-                                                <div className="flex items-center gap-3 mb-6 opacity-60 font-bold tracking-widest transition-colors duration-1000"><Icon name="BrainCircuit" size={20} />宇宙的深層啟示</div>
+                                                <div className="flex items-center gap-3 mb-6 opacity-60 transition-colors duration-1000 font-bold tracking-widest italic uppercase"><Icon name="BrainCircuit" size={20} />宇宙的深層啟示</div>
                                                 {isAiLoading ? (<div className="flex flex-col items-center justify-center py-20 gap-4"><Icon name="RefreshCw" className="animate-spin opacity-30" size={32} /><p className="animate-pulse text-sm opacity-40 tracking-widest font-serif">正在感應...</p></div>) : aiResponse ? (<div className="leading-relaxed font-light text-justify whitespace-pre-wrap text-base animate-in">{aiResponse}</div>) : !isAuthenticated ? (
                                                     <div className="py-10 flex flex-col items-center gap-6 animate-in">
-                                                        <Icon name="Lock" size={40} className="opacity-20" /><div className="text-center space-y-2 mb-6"><p className="text-sm opacity-50 font-light tracking-wide">啟示已鎖定</p><p className="text-[10px] opacity-30 uppercase tracking-[0.2em]">請輸入訪問密碼解鎖</p></div>
-                                                        <div className="flex flex-col w-full gap-5 px-4 max-w-xs mb-10 pb-12">
+                                                        <Icon name="Lock" size={40} className="opacity-20" /><div className="text-center space-y-2 mb-6"><p className="text-sm opacity-50 font-light tracking-wide">啟示已加密鎖定</p><p className="text-[10px] opacity-30 uppercase tracking-[0.2em]">請輸入密碼以解鎖</p></div>
+                                                        {/* 手機版排版優化：垂直排列 */}
+                                                        <div className="flex flex-col w-full gap-5 px-4 max-w-xs mb-12">
                                                             <input type="text" value={unlockPassInput} onChange={e=>setUnlockPassInput(e.target.value)} placeholder="輸入訪問密碼" className="w-full bg-white/5 border border-white/10 rounded-xl p-5 text-center text-sm focus:outline-none focus:border-indigo-400 shadow-inner" />
                                                             <button onClick={handleUnlockInterpretation} className="w-full py-5 bg-white text-slate-900 rounded-xl font-bold text-xs btn-press shadow-xl uppercase">解鎖啟示內容</button>
                                                         </div>
