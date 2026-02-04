@@ -27,7 +27,7 @@
     <script type="text/babel">
         const { useState, useEffect, useRef, useMemo } = React;
 
-        // --- 1. SVG 圖示路徑定義 ---
+        // --- 1. SVG 圖示定義 ---
         const ICONS = {
             Sparkles: <><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></>,
             RefreshCw: <><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></>,
@@ -41,28 +41,22 @@
             Layout: <><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></>,
             BrainCircuit: <><path d="M12 4.5V2"/><path d="M18 11h2.5"/><path d="M12 19.5V22"/><path d="M5.5 11H3"/><path d="M12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/><path d="M16 12.5V11a4 4 0 0 0-8 0v1.5"/><path d="M16 8a4 4 0 0 0-8 0"/></>,
             LogOut: <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></>,
-            ChiikawaSilhouette: <path d="M12 22C6.5 22 2 18 2 12.5C2 9 4 6 7 5 V 2 A 1.5 1.5 0 0 1 11 2v2c.3-.1.6-.1.9-.1s.7 0 1 .1V2a1.5 1.5 0 0 1 3 0v2.5c3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" fill="currentColor" />,
-            HachiwareSilhouette: <path d="M12 22c-5 0-9-4-9-9 0-3.5 2-6.5 5-7.5 L 4.5 1 L 8 0 L 10 3.5 C 10.5 3.5 11.5 3.3 12 3.3 S 13.5 3.5 14 3.5 L 16 0 L 19.5 1 L 19 5 C 21 6 22 9 22 12.5 22 18 18 22 12 22 Z M 10 9 L 12 11 L 14 9" fill="currentColor" />,
-            UsagiSilhouette: <path d="M12 22c-5 0-9-4-9-9 0-4 1.5-7.5 4-8.5 V 0 a 1 1 0 0 1 2 0 v 4 c 1 -.1 2 -.2 3 -.2 s 2 .1 3 .2 v -4 a 1 1 0 0 1 2 0 v 4.5 c 2.5 1 4 4.5 4 8.5 0 5 -4 9 -9 9 Z" fill="currentColor" />
+            Heart: <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>,
+            Copy: <><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></>,
+            ChevronDown: <polyline points="6 9 12 15 18 9" />,
+            AlertCircle: <><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>,
+            ChiikawaSilhouette: <path d="M12 22C6.5 22 2 17.5 2 12C2 8.5 4.5 5.5 8 4.5V2A1.5 1.5 0 0 1 11 2v2c.3-.1.6-.1.9-.1s.7 0 1 .1V2a1.5 1.5 0 0 1 3 0v2.5c3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" fill="currentColor" />,
+            HachiwareSilhouette: <path d="M12 22c-5.5 0-10-4.5-10-10 0-3.5 2.5-6.5 6-7.5 L 4.5 1 L 8 0 L 10 3.5 C 10.5 3.5 11.5 3.3 12 3.3 S 13.5 3.5 14 3.5 L 16 0 L 19.5 1 L 19 5 C 21 6 22 9 22 12.5 22 18 18 22 12 22 Z M 10 9 L 12 11 L 14 9" fill="currentColor" />,
+            UsagiSilhouette: <path d="M12 22c-5.5 0-10-4.5-10-10 0-4 1.5-7.5 4-8.5 V 0 a 1 1 0 0 1 2 0 v 4 c 1 -.1 2 -.2 3 -.2 s 2 .1 3 .2 v -4 a 1 1 0 0 1 2 0 v 4.5 c 2.5 1 4 4.5 4 8.5 0 5 -4 9 -9 9 Z" fill="currentColor" />
         };
 
-        // --- 2. 核心 Icon 組件 ---
         const Icon = ({ name, size = 24, className = "" }) => (
             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
                 {ICONS[name] || null}
             </svg>
         );
 
-        // --- 3. 加密工具 ---
-        const encodeKey = (key, pass) => btoa(unescape(encodeURIComponent(key + "|" + pass)));
-        const decodeKey = (encoded) => {
-            try {
-                const decoded = decodeURIComponent(escape(atob(encoded)));
-                const [key, pass] = decoded.split('|');
-                return { key, pass };
-            } catch (e) { return null; }
-        };
-
+        // --- 2. 資料定義 ---
         const TAROT_DATA = [
             { id: 0, numeral: "0", title: "愚者", meaning: "開端與冒險", insight: "全新的開始，勇敢踏出冒險的第一步。信任宇宙，前方有無限可能。" },
             { id: 1, numeral: "I", title: "魔術師", meaning: "創造與能力", insight: "你已具備成功工具，現在正是實踐想法的時刻。展現你的才華吧。" },
@@ -113,34 +107,17 @@
             21: "https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/21.jpg"
         };
 
-        // --- 4. 渲染組件 ---
-        const TarotView = ({card, idx, isChiMode, theme, onZoom}) => (
-            <div key={idx} className="flex flex-col items-center gap-4 animate-in" style={{animationDelay: `${idx*150}ms`}}>
-                <div className={`relative w-44 h-72 rounded-xl p-0.5 bg-gradient-to-br from-white/80 to-white/20 shadow-2xl ${card.isReversed ? 'rotate-180' : ''}`}>
-                    <div className={`w-full h-full ${theme.cardBg} rounded-lg flex flex-col items-center justify-between relative overflow-hidden transition-colors duration-1000`}>
-                        <div className="absolute top-2 left-3 text-[10px] opacity-30 font-serif z-10">{card.numeral}</div>
-                        <div className="flex-1 w-full relative group">
-                            {isChiMode ? (
-                                <div className="w-full h-full flex items-center justify-center p-2 cursor-zoom-in" onClick={() => onZoom(CHIIKAWA_IMAGES[card.id])}>
-                                    <img src={CHIIKAWA_IMAGES[card.id]} className="w-full h-full object-contain opacity-90 transition-all hover:scale-105" alt={card.title} />
-                                </div>
-                            ) : (
-                                <div className="w-full h-full flex flex-col items-center justify-center space-y-3 pt-6 transition-colors duration-1000">
-                                    <Icon name={card.id === 19 ? "Sun" : (card.id === 18 ? "Moon" : "Star")} size={48} className="opacity-30" />
-                                    <div className="text-center font-bold tracking-widest">{card.title}</div>
-                                </div>
-                            )}
-                        </div>
-                        <div className={`w-full py-2 px-3 text-center z-10 ${isChiMode ? 'bg-black/60 backdrop-blur-md' : ''}`}>
-                            {isChiMode && <div className="text-[11px] font-bold tracking-widest text-white">{card.title}</div>}
-                            <div className={`text-[8px] uppercase font-mono tracking-tighter ${isChiMode ? 'text-white/50' : 'opacity-20'}`}>TAROT ORACLE</div>
-                        </div>
-                    </div>
-                </div>
-                <span className="text-[10px] uppercase opacity-60 font-bold tracking-widest">{card.isReversed ? '逆位' : '正位'}</span>
-            </div>
-        );
+        // --- 3. 加密工具 ---
+        const encodeKey = (key, pass) => btoa(unescape(encodeURIComponent(key + "|" + pass)));
+        const decodeKey = (encoded) => {
+            try {
+                const decoded = decodeURIComponent(escape(atob(encoded)));
+                const [key, pass] = decoded.split('|');
+                return { key, pass };
+            } catch (e) { return null; }
+        };
 
+        // --- 4. 主程式 App ---
         const App = () => {
             const [activeTab, setActiveTab] = useState('divination');
             const [theme, setTheme] = useState('night');
@@ -159,7 +136,7 @@
             const [isAuthenticated, setIsAuthenticated] = useState(false);
             const [zoomedImage, setZoomedImage] = useState(null);
 
-            // 授權參數處理
+            // 授權連結檢測
             useEffect(() => {
                 const params = new URLSearchParams(window.location.search);
                 const authData = params.get('auth');
@@ -171,10 +148,21 @@
                         setMasterApiKey(result.key);
                         setMasterPass(result.pass);
                         window.history.replaceState({}, document.title, window.location.pathname);
-                        alert("授權成功！請輸入密碼開始。");
+                        alert("授權成功！現在您可以輸入密碼開始。");
                     }
                 }
             }, []);
+
+            // 函數定義
+            const handleSecretClick = () => {
+                const next = secretClickCount + 1;
+                if (next >= 5) {
+                    setTheme('chiikawa-pink');
+                    setSecretClickCount(0);
+                } else {
+                    setSecretClickCount(next);
+                }
+            };
 
             const toggleTheme = () => {
                 if (theme === 'chiikawa-pink') setTheme('chiikawa-blue');
@@ -188,69 +176,56 @@
                 const styles = {
                     night: { bg: "bg-[#020617]", text: "text-slate-100", glow1: "bg-indigo-900", glow2: "bg-purple-900", navBg: "bg-slate-900/80", cardBg: "bg-slate-900", btnBg: "bg-white text-slate-950", border: "border-white/10", accent: "#818cf8" },
                     day: { bg: "bg-[#fffbeb]", text: "text-slate-800", glow1: "bg-amber-200", glow2: "bg-orange-200", navBg: "bg-white/80", cardBg: "bg-white", btnBg: "bg-slate-900 text-white", border: "border-amber-900/10", accent: "#ea580c" },
-                    'chiikawa-pink': { bg: "bg-[#EFA5C9]", text: "text-[#5D2E46]", glow1: "bg-white/40", glow2: "bg-[#FADDE9]", navBg: "bg-white/70", cardBg: "bg-white", btnBg: "bg-[#D64E8B] text-white", border: "border-[#F4C1D9]", accent: "#D64E8B" },
-                    'chiikawa-blue': { bg: "bg-[#91A8D0]", text: "text-[#1B2A4E]", glow1: "bg-white/40", glow2: "bg-[#D1DCEE]", navBg: "bg-white/70", cardBg: "bg-white", btnBg: "bg-[#3D5A80] text-white", border: "border-[#B8C9E5]", accent: "#3D5A80" },
-                    'chiikawa-yellow': { bg: "bg-[#FFF9D4]", text: "text-[#4D432A]", glow1: "bg-white/50", glow2: "bg-[#FEF5BC]", navBg: "bg-white/70", cardBg: "bg-white", btnBg: "bg-[#96831A] text-white", border: "border-[#E8DE95]", accent: "#96831A" }
+                    'chiikawa-pink': { bg: "bg-[#EFA5C9]", text: "text-[#5D2E46]", glow1: "bg-white/40", glow2: "bg-[#FADDE9]", navBg: "bg-white/70", cardBg: "bg-white", btnBg: "bg-[#D64E8B] text-white shadow-lg", border: "border-[#F4C1D9]", accent: "#D64E8B" },
+                    'chiikawa-blue': { bg: "bg-[#91A8D0]", text: "text-[#1B2A4E]", glow1: "bg-white/40", glow2: "bg-[#D1DCEE]", navBg: "bg-white/70", cardBg: "bg-white", btnBg: "bg-[#3D5A80] text-white shadow-lg", border: "border-[#B8C9E5]", accent: "#3D5A80" },
+                    'chiikawa-yellow': { bg: "bg-[#FFF9D4]", text: "text-[#4D432A]", glow1: "bg-white/50", glow2: "bg-[#FEF5BC]", navBg: "bg-white/70", cardBg: "bg-white", btnBg: "bg-[#96831A] text-white shadow-xl border-2 border-white/50", border: "border-[#E8DE95]", accent: "#96831A" }
                 };
                 return styles[theme];
             }, [theme]);
 
-            const fetchInterpretation = async (cards) => {
-                if (!masterApiKey) return;
-                setIsAiLoading(true);
-                const details = cards.map(c => `${c.title}(${c.isReversed?'逆位':'正位'})`).join(',');
-                const prompt = `你是一位專業塔羅大師。問題：${userQuestion || '今日指引'}。牌組：${details}。提供300字暖心建議，不使用Markdown。`;
-                try {
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${masterApiKey}`, {
-                        method: 'POST', headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                    });
-                    const data = await res.json();
-                    setAiResponse(data.candidates?.[0]?.content?.parts?.[0]?.text.replace(/[*#]/g, '').trim() || "啟示已在星圖中形成。");
-                } catch (e) { setAiResponse("能量傳輸稍有延遲，請看基本解析。"); }
-                finally { setIsAiLoading(false); }
-            };
-
             const drawCards = () => {
-                setIsAuthenticated(false);
-                setAiResponse('');
-                setUnlockPassInput('');
-                setGameState('shuffling');
+                setIsAuthenticated(false); setAiResponse(''); setUnlockPassInput(''); setGameState('shuffling');
                 setTimeout(() => {
                     const count = spreadType === 'one' ? 1 : 3;
                     const drawn = [...TAROT_DATA].sort(() => Math.random() - 0.5).slice(0, count).map(c => ({
                         ...c, isReversed: Math.random() > 0.35
                     }));
-                    setSelectedCards(drawn);
-                    setGameState('revealed');
+                    setSelectedCards(drawn); setGameState('revealed');
                 }, 1500);
             };
 
             const resetGame = () => {
-                setGameState('idle');
-                setSelectedCards([]);
-                setAiResponse('');
-                setUserQuestion('');
-                setIsAuthenticated(false);
-                setUnlockPassInput('');
+                setGameState('idle'); setSelectedCards([]); setAiResponse(''); setUserQuestion('');
+                setIsAuthenticated(false); setUnlockPassInput('');
             };
 
-            const handleUnlock = () => {
-                if (!masterPass) { alert("此裝置尚未授權，請在原始設定裝置生成「親友授權連結」並在手機點開一次。"); return; }
+            const handleUnlock = async () => {
+                if (!masterApiKey || !masterPass) { alert("此裝置尚未授權。"); return; }
                 if (unlockPassInput.trim() === masterPass) {
                     setIsAuthenticated(true);
-                    fetchInterpretation(selectedCards);
+                    setIsAiLoading(true);
+                    const details = selectedCards.map(c => `${c.title}(${c.isReversed?'逆位':'正位'})`).join(',');
+                    const prompt = `你是一位睿智的塔羅大師。問題：${userQuestion || '求引'}。牌組：${details}。請給予300字暖心解讀，嚴禁Markdown。`;
+                    try {
+                        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${masterApiKey}`, {
+                            method: 'POST', headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                        });
+                        const data = await res.json();
+                        setAiResponse(data.candidates?.[0]?.content?.parts?.[0]?.text.replace(/[*#]/g, '').trim() || "感應中...");
+                    } catch (e) { setAiResponse("能量傳輸稍有延遲，請看基本解析。"); }
+                    finally { setIsAiLoading(false); }
                 } else { alert("解鎖密碼錯誤。"); }
             };
 
             const generateLink = () => {
-                if (!masterApiKey || !masterPass) { alert("請先填寫 API 金鑰與密碼。"); return; }
+                if (!masterApiKey || !masterPass) { alert("請先填寫 API 金鑰與密碼並儲存。"); return; }
                 const encrypted = encodeKey(masterApiKey, masterPass);
                 const url = `${window.location.origin}${window.location.pathname}?auth=${encrypted}`;
-                const el = document.createElement('textarea');
-                el.value = url; document.body.appendChild(el); el.select();
+                const el = document.createElement('textarea'); el.value = url;
+                document.body.appendChild(el); el.select();
                 document.execCommand('copy'); document.body.removeChild(el);
-                alert("專屬授權連結已複製！傳給手機開啟一次即可。");
+                alert("授權連結已複製！傳給手機點開即可。");
             };
 
             const handleSaveMaster = () => {
@@ -258,44 +233,62 @@
                     localStorage.setItem('arcanum_master_key', masterApiKey);
                     localStorage.setItem('arcanum_master_pass', masterPass);
                     setIsSetupVisible(false);
-                    alert("設定成功！");
+                    alert("管理設定儲存成功！");
                 }
             };
+
+            // --- 內部組件 ---
+            const TarotCard = ({card, idx}) => (
+                <div key={idx} className="flex flex-col items-center gap-4 animate-in" style={{animationDelay: `${idx*150}ms`}}>
+                    <div className={`relative w-44 h-72 rounded-xl p-0.5 bg-gradient-to-br from-white/80 to-white/20 shadow-2xl ${card.isReversed ? 'rotate-180' : ''}`}>
+                        <div className={`w-full h-full ${themeStyles.cardBg} rounded-lg flex flex-col items-center justify-between relative overflow-hidden transition-colors duration-1000`}>
+                            <div className="absolute top-2 left-3 text-[10px] opacity-30 font-serif z-10">{card.numeral}</div>
+                            <div className="flex-1 w-full relative group">
+                                {isChiMode ? (
+                                    <div className="w-full h-full flex items-center justify-center p-2 cursor-zoom-in" onClick={() => setZoomedImage(CHIIKAWA_IMAGES[card.id])}>
+                                        <img src={CHIIKAWA_IMAGES[card.id]} className="w-full h-full object-contain opacity-90 transition-all hover:scale-105" alt={card.title} />
+                                    </div>
+                                ) : (
+                                    <div className="w-full h-full flex flex-col items-center justify-center space-y-3 pt-6 transition-colors duration-1000"><Icon name={card.id === 19 ? "Sun" : (card.id === 18 ? "Moon" : "Star")} size={48} className="opacity-30" /><div className="text-center font-bold tracking-widest">{card.title}</div></div>
+                                )}
+                            </div>
+                            <div className={`w-full py-2 px-3 text-center z-10 ${isChiMode ? 'bg-black/60 backdrop-blur-md' : ''}`}>
+                                {isChiMode && <div className="text-[11px] font-bold tracking-widest text-white">{card.title}</div>}
+                                <div className={`text-[8px] uppercase font-mono tracking-tighter ${isChiMode ? 'text-white/50' : 'opacity-20'}`}>TAROT ORACLE</div>
+                            </div>
+                        </div>
+                    </div>
+                    <span className="text-[10px] uppercase opacity-60 font-bold tracking-widest">{card.isReversed ? '逆位' : '正位'}</span>
+                </div>
+            );
 
             const GuidePage = () => {
                 const [expandedId, setExpandedId] = useState(null);
                 return (
                     <div className="animate-in space-y-8 pb-10">
-                        <h2 className="text-3xl font-serif font-bold tracking-widest transition-colors duration-1000">占卜指南</h2>
-                        <div className="space-y-4">
-                            <div className="glass-panel p-6 rounded-[2rem]">
-                                <p className="font-bold text-indigo-400 mb-2 uppercase tracking-widest font-serif text-sm">Cloud Share</p>
-                                <p className="text-[11px] opacity-70 leading-relaxed text-justify italic">如果您想讓其他手機也能看占卜結果，請先完成「管理員加密設定」，然後點擊下方按鈕生成分享連結傳給親友點開一次。</p>
-                                <button onClick={generateLink} className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-indigo-500/20 border border-indigo-500/30 rounded-full text-[10px] font-bold active:scale-95 transition-all"><Icon name="Share" size={12} /> 生成親友授權連結</button>
+                        <h2 className="text-3xl font-serif font-bold tracking-widest">占卜指南</h2>
+                        <div className="glass-panel p-6 rounded-[2rem]">
+                            <p className="font-bold text-indigo-400 mb-2 uppercase text-sm">Cloud Share</p>
+                            <p className="text-[11px] opacity-70 leading-relaxed italic">管理員設定後生成連結傳給親友。親友手機開啟連結後即可永久具備解鎖能力。</p>
+                            <button onClick={generateLink} className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-indigo-500/20 border border-indigo-500/30 rounded-full text-[10px] font-bold active:scale-95 transition-all"><Icon name="Share" size={12} /> 生成親友授權連結</button>
+                        </div>
+                        <section className="space-y-4">
+                            <h3 className="font-bold text-lg opacity-80 border-l-4 border-rose-500 pl-3">大阿爾克那圖鑑</h3>
+                            <div className="space-y-2">
+                                {TAROT_DATA.map(c => (
+                                    <div key={c.id} className="border border-white/5 rounded-2xl overflow-hidden glass-panel">
+                                        <button onClick={() => setExpandedId(expandedId === c.id ? null : c.id)} className="w-full flex items-center justify-between p-5 text-left transition-colors hover:bg-white/5">
+                                            <div className="flex items-center gap-4"><span className="font-mono text-xs opacity-40">{c.numeral}</span><span className="font-bold tracking-widest">{c.title}</span></div>
+                                            <Icon name="ChevronDown" size={16} className={`transition-transform ${expandedId === c.id ? 'rotate-180' : ''}`} />
+                                        </button>
+                                        {expandedId === c.id && (
+                                            <div className="p-6 bg-black/20 text-xs animate-in"><p className="opacity-80 font-bold mb-2">{c.meaning}</p><p className="opacity-60 italic">{c.insight}</p></div>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
-                        </div>
-                        <div className="space-y-8">
-                            <section className="space-y-4">
-                                <h3 className="font-bold text-lg opacity-80 border-l-4 border-rose-500 pl-3">大阿爾克那圖鑑</h3>
-                                <div className="space-y-2">
-                                    {TAROT_DATA.map(c => (
-                                        <div key={c.id} className="border border-white/5 rounded-2xl overflow-hidden glass-panel">
-                                            <button onClick={() => setExpandedId(expandedId === c.id ? null : c.id)} className="w-full flex items-center justify-between p-5 text-left transition-colors hover:bg-white/5">
-                                                <div className="flex items-center gap-4"><span className="font-mono text-xs opacity-40">{c.numeral}</span><span className="font-bold tracking-widest">{c.title}</span></div>
-                                                <Icon name="ChevronDown" size={16} className={`transition-transform ${expandedId === c.id ? 'rotate-180' : ''}`} />
-                                            </button>
-                                            {expandedId === c.id && (
-                                                <div className="p-6 bg-black/20 text-xs space-y-4 animate-in text-justify">
-                                                    <p className="opacity-80 font-bold">{c.meaning}</p>
-                                                    <p className="opacity-60 italic leading-relaxed">{c.uprightInsight}</p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                            </section>
-                            <button onClick={() => setIsSetupVisible(true)} className="w-full py-4 border border-dashed border-white/20 rounded-2xl opacity-40 text-xs hover:opacity-100 transition-all font-bold uppercase tracking-[0.2em]">管理員加密設定</button>
-                        </div>
+                        </section>
+                        <button onClick={() => setIsSetupVisible(true)} className="w-full py-4 border border-dashed border-white/20 rounded-2xl opacity-40 text-xs hover:opacity-100 font-bold uppercase tracking-widest">管理員加密設定</button>
                     </div>
                 );
             };
@@ -307,21 +300,22 @@
                         <div className={`absolute bottom-[-10%] right-[-10%] w-[80%] h-[40%] ${themeStyles.glow2} rounded-full blur-[120px] transition-colors duration-1000`} />
                     </div>
 
+                    {zoomedImage && (
+                        <div className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4" onClick={() => setZoomedImage(null)}>
+                            <img src={zoomedImage} className="max-w-full max-h-full rounded-2xl shadow-2xl animate-in" alt="Tarot" />
+                            <button className="absolute top-8 right-8 text-white/50" onClick={() => setZoomedImage(null)}><Icon name="X" size={40} /></button>
+                        </div>
+                    )}
+
                     <div className="relative z-10 max-w-lg mx-auto px-6 py-10">
                         <header className="flex justify-between items-center mb-12">
-                            <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
-                                const next = secretClickCount + 1;
-                                if (next >= 5) { setTheme('chiikawa-pink'); setSecretClickCount(0); }
-                                else setSecretClickCount(next);
-                            }}>
-                                <div className="p-2 rounded-xl bg-white/20">
-                                    <Icon name={isChiMode ? "Heart" : "Sparkles"} className={isChiMode ? "animate-pulse text-white" : "text-amber-300"} />
-                                </div>
+                            <div className="flex items-center gap-2 cursor-pointer" onClick={handleSecretClick}>
+                                <div className="p-2 rounded-xl bg-white/20 transition-colors"><Icon name={isChiMode ? "Heart" : "Sparkles"} className={isChiMode ? "animate-pulse text-white" : "text-amber-300"} /></div>
                                 <h1 className="text-xl font-serif font-bold tracking-widest">{isChiMode ? "阿爾克納 & Chiikawa" : "大阿爾克納 - 塔羅占卜"}</h1>
                             </div>
                             <div className="flex gap-2">
-                                {isChiMode && <button onClick={() => setTheme('night')} className="w-10 h-10 rounded-full flex items-center justify-center border bg-white/10 shadow-sm btn-press transition-all"><Icon name="LogOut" size={16} /></button>}
-                                <button onClick={toggleTheme} className="w-12 h-12 rounded-full flex items-center justify-center border bg-white/10 shadow-sm btn-press transition-all">
+                                {isChiMode && <button onClick={() => setTheme('night')} className="w-10 h-10 rounded-full flex items-center justify-center border bg-white/10 shadow-sm btn-press"><Icon name="LogOut" size={16} /></button>}
+                                <button onClick={toggleTheme} className="w-12 h-12 rounded-full flex items-center justify-center border bg-white/10 shadow-sm btn-press">
                                     {theme === 'chiikawa-pink' ? <Icon name="ChiikawaSilhouette" size={28} /> :
                                      theme === 'chiikawa-blue' ? <Icon name="HachiwareSilhouette" size={28} /> :
                                      theme === 'chiikawa-yellow' ? <Icon name="UsagiSilhouette" size={28} /> :
@@ -340,7 +334,7 @@
                                             <button onClick={()=>setSpreadType('one')} className={`flex-1 p-6 rounded-3xl border-2 transition-all ${spreadType==='one' ? 'border-indigo-400 bg-white/10' : 'border-white/5 opacity-40'}`}><Icon name="Compass" className="mx-auto mb-2 opacity-50" /><span className="text-sm font-bold block uppercase tracking-widest">一牌直覺</span></button>
                                             <button onClick={()=>setSpreadType('triangle')} className={`flex-1 p-6 rounded-3xl border-2 transition-all ${spreadType==='triangle' ? 'border-indigo-400 bg-white/10' : 'border-white/5 opacity-40'}`}><Icon name="Layout" className="mx-auto mb-2 opacity-50" /><span className="text-sm font-bold block uppercase tracking-widest">聖三角</span></button>
                                         </div>
-                                        <button onClick={drawCards} className={`w-full py-6 ${themeStyles.btnBg} rounded-full font-bold tracking-[0.3em] btn-press shadow-2xl active:scale-95 transition-all text-xl uppercase`}>啟動靈性感應</button>
+                                        <button onClick={drawCards} className={`w-full py-6 ${themeStyles.btnBg} rounded-full font-bold tracking-[0.3em] active:scale-95 transition-all text-xl uppercase`}>啟動靈性感應</button>
                                     </div>
                                 )}
 
@@ -349,21 +343,21 @@
                                 )}
 
                                 {gameState === 'revealed' && (
-                                    <div className="space-y-10 animate-in">
+                                    <div className="space-y-12 animate-in pb-10">
                                         <div className="flex flex-wrap justify-center gap-6">
                                             {selectedCards.map((c, i) => (
-                                                 <TarotView key={i} card={c} idx={i} isChiMode={isChiMode} theme={themeStyles} onZoom={setZoomedImage} />
+                                                 <TarotCard key={i} card={c} idx={i} />
                                             ))}
                                         </div>
-                                        <div className="space-y-6 pb-20">
+                                        <div className="space-y-6">
                                             <div className="glass-panel rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden transition-colors duration-1000 min-h-[350px]">
-                                                <div className="flex items-center gap-3 mb-8 opacity-60 font-bold tracking-widest uppercase italic transition-colors duration-1000"><Icon name="BrainCircuit" size={20} />宇宙的深層啟示</div>
-                                                {isAiLoading ? (<div className="flex flex-col items-center justify-center py-20 gap-4 text-center transition-colors duration-1000"><Icon name="RefreshCw" className="animate-spin opacity-30" size={32} /><p className="animate-pulse text-sm opacity-40 tracking-widest font-serif">同步中...</p></div>) : aiResponse ? (
-                                                    <div className="leading-relaxed font-light text-justify whitespace-pre-wrap text-base animate-in transition-colors duration-1000">{aiResponse}</div>
+                                                <div className="flex items-center gap-3 mb-8 opacity-60 font-bold tracking-widest uppercase italic"><Icon name="BrainCircuit" size={20} />宇宙的深層啟示</div>
+                                                {isAiLoading ? (<div className="flex flex-col items-center justify-center py-20 gap-4 text-center"><Icon name="RefreshCw" className="animate-spin opacity-30" size={32} /><p className="animate-pulse text-sm opacity-40 tracking-widest font-serif">同步中...</p></div>) : aiResponse ? (
+                                                    <div className="leading-relaxed font-light text-justify whitespace-pre-wrap text-base animate-in">{aiResponse}</div>
                                                 ) : !isAuthenticated ? (
-                                                    <div className="py-10 flex flex-col items-center gap-6 animate-in transition-colors duration-1000">
+                                                    <div className="py-10 flex flex-col items-center gap-6 animate-in">
                                                         <Icon name="Lock" size={40} className="opacity-20" />
-                                                        <div className="text-center space-y-2 mb-6"><p className="text-sm opacity-50 transition-colors duration-1000">啟示內容已鎖定</p><p className="text-[10px] opacity-30 uppercase transition-colors duration-1000">請輸入解鎖密碼</p></div>
+                                                        <div className="text-center space-y-2 mb-6 text-sm opacity-50"><p>啟示內容已鎖定</p><p className="text-[10px] uppercase">請輸入解鎖密碼</p></div>
                                                         <div className="flex flex-col w-full gap-5 px-4 max-w-xs mb-16">
                                                             <input type="text" value={unlockPassInput} onChange={e=>setUnlockPassInput(e.target.value)} placeholder="訪問密碼" className="w-full bg-white/5 border border-white/10 rounded-xl p-5 text-center text-sm focus:outline-none focus:border-indigo-400 shadow-inner" />
                                                             <button onClick={handleUnlock} className="w-full py-5 bg-white text-slate-900 rounded-xl font-bold text-xs shadow-xl active:bg-indigo-50 uppercase tracking-widest transition-all">解鎖啟示內容</button>
@@ -371,7 +365,6 @@
                                                     </div>
                                                 ) : <div className="text-center py-20 opacity-30 italic text-sm">連線中...</div>}
                                             </div>
-                                            {selectedCards.map((c, i) => (<div key={i} className={`p-7 rounded-[2.5rem] border ${themeStyles.border} bg-white/5 text-sm space-y-4 shadow-md animate-in`} style={{animationDelay: `${i*100}ms`}}><div className="flex justify-between items-center mb-5"><h4 className="font-bold flex items-center gap-2"><span className="w-1.5 h-1.5 bg-current opacity-20 rounded-full" />{c.title} 基本解析</h4></div><div className="space-y-2 opacity-80 leading-relaxed text-justify"><p className="font-bold">{c.meaning}</p><p className="italic opacity-60 text-xs leading-relaxed">{c.uprightInsight}</p></div></div>))}
                                             <div className="flex flex-col gap-5 pt-4 mb-24"><button onClick={resetGame} className={`w-full py-5 border-2 border-white/10 rounded-full text-sm font-bold flex items-center justify-center gap-2 opacity-60 transition-colors duration-1000`}><Icon name="RefreshCw" size={16} /> 重新占卜</button></div>
                                         </div>
                                     </div>
@@ -381,34 +374,26 @@
                         {activeTab === 'guide' && <GuidePage />}
                     </div>
 
-                    <nav className={`fixed bottom-0 left-0 w-full ${themeStyles.navBg} backdrop-blur-2xl border-t ${themeStyles.border} px-16 py-6 flex justify-around items-center z-50 shadow-[0_-10px_30px_rgba(0,0,0,0.2)] transition-colors duration-1000 no-select`}>
-                        <button onClick={()=>setActiveTab('divination')} className={`flex flex-col items-center gap-1.5 transition-all ${activeTab==='divination'?'opacity-100 scale-110':'opacity-30'}`} style={{color: activeTab === 'divination' ? themeStyles.accent : '#64748b'}}><Icon name="Sparkles" size={26} /><span className="text-[10px] font-bold mt-1">占卜</span></button>
-                        <button onClick={()=>setActiveTab('guide')} className={`flex flex-col items-center gap-1.5 transition-all ${activeTab==='guide'?'opacity-100 scale-110':'opacity-30'}`} style={{color: activeTab === 'guide' ? themeStyles.accent : '#64748b'}}><Icon name="BookOpen" size={26} /><span className="text-[10px] font-bold mt-1">指南</span></button>
+                    <nav className={`fixed bottom-0 left-0 w-full bg-slate-900/80 backdrop-blur-2xl border-t border-white/10 px-16 py-6 flex justify-around items-center z-50 shadow-[0_-10px_30px_rgba(0,0,0,0.2)]`}>
+                        <button onClick={()=>setActiveTab('divination')} className={`flex flex-col items-center gap-1.5 transition-all ${activeTab==='divination'?'opacity-100 scale-110' : 'opacity-30'}`} style={{color: activeTab === 'divination' ? themeStyles.accent : '#64748b'}}><Icon name="Sparkles" size={26} /><span className="text-[10px] font-bold mt-1 uppercase">占卜</span></button>
+                        <button onClick={()=>setActiveTab('guide')} className={`flex flex-col items-center gap-1.5 transition-all ${activeTab==='guide'?'opacity-100 scale-110' : 'opacity-30'}`} style={{color: activeTab === 'guide' ? themeStyles.accent : '#64748b'}}><Icon name="BookOpen" size={26} /><span className="text-[10px] font-bold mt-1 uppercase">指南</span></button>
                     </nav>
 
                     {isSetupVisible && (
                         <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/95 backdrop-blur-md">
                             <div className="w-full max-w-sm glass-panel rounded-[3.5rem] p-10 space-y-8 shadow-2xl">
-                                <div className="text-center space-y-2"><h3 className="text-2xl font-serif font-bold transition-colors duration-1000">管理加密設定</h3><p className="text-[10px] opacity-50 italic text-indigo-300">完成後即可生成分享連結給親友</p></div>
+                                <div className="text-center space-y-2"><h3 className="text-2xl font-serif font-bold">管理加密設定</h3><p className="text-[10px] opacity-50 italic text-indigo-300">完成後即可生成授權連結</p></div>
                                 <div className="space-y-4">
                                     <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">Gemini API Key</label><input type="password" value={masterApiKey} onChange={e=>setMasterApiKey(e.target.value)} placeholder="API Key" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400 shadow-inner" /></div>
                                     <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">設定解鎖密碼</label><input type="text" value={masterPass} onChange={e=>setMasterPass(e.target.value)} placeholder="解鎖密碼" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:border-indigo-400 shadow-inner" /></div>
+                                    <div className="space-y-1"><label className="text-[10px] opacity-40 ml-2 uppercase font-bold tracking-widest">Firebase 配置</label><textarea id="masterFbConfigInput" placeholder="貼入配置代碼" className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-[10px] h-24 focus:outline-none focus:border-indigo-400 font-mono shadow-inner" /></div>
                                 </div>
-                                <button onClick={handleSaveMaster} className="w-full py-5 bg-white text-slate-900 rounded-full font-bold shadow-xl active:scale-95 transition-all">儲存本地設定</button>
+                                <button onClick={() => {
+                                    const fbInput = document.getElementById('masterFbConfigInput').value;
+                                    handleSaveMaster(fbInput);
+                                }} className="w-full py-5 bg-white text-slate-900 rounded-full font-bold shadow-xl active:scale-95 transition-all">儲存本地設定</button>
                                 <button onClick={() => setIsSetupVisible(false)} className="w-full text-[10px] opacity-30 mt-4 font-bold tracking-widest uppercase text-center">取消</button>
                             </div>
-                        </div>
-                    )}
-
-                    {isAuthenticated && aiResponse && (
-                        <div className="fixed bottom-32 right-6 z-40 animate-in">
-                            <button onClick={() => {
-                                const text = `【大阿爾克納啟示】\n問題：${userQuestion || '求引'}\n\n${aiResponse}`;
-                                const el = document.createElement('textarea'); el.value = text;
-                                document.body.appendChild(el); el.select();
-                                document.execCommand('copy'); document.body.removeChild(el);
-                                alert("已複製內容！");
-                            }} className="w-14 h-14 bg-indigo-600 text-white rounded-full flex items-center justify-center shadow-2xl active:scale-90 transition-all"><Icon name="Copy" size={20} /></button>
                         </div>
                     )}
                 </div>
