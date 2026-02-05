@@ -122,7 +122,7 @@
 
         const UPDATE_LOGS = [
             { date: "2026/02/06", title: "百科與更新日誌優化", desc: "完成所有牌組的正逆位領域解析。新增宇宙觀測日誌。" },
-            { date: "2026/02/06", title: "視覺強化與功能升級", desc: "優化一般版與特別版對比度。提升複製功能顯眼度。加大解說區標題字體。" },
+            { date: "2026/02/06", title: "視覺強化與功能升級", desc: "優化對比度，解決區塊被背景吃掉的問題。提升複製功能顯眼度。加大解說區標題字體。優化重新占卜按鈕。" },
             { date: "2026/02/05", title: "動態場景技術升級", desc: "卡牌隨日夜模式自動配色。優化輸入框在星空背景下的辨識度。" },
             { date: "2026/02/04", title: "介面風格全面翻新", desc: "採用毛玻璃與動態星塵特效。優化行動端按鈕觸控。" }
         ];
@@ -184,7 +184,7 @@
             const isChi = theme.startsWith('chiikawa');
 
             return (
-                <div className={`rounded-[1.5rem] border overflow-hidden transition-all duration-300 ${isOpen ? 'shadow-2xl' : 'hover:scale-[1.01] shadow-md'} ${isChi ? 'bg-white text-slate-800 border-slate-200' : `${styles.panel} border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.4)]`}`}>
+                <div className={`rounded-[1.5rem] border overflow-hidden transition-all duration-300 ${isOpen ? 'shadow-2xl' : 'hover:scale-[1.01] shadow-md'} ${ (isChi || theme === 'day') ? 'bg-white text-slate-800 border-slate-200 shadow-lg' : `${styles.panel} border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.4)]`}`}>
                     <button 
                         onClick={() => setIsOpen(!isOpen)}
                         className="w-full p-6 flex items-center gap-6 text-left focus:outline-none"
@@ -223,7 +223,7 @@
                                             { label: '💰 財運', key: 'finance' },
                                             { label: '🤝 社交', key: 'social' }
                                         ].map(item => (
-                                            <div key={item.key} className={`p-5 rounded-2xl border ${isChi ? 'bg-slate-50 border-slate-100' : 'bg-black/20 border-white/10'}`}>
+                                            <div key={item.key} className={`p-5 rounded-2xl border ${ (isChi || theme === 'day') ? 'bg-slate-50 border-slate-200' : 'bg-black/20 border-white/10'}`}>
                                                 <div className="text-xs font-bold opacity-40 uppercase tracking-widest mb-2">{item.label}</div>
                                                 <p className="text-sm leading-relaxed opacity-80">{card[item.key][0]}</p>
                                             </div>
@@ -242,7 +242,7 @@
                                             { label: '📉 財運', key: 'finance' },
                                             { label: '🤝 社交', key: 'social' }
                                         ].map(item => (
-                                            <div key={item.key} className={`p-5 rounded-2xl border ${isChi ? 'bg-slate-50 border-slate-100' : 'bg-black/20 border-white/10'}`}>
+                                            <div key={item.key} className={`p-5 rounded-2xl border ${ (isChi || theme === 'day') ? 'bg-slate-50 border-slate-200' : 'bg-black/20 border-white/10'}`}>
                                                 <div className="text-xs font-bold opacity-40 uppercase tracking-widest mb-2">{item.label}</div>
                                                 <p className="text-sm leading-relaxed opacity-80">{card[item.key][1]}</p>
                                             </div>
@@ -278,6 +278,7 @@
             const [unlockInput, setUnlockInput] = useState('');
             const [isSettingOpen, setIsSettingOpen] = useState(false);
             
+            // 進階安全設定
             const [isAdminAuthModalOpen, setIsAdminAuthModalOpen] = useState(false);
             const [adminSecretInput, setAdminSecretInput] = useState('');
 
@@ -290,7 +291,7 @@
                         cardBg: 'bg-slate-900', cardIcon: 'text-amber-300 opacity-60', cardSubText: 'opacity-40', cardTitleText: 'text-white'
                     },
                     day: { 
-                        bg: 'bg-[#fffbeb]', text: 'text-slate-800', accent: '#ea580c', panel: 'bg-white/90', btn: 'bg-slate-900 text-white', input: 'bg-white text-slate-800 border-slate-200 shadow-inner',
+                        bg: 'bg-[#fffbeb]', text: 'text-slate-800', accent: '#ea580c', panel: 'bg-white/95', btn: 'bg-slate-900 text-white', input: 'bg-white text-slate-800 border-slate-200 shadow-inner',
                         cardBg: 'bg-white', cardIcon: 'text-amber-500 opacity-80', cardSubText: 'text-slate-400', cardTitleText: 'text-slate-900'
                     },
                     'chiikawa-pink': { bg: 'bg-[#FADDE9]', text: 'text-[#D64E8B]', accent: '#D64E8B', panel: 'bg-white/95', btn: 'bg-[#D64E8B] text-white', input: 'bg-white text-slate-800 border-slate-200' },
@@ -315,9 +316,10 @@
                     if (res) {
                         localStorage.setItem('arcanum_master_key', res[0]);
                         localStorage.setItem('arcanum_master_pass', res[1]);
-                        setMasterApiKey(res[0]); setMasterPass(res[1]);
+                        setMasterApiKey(res[0]); 
+                        setMasterPass(res[1]);
                         window.history.replaceState({}, '', window.location.pathname);
-                        showMsg("授權金鑰同步成功！", "success");
+                        showMsg("授權金鑰同步成功！宇宙連結已就緒。", "success");
                     }
                 }
             }, []);
@@ -366,7 +368,7 @@
             const fetchAiInterpretation = async () => {
                 const key = masterApiKey || localStorage.getItem('arcanum_master_key');
                 const pass = masterPass || localStorage.getItem('arcanum_master_pass');
-                if (!key) { showMsg("尚未配置 API 金鑰。", "error"); return; }
+                if (!key || key.trim() === '') { showMsg("尚未配置 API 金鑰。", "error"); return; }
                 if (!unlockInput) { showMsg("請輸入訪問密碼。", "error"); return; }
                 if (unlockInput !== pass) { showMsg("密碼不正確。", "error"); return; }
                 
@@ -417,7 +419,7 @@
                 if(!masterApiKey) { showMsg("請先輸入 API Key 再儲存。", "error"); return; }
                 localStorage.setItem('arcanum_master_key', masterApiKey);
                 localStorage.setItem('arcanum_master_pass', masterPass);
-                showMsg("設定已儲存成功！", "success");
+                showMsg("設定儲存成功！", "success");
             };
 
             const shareAuth = () => {
@@ -446,7 +448,7 @@
                                     <Icon name={systemMsg.type === 'error' ? 'X' : 'Sparkles'} size={28} />
                                 </div>
                                 <div className="space-y-2">
-                                    <h4 className="font-bold text-lg">提示</h4>
+                                    <h4 className="font-bold text-lg text-white">提示</h4>
                                     <p className="text-sm opacity-80 leading-relaxed break-words">{systemMsg.text}</p>
                                 </div>
                                 <button onClick={() => setSystemMsg(null)} className={`w-full py-4 rounded-2xl font-bold text-xs uppercase tracking-widest ${themeStyles.btn} btn-active shadow-lg transition-all`}>確定</button>
@@ -459,7 +461,7 @@
                             <div className="w-full max-w-sm glass rounded-[3rem] p-10 text-center space-y-8 animate-fade-up border-2 border-white/20 bg-slate-900 shadow-2xl text-white">
                                 <div className="space-y-2">
                                     <Icon name="Shield" size={40} className="mx-auto text-amber-400 opacity-80" />
-                                    <h4 className="font-bold text-xl tracking-widest">核心存取驗證</h4>
+                                    <h4 className="font-bold text-xl tracking-widest text-white">核心存取驗證</h4>
                                     <p className="text-xs opacity-40">請輸入專用密碼以進入</p>
                                 </div>
                                 <input 
@@ -553,7 +555,7 @@
                                             ))}
                                         </div>
 
-                                        <div className={`rounded-[3rem] p-8 md:p-14 space-y-8 shadow-2xl border ${theme === 'day' ? 'bg-white border-slate-100' : 'bg-slate-900 border-white/10'}`}>
+                                        <div className={`rounded-[3rem] p-8 md:p-14 space-y-8 shadow-2xl border ${ (isChiTheme || theme === 'day') ? 'bg-white border-slate-200 text-slate-800' : 'bg-slate-900 border-white/10 text-white'}`}>
                                             <div className="flex justify-between items-center border-b border-black/5 pb-4">
                                                 <div className="flex items-center gap-2 opacity-50 text-xs font-bold tracking-widest uppercase italic">
                                                     <Icon name="Sparkles" size={14} /> 宇宙的深度啟示
@@ -588,11 +590,11 @@
 
                                         <div className="grid grid-cols-1 gap-6">
                                             {selectedCards.map((c, i) => (
-                                                <div key={i} className={`rounded-[2.5rem] p-8 space-y-6 shadow-xl border ${theme === 'day' ? 'bg-white border-slate-100' : 'bg-slate-900 border-white/10'}`}>
+                                                <div key={i} className={`rounded-[2.5rem] p-8 space-y-6 shadow-xl border ${ (isChiTheme || theme === 'day') ? 'bg-white border-slate-200 text-slate-800' : 'bg-slate-900 border-white/10 text-white'}`}>
                                                     <h3 className="text-2xl font-bold font-serif">{c.title} <span className="text-sm opacity-30 tracking-widest uppercase">({c.isReversed?'逆位':'正位'})</span></h3>
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                         {['love', 'work', 'finance', 'social'].map(key => (
-                                                            <div key={key} className={`p-5 rounded-[1.5rem] space-y-2 border ${theme === 'day' ? 'bg-slate-50 border-slate-100' : 'bg-black/20 border-white/5'}`}>
+                                                            <div key={key} className={`p-5 rounded-[1.5rem] space-y-2 border ${ (isChiTheme || theme === 'day') ? 'bg-slate-50 border-slate-200' : 'bg-black/20 border-white/5'}`}>
                                                                 <div className="text-xs md:text-sm font-bold opacity-40 uppercase tracking-widest mb-1">{key === 'love' ? '💖 感情' : key === 'work' ? '💼 事業' : key === 'finance' ? '💰 財運' : '🤝 社交'}</div>
                                                                 <p className="text-sm leading-relaxed opacity-80">{c[key][c.isReversed ? 1 : 0]}</p>
                                                             </div>
@@ -601,7 +603,15 @@
                                                 </div>
                                             ))}
                                         </div>
-                                        <button onClick={() => setGameState('idle')} className="w-full py-5 border-2 border-white/10 rounded-full opacity-40 hover:opacity-100 hover:bg-white/5 transition-all text-sm font-bold uppercase tracking-[0.3em] btn-active">重新啟動占卜</button>
+                                        
+                                        {/* 強化版重新啟動占卜按鈕 */}
+                                        <button 
+                                            onClick={() => setGameState('idle')} 
+                                            className={`w-full py-6 rounded-full font-bold uppercase tracking-[0.4em] btn-active transition-all shadow-2xl flex items-center justify-center gap-3 border-2 border-white/10 ${themeStyles.btn}`}
+                                        >
+                                            <Icon name="Refresh" size={20} />
+                                            重新啟動占卜
+                                        </button>
                                     </div>
                                 )}
                             </div>
@@ -666,7 +676,7 @@
                                     {isSettingOpen && (
                                         <div className={`p-8 rounded-[2.5rem] space-y-10 animate-fade-up border border-white/20 ${isChiTheme ? 'bg-white text-slate-800 shadow-xl' : 'bg-slate-900 shadow-2xl border-white/10'}`}>
                                             <div className="space-y-6 text-center">
-                                                <div className="space-y-2"><p className="text-sm font-bold tracking-widest uppercase">系統核心設定</p><p className="text-[11px] opacity-40 leading-relaxed italic">設定您的 Gemini API 金鑰與訪問密碼。</p></div>
+                                                <div className="space-y-2"><p className="text-sm font-bold tracking-widest uppercase text-current">系統核心設定</p><p className="text-[11px] opacity-40 leading-relaxed italic">設定您的 Gemini API 金鑰與訪問密碼。</p></div>
                                                 <div className="space-y-3">
                                                     <input type="password" placeholder="Gemini API Key" value={masterApiKey} onChange={e => setMasterApiKey(e.target.value)} className={`w-full border rounded-2xl px-4 py-5 text-center focus:outline-none transition-all text-sm ${isChiTheme ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-black/20 border-white/10 text-white'}`} />
                                                     <input type="text" placeholder="設定訪問密碼" value={masterPass} onChange={e => setMasterPass(e.target.value)} className={`w-full border rounded-2xl px-4 py-5 text-center focus:outline-none transition-all text-sm ${isChiTheme ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-black/20 border-white/10 text-white'}`} />
@@ -675,7 +685,7 @@
                                                     <button onClick={saveSettings} className="flex-1 py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold uppercase tracking-widest flex items-center justify-center gap-2 btn-active transition-all shadow-xl"><Icon name="Save" size={16} /> 儲存設定</button>
                                                     <button onClick={shareAuth} className="flex-1 py-5 bg-slate-800 text-white rounded-2xl font-bold uppercase tracking-widest flex items-center justify-center gap-2 btn-active transition-all shadow-xl"><Icon name="Share" size={16} /> 分享連結</button>
                                                 </div>
-                                                <button onClick={() => setIsSettingOpen(false)} className="text-[10px] opacity-20 uppercase font-bold tracking-widest hover:opacity-100 transition-all">關閉設定</button>
+                                                <button onClick={() => setIsSettingOpen(false)} className="text-[10px] opacity-20 uppercase font-bold tracking-widest hover:opacity-100 transition-all text-current">關閉設定</button>
                                             </div>
                                         </div>
                                     )}
