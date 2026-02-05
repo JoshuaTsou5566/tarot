@@ -121,10 +121,10 @@
         }, {});
 
         const UPDATE_LOGS = [
-            { date: "2026/02/06", title: "百科內容深度擴充", desc: "新增所有牌組在四大領域（感情、事業、財運、社交）的正逆位詳細解說。加入「宇宙觀測日誌」更新歷程區塊。" },
-            { date: "2026/02/06", title: "視覺與安全性升級", desc: "新增 5566 管理員二次驗證密碼。優化吉伊卡哇特別版結果區塊對比度。加入一鍵複製 AI 啟示功能。" },
-            { date: "2026/02/05", title: "動態牌面顏色切換", desc: "一般版卡牌現在會隨日夜模式自動變更背景色與圖標色，提升沈浸感。" },
-            { date: "2026/02/04", title: "介面全面玻璃化", desc: "採用更高級的毛玻璃效果與星塵背景粒子。優化行動端按鈕觸控體驗。" }
+            { date: "2026/02/06", title: "百科與更新日誌優化", desc: "完成所有牌組的正逆位領域解析。新增宇宙觀測日誌。" },
+            { date: "2026/02/06", title: "視覺強化與功能升級", desc: "優化一般版與特別版對比度。提升複製功能顯眼度。加大解說區標題字體。" },
+            { date: "2026/02/05", title: "動態場景技術升級", desc: "卡牌隨日夜模式自動配色。優化輸入框在星空背景下的辨識度。" },
+            { date: "2026/02/04", title: "介面風格全面翻新", desc: "採用毛玻璃與動態星塵特效。優化行動端按鈕觸控。" }
         ];
 
         // --- 子組件 ---
@@ -184,7 +184,7 @@
             const isChi = theme.startsWith('chiikawa');
 
             return (
-                <div className={`rounded-[1.5rem] border border-white/5 overflow-hidden transition-all duration-300 ${isOpen ? 'shadow-2xl' : 'hover:scale-[1.01] shadow-md'} ${isChi ? 'bg-white text-slate-800' : 'glass'}`}>
+                <div className={`rounded-[1.5rem] border overflow-hidden transition-all duration-300 ${isOpen ? 'shadow-2xl' : 'hover:scale-[1.01] shadow-md'} ${isChi ? 'bg-white text-slate-800 border-slate-200' : `${styles.panel} border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.4)]`}`}>
                     <button 
                         onClick={() => setIsOpen(!isOpen)}
                         className="w-full p-6 flex items-center gap-6 text-left focus:outline-none"
@@ -201,7 +201,6 @@
                     
                     {isOpen && (
                         <div className="px-6 pb-10 space-y-8 animate-fade-up">
-                            {/* 關鍵字與基本牌義 */}
                             <div className="pt-4 border-t border-black/5 space-y-4">
                                 <div className="flex flex-wrap gap-2">
                                     {card.keywords.map(kw => (
@@ -211,13 +210,11 @@
                                 <p className="text-sm opacity-60 leading-relaxed italic">「此牌象徵{card.meaning}，提醒我們生命的每一次起伏都有其深層的指引價值。」</p>
                             </div>
 
-                            {/* 正逆位詳細解說 */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                {/* 正位 */}
                                 <div className="space-y-6">
-                                    <h5 className="flex items-center gap-2 text-emerald-500 font-bold tracking-widest">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                                        正位解讀 (UPRIGHT)
+                                    <h5 className="flex items-center gap-2 text-emerald-500 font-bold tracking-widest text-sm md:text-base">
+                                        <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                                        正位解讀
                                     </h5>
                                     <div className="space-y-4">
                                         {[
@@ -226,18 +223,17 @@
                                             { label: '💰 財運', key: 'finance' },
                                             { label: '🤝 社交', key: 'social' }
                                         ].map(item => (
-                                            <div key={item.key} className={`p-4 rounded-2xl border ${isChi ? 'bg-slate-50 border-slate-100' : 'bg-white/5 border-white/5'}`}>
-                                                <div className="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-1">{item.label}</div>
-                                                <p className="text-xs md:text-sm leading-relaxed opacity-75">{card[item.key][0]}</p>
+                                            <div key={item.key} className={`p-5 rounded-2xl border ${isChi ? 'bg-slate-50 border-slate-100' : 'bg-black/20 border-white/10'}`}>
+                                                <div className="text-xs font-bold opacity-40 uppercase tracking-widest mb-2">{item.label}</div>
+                                                <p className="text-sm leading-relaxed opacity-80">{card[item.key][0]}</p>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
-                                {/* 逆位 */}
                                 <div className="space-y-6">
-                                    <h5 className="flex items-center gap-2 text-rose-500 font-bold tracking-widest">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-rose-500"></div>
-                                        逆位解讀 (REVERSED)
+                                    <h5 className="flex items-center gap-2 text-rose-500 font-bold tracking-widest text-sm md:text-base">
+                                        <div className="w-2 h-2 rounded-full bg-rose-500"></div>
+                                        逆位解讀
                                     </h5>
                                     <div className="space-y-4">
                                         {[
@@ -246,9 +242,9 @@
                                             { label: '📉 財運', key: 'finance' },
                                             { label: '🤝 社交', key: 'social' }
                                         ].map(item => (
-                                            <div key={item.key} className={`p-4 rounded-2xl border ${isChi ? 'bg-slate-50 border-slate-100' : 'bg-white/5 border-white/5'}`}>
-                                                <div className="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-1">{item.label}</div>
-                                                <p className="text-xs md:text-sm leading-relaxed opacity-75">{card[item.key][1]}</p>
+                                            <div key={item.key} className={`p-5 rounded-2xl border ${isChi ? 'bg-slate-50 border-slate-100' : 'bg-black/20 border-white/10'}`}>
+                                                <div className="text-xs font-bold opacity-40 uppercase tracking-widest mb-2">{item.label}</div>
+                                                <p className="text-sm leading-relaxed opacity-80">{card[item.key][1]}</p>
                                             </div>
                                         ))}
                                     </div>
@@ -282,7 +278,6 @@
             const [unlockInput, setUnlockInput] = useState('');
             const [isSettingOpen, setIsSettingOpen] = useState(false);
             
-            // 進階安全設定
             const [isAdminAuthModalOpen, setIsAdminAuthModalOpen] = useState(false);
             const [adminSecretInput, setAdminSecretInput] = useState('');
 
@@ -291,16 +286,16 @@
             const themeStyles = useMemo(() => {
                 const map = {
                     night: { 
-                        bg: 'bg-[#020617]', text: 'text-slate-100', accent: '#818cf8', panel: 'bg-slate-900/60', btn: 'bg-indigo-600 text-white', input: 'bg-white/5',
+                        bg: 'bg-[#020617]', text: 'text-slate-100', accent: '#818cf8', panel: 'bg-slate-900/90', btn: 'bg-indigo-600 text-white', input: 'bg-slate-900 text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]',
                         cardBg: 'bg-slate-900', cardIcon: 'text-amber-300 opacity-60', cardSubText: 'opacity-40', cardTitleText: 'text-white'
                     },
                     day: { 
-                        bg: 'bg-[#fffbeb]', text: 'text-slate-800', accent: '#ea580c', panel: 'bg-white/60', btn: 'bg-slate-900 text-white', input: 'bg-black/5',
+                        bg: 'bg-[#fffbeb]', text: 'text-slate-800', accent: '#ea580c', panel: 'bg-white/90', btn: 'bg-slate-900 text-white', input: 'bg-white text-slate-800 border-slate-200 shadow-inner',
                         cardBg: 'bg-white', cardIcon: 'text-amber-500 opacity-80', cardSubText: 'text-slate-400', cardTitleText: 'text-slate-900'
                     },
-                    'chiikawa-pink': { bg: 'bg-[#FADDE9]', text: 'text-[#D64E8B]', accent: '#D64E8B', panel: 'bg-white/95', btn: 'bg-[#D64E8B] text-white', input: 'bg-black/5' },
-                    'chiikawa-blue': { bg: 'bg-[#D1DCEE]', text: 'text-[#3D5A80]', accent: '#3D5A80', panel: 'bg-white/95', btn: 'bg-[#3D5A80] text-white', input: 'bg-black/5' },
-                    'chiikawa-yellow': { bg: 'bg-[#FEF5BC]', text: 'text-[#96831A]', accent: '#96831A', panel: 'bg-white/95', btn: 'bg-[#96831A] text-white', input: 'bg-black/5' }
+                    'chiikawa-pink': { bg: 'bg-[#FADDE9]', text: 'text-[#D64E8B]', accent: '#D64E8B', panel: 'bg-white/95', btn: 'bg-[#D64E8B] text-white', input: 'bg-white text-slate-800 border-slate-200' },
+                    'chiikawa-blue': { bg: 'bg-[#D1DCEE]', text: 'text-[#3D5A80]', accent: '#3D5A80', panel: 'bg-white/95', btn: 'bg-[#3D5A80] text-white', input: 'bg-white text-slate-800 border-slate-200' },
+                    'chiikawa-yellow': { bg: 'bg-[#FEF5BC]', text: 'text-[#96831A]', accent: '#96831A', panel: 'bg-white/95', btn: 'bg-[#96831A] text-white', input: 'bg-white text-slate-800 border-slate-200' }
                 };
                 return map[theme] || map.night;
             }, [theme]);
@@ -320,10 +315,9 @@
                     if (res) {
                         localStorage.setItem('arcanum_master_key', res[0]);
                         localStorage.setItem('arcanum_master_pass', res[1]);
-                        setMasterApiKey(res[0]); 
-                        setMasterPass(res[1]);
+                        setMasterApiKey(res[0]); setMasterPass(res[1]);
                         window.history.replaceState({}, '', window.location.pathname);
-                        showMsg("授權金鑰同步成功！宇宙連結已就緒。", "success");
+                        showMsg("授權金鑰同步成功！", "success");
                     }
                 }
             }, []);
@@ -372,42 +366,23 @@
             const fetchAiInterpretation = async () => {
                 const key = masterApiKey || localStorage.getItem('arcanum_master_key');
                 const pass = masterPass || localStorage.getItem('arcanum_master_pass');
-
-                if (!key || key.trim() === '') {
-                    showMsg("尚未配置 API 金鑰。請至「百科 > 管理員設定」中儲存 Gemini API Key。", "error");
-                    return;
-                }
-                if (!unlockInput) {
-                    showMsg("請輸入訪問密碼以開啟靈性訊息。", "error");
-                    return;
-                }
-                if (unlockInput !== pass) {
-                    showMsg("密碼不正確。請向管理員詢問正確的進入密語。", "error");
-                    return;
-                }
+                if (!key) { showMsg("尚未配置 API 金鑰。", "error"); return; }
+                if (!unlockInput) { showMsg("請輸入訪問密碼。", "error"); return; }
+                if (unlockInput !== pass) { showMsg("密碼不正確。", "error"); return; }
                 
                 setIsUnlocked(true);
                 setIsLoadingAi(true);
-                
                 const cardDesc = selectedCards.map(c => `${c.title}(${c.isReversed?'逆位':'正位'})`).join('、');
-                const prompt = `你是一位資深的靈性塔羅大師。使用者問：${userQuestion}。抽出的牌：${cardDesc}。請提供一段溫柔、充滿啟發性的解析，約 300 字。直接提供內容，嚴禁 Markdown 符號。`;
+                const prompt = `你是一位資深的靈性塔羅大師。使用者問：${userQuestion}。抽出的牌：${cardDesc}。請提供一段溫柔解析，約 300 字。直接提供內容，嚴禁 Markdown 符號。`;
 
                 try {
                     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                     });
                     const data = await res.json();
-                    
-                    if (data.error) {
-                        if (data.error.message.includes('blocked')) {
-                            throw new Error("金鑰存取被 Google 封鎖。請在 Google Cloud 設定中將金鑰存取限制（Referer）設定為「無限制」。");
-                        }
-                        throw new Error(data.error.message);
-                    }
-                    
-                    setAiResponse(data.candidates?.[0]?.content?.parts?.[0]?.text || "啟示目前顯得模糊，請再試一次。");
+                    if (data.error) throw new Error(data.error.message);
+                    setAiResponse(data.candidates?.[0]?.content?.parts?.[0]?.text || "啟示目前顯得模糊。");
                 } catch (e) {
                     showMsg("連線失敗：" + e.message, "error");
                     setIsUnlocked(false);
@@ -425,10 +400,8 @@
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    showMsg("啟示內容已成功存入靈魂剪貼簿。", "success");
-                } catch (err) {
-                    showMsg("複製失敗。", "error");
-                }
+                    showMsg("啟示內容已成功複製。", "success");
+                } catch (err) { showMsg("複製失敗。", "error"); }
                 document.body.removeChild(textArea);
             };
 
@@ -437,26 +410,18 @@
                     setIsAdminAuthModalOpen(false);
                     setIsSettingOpen(true);
                     setAdminSecretInput('');
-                } else {
-                    showMsg("核心存取密碼錯誤。", "error");
-                }
+                } else { showMsg("核心存取密碼錯誤。", "error"); }
             };
 
             const saveSettings = () => {
-                if(!masterApiKey) {
-                    showMsg("請先輸入 API Key 再儲存。", "error");
-                    return;
-                }
+                if(!masterApiKey) { showMsg("請先輸入 API Key 再儲存。", "error"); return; }
                 localStorage.setItem('arcanum_master_key', masterApiKey);
                 localStorage.setItem('arcanum_master_pass', masterPass);
-                showMsg("設定已儲存至瀏覽器快取。您可以開始啟動宇宙感應了！", "success");
+                showMsg("設定已儲存成功！", "success");
             };
 
             const shareAuth = () => {
-                if (!masterApiKey || !masterPass) {
-                    showMsg("請先儲存金鑰與密碼後才能生成連結。", "error");
-                    return;
-                }
+                if (!masterApiKey || !masterPass) { showMsg("請先儲存金鑰與密碼。", "error"); return; }
                 const link = `${window.location.origin}${window.location.pathname}?auth=${encodeKey(masterApiKey, masterPass)}`;
                 const textArea = document.createElement("textarea");
                 textArea.value = link;
@@ -465,10 +430,8 @@
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    showMsg("專屬授權連結已複製！親友只需點開網址即可自動配對。", "success");
-                } catch (err) {
-                    showMsg("複製失敗，請手動複製網址分享。", "error");
-                }
+                    showMsg("授權連結已複製！", "success");
+                } catch (err) { showMsg("複製失敗。", "error"); }
                 document.body.removeChild(textArea);
             };
 
@@ -478,13 +441,13 @@
                     
                     {systemMsg && (
                         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 modal-overlay no-select">
-                            <div className="w-full max-w-sm glass rounded-[3rem] p-10 text-center space-y-6 animate-fade-up border-2 border-white/20 bg-slate-900/90 shadow-2xl">
+                            <div className="w-full max-w-sm glass rounded-[3rem] p-10 text-center space-y-6 animate-fade-up border-2 border-white/20 bg-slate-900/90 shadow-2xl text-white">
                                 <div className={`w-14 h-14 rounded-full mx-auto flex items-center justify-center ${systemMsg.type === 'error' ? 'bg-rose-500/20 text-rose-500' : 'bg-emerald-500/20 text-emerald-500'}`}>
                                     <Icon name={systemMsg.type === 'error' ? 'X' : 'Sparkles'} size={28} />
                                 </div>
                                 <div className="space-y-2">
-                                    <h4 className="font-bold text-lg text-white">{systemMsg.type === 'error' ? '提示' : '宇宙指引'}</h4>
-                                    <p className="text-sm opacity-80 leading-relaxed break-words text-white/90">{systemMsg.text}</p>
+                                    <h4 className="font-bold text-lg">提示</h4>
+                                    <p className="text-sm opacity-80 leading-relaxed break-words">{systemMsg.text}</p>
                                 </div>
                                 <button onClick={() => setSystemMsg(null)} className={`w-full py-4 rounded-2xl font-bold text-xs uppercase tracking-widest ${themeStyles.btn} btn-active shadow-lg transition-all`}>確定</button>
                             </div>
@@ -493,11 +456,11 @@
 
                     {isAdminAuthModalOpen && (
                         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 modal-overlay no-select">
-                            <div className="w-full max-w-sm glass rounded-[3rem] p-10 text-center space-y-8 animate-fade-up border-2 border-white/20 bg-slate-900 shadow-2xl">
+                            <div className="w-full max-w-sm glass rounded-[3rem] p-10 text-center space-y-8 animate-fade-up border-2 border-white/20 bg-slate-900 shadow-2xl text-white">
                                 <div className="space-y-2">
                                     <Icon name="Shield" size={40} className="mx-auto text-amber-400 opacity-80" />
-                                    <h4 className="font-bold text-xl tracking-widest text-white">核心存取驗證</h4>
-                                    <p className="text-xs opacity-40 text-white/60">請輸入管理員專用密碼以進入</p>
+                                    <h4 className="font-bold text-xl tracking-widest">核心存取驗證</h4>
+                                    <p className="text-xs opacity-40">請輸入專用密碼以進入</p>
                                 </div>
                                 <input 
                                     type="password" value={adminSecretInput} onChange={e => setAdminSecretInput(e.target.value)} 
@@ -506,7 +469,7 @@
                                     className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-5 text-center focus:outline-none transition-all text-lg shadow-inner text-white"
                                 />
                                 <div className="flex gap-3">
-                                    <button onClick={() => setIsAdminAuthModalOpen(false)} className="flex-1 py-4 rounded-2xl text-xs font-bold opacity-40 uppercase tracking-widest text-white/60">取消</button>
+                                    <button onClick={() => setIsAdminAuthModalOpen(false)} className="flex-1 py-4 rounded-2xl text-xs font-bold opacity-40 uppercase tracking-widest">取消</button>
                                     <button onClick={handleAdminAccess} className={`flex-1 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest ${themeStyles.btn} btn-active shadow-lg`}>進入設定</button>
                                 </div>
                             </div>
@@ -561,7 +524,7 @@
                                             value={userQuestion}
                                             onChange={e => setUserQuestion(e.target.value)}
                                             placeholder="在此輸入您想問的事情..."
-                                            className={`w-full max-w-2xl h-40 glass ${themeStyles.panel} rounded-[2rem] p-8 focus:outline-none focus:ring-2 ring-white/20 transition-all text-lg placeholder:opacity-20 resize-none shadow-inner ${isChiTheme ? 'bg-white text-slate-800' : ''}`}
+                                            className={`w-full max-w-2xl h-40 border-2 rounded-[2rem] p-8 focus:outline-none focus:ring-4 ring-indigo-500/20 transition-all text-lg placeholder:opacity-20 resize-none shadow-xl ${themeStyles.input}`}
                                         />
                                         <div className="flex gap-4 w-full max-w-md no-select">
                                             <button onClick={() => setSpreadType('one')} className={`flex-1 py-4 rounded-2xl glass transition-all border-2 ${spreadType === 'one' ? 'border-amber-400/60 bg-amber-400/10 scale-105' : 'border-transparent opacity-40'}`}>一牌直覺</button>
@@ -590,7 +553,7 @@
                                             ))}
                                         </div>
 
-                                        <div className={`rounded-[3rem] p-8 md:p-14 space-y-8 shadow-2xl border-white/20 ${isChiTheme ? 'bg-white text-slate-800' : 'glass'}`}>
+                                        <div className={`rounded-[3rem] p-8 md:p-14 space-y-8 shadow-2xl border ${theme === 'day' ? 'bg-white border-slate-100' : 'bg-slate-900 border-white/10'}`}>
                                             <div className="flex justify-between items-center border-b border-black/5 pb-4">
                                                 <div className="flex items-center gap-2 opacity-50 text-xs font-bold tracking-widest uppercase italic">
                                                     <Icon name="Sparkles" size={14} /> 宇宙的深度啟示
@@ -625,13 +588,13 @@
 
                                         <div className="grid grid-cols-1 gap-6">
                                             {selectedCards.map((c, i) => (
-                                                <div key={i} className={`rounded-[2.5rem] p-8 space-y-6 shadow-xl ${isChiTheme ? 'bg-white text-slate-800' : 'glass'}`}>
+                                                <div key={i} className={`rounded-[2.5rem] p-8 space-y-6 shadow-xl border ${theme === 'day' ? 'bg-white border-slate-100' : 'bg-slate-900 border-white/10'}`}>
                                                     <h3 className="text-2xl font-bold font-serif">{c.title} <span className="text-sm opacity-30 tracking-widest uppercase">({c.isReversed?'逆位':'正位'})</span></h3>
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                         {['love', 'work', 'finance', 'social'].map(key => (
-                                                            <div key={key} className={`p-5 rounded-[1.5rem] space-y-2 border ${isChiTheme ? 'bg-slate-50 border-slate-100' : 'bg-white/5 border-white/5'}`}>
+                                                            <div key={key} className={`p-5 rounded-[1.5rem] space-y-2 border ${theme === 'day' ? 'bg-slate-50 border-slate-100' : 'bg-black/20 border-white/5'}`}>
                                                                 <div className="text-xs md:text-sm font-bold opacity-40 uppercase tracking-widest mb-1">{key === 'love' ? '💖 感情' : key === 'work' ? '💼 事業' : key === 'finance' ? '💰 財運' : '🤝 社交'}</div>
-                                                                <p className="text-sm leading-relaxed opacity-75">{c[key][c.isReversed ? 1 : 0]}</p>
+                                                                <p className="text-sm leading-relaxed opacity-80">{c[key][c.isReversed ? 1 : 0]}</p>
                                                             </div>
                                                         ))}
                                                     </div>
@@ -652,7 +615,7 @@
                                 ) : (
                                     <div className="space-y-4">
                                         {history.map(h => (
-                                            <div key={h.id} className={`rounded-[2rem] p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border border-white/5 ${isChiTheme ? 'bg-white text-slate-800' : 'glass'}`}>
+                                            <div key={h.id} className={`rounded-[2rem] p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border border-white/5 ${isChiTheme ? 'bg-white text-slate-800' : 'bg-slate-900 border-white/10 shadow-xl'}`}>
                                                 <div className="space-y-2">
                                                     <div className="text-[10px] opacity-30 font-mono tracking-widest uppercase">{h.timestamp}</div>
                                                     <div className="font-bold text-lg opacity-90">問：{h.question}</div>
@@ -680,7 +643,6 @@
                                     </div>
                                 </section>
 
-                                {/* 更新歷程 */}
                                 <section className="pt-16 space-y-8 border-t border-white/5">
                                     <div className="flex items-center gap-3 opacity-50">
                                         <Icon name="Clock" size={24} />
@@ -688,7 +650,7 @@
                                     </div>
                                     <div className="space-y-6">
                                         {UPDATE_LOGS.map((log, i) => (
-                                            <div key={i} className={`p-6 rounded-[1.5rem] border border-white/5 ${isChiTheme ? 'bg-white text-slate-800 shadow-sm' : 'glass bg-white/5'}`}>
+                                            <div key={i} className={`p-6 rounded-[1.5rem] border border-white/5 ${isChiTheme ? 'bg-white text-slate-800 shadow-sm' : 'bg-slate-900 border-white/10 shadow-xl'}`}>
                                                 <div className="flex justify-between items-start mb-2">
                                                     <h4 className="font-bold text-base tracking-widest">{log.title}</h4>
                                                     <span className="text-[10px] font-mono opacity-30 mt-1">{log.date}</span>
@@ -702,12 +664,12 @@
                                 <section className="pt-10 border-t border-white/5 space-y-6">
                                     <button onClick={() => setIsAdminAuthModalOpen(true)} className="w-full py-4 glass rounded-[1.5rem] text-[11px] font-bold opacity-30 hover:opacity-100 flex items-center justify-center gap-2 transition-all uppercase tracking-[0.2em]">管理員進階設定 <Icon name="Chevron" size={12} className={isSettingOpen ? 'rotate-180' : ''} /></button>
                                     {isSettingOpen && (
-                                        <div className={`p-8 rounded-[2.5rem] space-y-10 animate-fade-up border border-white/20 ${isChiTheme ? 'bg-white text-slate-800 shadow-xl' : 'glass'}`}>
+                                        <div className={`p-8 rounded-[2.5rem] space-y-10 animate-fade-up border border-white/20 ${isChiTheme ? 'bg-white text-slate-800 shadow-xl' : 'bg-slate-900 shadow-2xl border-white/10'}`}>
                                             <div className="space-y-6 text-center">
                                                 <div className="space-y-2"><p className="text-sm font-bold tracking-widest uppercase">系統核心設定</p><p className="text-[11px] opacity-40 leading-relaxed italic">設定您的 Gemini API 金鑰與訪問密碼。</p></div>
                                                 <div className="space-y-3">
-                                                    <input type="password" placeholder="Gemini API Key" value={masterApiKey} onChange={e => setMasterApiKey(e.target.value)} className={`w-full border rounded-2xl px-4 py-5 text-center focus:outline-none transition-all text-sm ${isChiTheme ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-white/5 border-white/10 text-white'}`} />
-                                                    <input type="text" placeholder="設定訪問密碼" value={masterPass} onChange={e => setMasterPass(e.target.value)} className={`w-full border rounded-2xl px-4 py-5 text-center focus:outline-none transition-all text-sm ${isChiTheme ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-white/5 border-white/10 text-white'}`} />
+                                                    <input type="password" placeholder="Gemini API Key" value={masterApiKey} onChange={e => setMasterApiKey(e.target.value)} className={`w-full border rounded-2xl px-4 py-5 text-center focus:outline-none transition-all text-sm ${isChiTheme ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-black/20 border-white/10 text-white'}`} />
+                                                    <input type="text" placeholder="設定訪問密碼" value={masterPass} onChange={e => setMasterPass(e.target.value)} className={`w-full border rounded-2xl px-4 py-5 text-center focus:outline-none transition-all text-sm ${isChiTheme ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-black/20 border-white/10 text-white'}`} />
                                                 </div>
                                                 <div className="flex gap-3 pt-2">
                                                     <button onClick={saveSettings} className="flex-1 py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold uppercase tracking-widest flex items-center justify-center gap-2 btn-active transition-all shadow-xl"><Icon name="Save" size={16} /> 儲存設定</button>
