@@ -86,7 +86,8 @@
             Save: <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2zM17 21v-8H7v8M7 3v5h8"/>,
             LogOut: <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>,
             Copy: <><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></>,
-            Shield: <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            Shield: <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>,
+            Clock: <><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></>
         };
 
         const TAROT_DATA = [
@@ -118,6 +119,13 @@
             acc[i] = `https://raw.githubusercontent.com/JoshuaTsou5566/tarot/refs/heads/main/${i}.jpg`;
             return acc;
         }, {});
+
+        const UPDATE_LOGS = [
+            { date: "2026/02/06", title: "百科內容深度擴充", desc: "新增所有牌組在四大領域（感情、事業、財運、社交）的正逆位詳細解說。加入「宇宙觀測日誌」更新歷程區塊。" },
+            { date: "2026/02/06", title: "視覺與安全性升級", desc: "新增 5566 管理員二次驗證密碼。優化吉伊卡哇特別版結果區塊對比度。加入一鍵複製 AI 啟示功能。" },
+            { date: "2026/02/05", title: "動態牌面顏色切換", desc: "一般版卡牌現在會隨日夜模式自動變更背景色與圖標色，提升沈浸感。" },
+            { date: "2026/02/04", title: "介面全面玻璃化", desc: "採用更高級的毛玻璃效果與星塵背景粒子。優化行動端按鈕觸控體驗。" }
+        ];
 
         // --- 子組件 ---
         const Icon = ({ name, size = 24, className = "" }) => (
@@ -167,6 +175,87 @@
                     <span className="text-[10px] uppercase font-bold tracking-widest opacity-60">
                         {card.isReversed ? '逆位' : '正位'}
                     </span>
+                </div>
+            );
+        };
+
+        const EncyclopediaItem = ({ card, theme, styles }) => {
+            const [isOpen, setIsOpen] = useState(false);
+            const isChi = theme.startsWith('chiikawa');
+
+            return (
+                <div className={`rounded-[1.5rem] border border-white/5 overflow-hidden transition-all duration-300 ${isOpen ? 'shadow-2xl' : 'hover:scale-[1.01] shadow-md'} ${isChi ? 'bg-white text-slate-800' : 'glass'}`}>
+                    <button 
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="w-full p-6 flex items-center gap-6 text-left focus:outline-none"
+                    >
+                        <div className="w-14 h-14 rounded-full glass flex items-center justify-center font-serif opacity-30 text-sm border-2 border-white/10 shrink-0">
+                            {card.numeral}
+                        </div>
+                        <div className="flex-1">
+                            <span className="font-bold text-lg tracking-widest block">{card.title}</span>
+                            <span className="text-xs opacity-40">{card.meaning}</span>
+                        </div>
+                        <Icon name="Chevron" size={20} className={`opacity-20 transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    {isOpen && (
+                        <div className="px-6 pb-10 space-y-8 animate-fade-up">
+                            {/* 關鍵字與基本牌義 */}
+                            <div className="pt-4 border-t border-black/5 space-y-4">
+                                <div className="flex flex-wrap gap-2">
+                                    {card.keywords.map(kw => (
+                                        <span key={kw} className="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-500 text-[10px] font-bold tracking-widest">#{kw}</span>
+                                    ))}
+                                </div>
+                                <p className="text-sm opacity-60 leading-relaxed italic">「此牌象徵{card.meaning}，提醒我們生命的每一次起伏都有其深層的指引價值。」</p>
+                            </div>
+
+                            {/* 正逆位詳細解說 */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                {/* 正位 */}
+                                <div className="space-y-6">
+                                    <h5 className="flex items-center gap-2 text-emerald-500 font-bold tracking-widest">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                                        正位解讀 (UPRIGHT)
+                                    </h5>
+                                    <div className="space-y-4">
+                                        {[
+                                            { label: '💖 感情', key: 'love' },
+                                            { label: '💼 事業', key: 'work' },
+                                            { label: '💰 財運', key: 'finance' },
+                                            { label: '🤝 社交', key: 'social' }
+                                        ].map(item => (
+                                            <div key={item.key} className={`p-4 rounded-2xl border ${isChi ? 'bg-slate-50 border-slate-100' : 'bg-white/5 border-white/5'}`}>
+                                                <div className="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-1">{item.label}</div>
+                                                <p className="text-xs md:text-sm leading-relaxed opacity-75">{card[item.key][0]}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                {/* 逆位 */}
+                                <div className="space-y-6">
+                                    <h5 className="flex items-center gap-2 text-rose-500 font-bold tracking-widest">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-rose-500"></div>
+                                        逆位解讀 (REVERSED)
+                                    </h5>
+                                    <div className="space-y-4">
+                                        {[
+                                            { label: '💔 感情', key: 'love' },
+                                            { label: '⚠️ 事業', key: 'work' },
+                                            { label: '📉 財運', key: 'finance' },
+                                            { label: '🤝 社交', key: 'social' }
+                                        ].map(item => (
+                                            <div key={item.key} className={`p-4 rounded-2xl border ${isChi ? 'bg-slate-50 border-slate-100' : 'bg-white/5 border-white/5'}`}>
+                                                <div className="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-1">{item.label}</div>
+                                                <p className="text-xs md:text-sm leading-relaxed opacity-75">{card[item.key][1]}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         };
@@ -397,9 +486,7 @@
                                     <h4 className="font-bold text-lg text-white">{systemMsg.type === 'error' ? '提示' : '宇宙指引'}</h4>
                                     <p className="text-sm opacity-80 leading-relaxed break-words text-white/90">{systemMsg.text}</p>
                                 </div>
-                                <button onClick={() => setSystemMsg(null)} className={`w-full py-4 rounded-2xl font-bold text-xs uppercase tracking-widest ${themeStyles.btn} btn-active shadow-lg transition-all`}>
-                                    確定
-                                </button>
+                                <button onClick={() => setSystemMsg(null)} className={`w-full py-4 rounded-2xl font-bold text-xs uppercase tracking-widest ${themeStyles.btn} btn-active shadow-lg transition-all`}>確定</button>
                             </div>
                         </div>
                     )}
@@ -419,12 +506,8 @@
                                     className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-5 text-center focus:outline-none transition-all text-lg shadow-inner text-white"
                                 />
                                 <div className="flex gap-3">
-                                    <button onClick={() => setIsAdminAuthModalOpen(false)} className="flex-1 py-4 rounded-2xl text-xs font-bold opacity-40 uppercase tracking-widest text-white/60">
-                                        取消
-                                    </button>
-                                    <button onClick={handleAdminAccess} className={`flex-1 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest ${themeStyles.btn} btn-active shadow-lg`}>
-                                        進入設定
-                                    </button>
+                                    <button onClick={() => setIsAdminAuthModalOpen(false)} className="flex-1 py-4 rounded-2xl text-xs font-bold opacity-40 uppercase tracking-widest text-white/60">取消</button>
+                                    <button onClick={handleAdminAccess} className={`flex-1 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest ${themeStyles.btn} btn-active shadow-lg`}>進入設定</button>
                                 </div>
                             </div>
                         </div>
@@ -590,15 +673,32 @@
                             <div className="animate-fade-up space-y-10 py-10 pb-20">
                                 <section className="space-y-6">
                                     <h3 className="text-2xl font-serif font-bold border-l-4 border-amber-400 pl-4 tracking-widest">阿爾克納百科</h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 gap-5">
                                         {TAROT_DATA.map(c => (
-                                            <div key={c.id} className={`rounded-[1.5rem] p-6 flex items-center gap-6 border border-white/5 hover:scale-[1.02] transition-all ${isChiTheme ? 'bg-white text-slate-800 shadow-md' : 'glass'}`}>
-                                                <div className="w-14 h-14 rounded-full glass flex items-center justify-center font-serif opacity-30 text-sm border-2 border-white/10">{c.numeral}</div>
-                                                <div className="flex flex-col"><span className="font-bold text-lg tracking-widest">{c.title}</span><span className="text-xs opacity-40">{c.meaning}</span></div>
+                                            <EncyclopediaItem key={c.id} card={c} theme={theme} styles={themeStyles} />
+                                        ))}
+                                    </div>
+                                </section>
+
+                                {/* 更新歷程 */}
+                                <section className="pt-16 space-y-8 border-t border-white/5">
+                                    <div className="flex items-center gap-3 opacity-50">
+                                        <Icon name="Clock" size={24} />
+                                        <h3 className="text-xl font-serif font-bold tracking-widest uppercase">宇宙觀測日誌 (Update Log)</h3>
+                                    </div>
+                                    <div className="space-y-6">
+                                        {UPDATE_LOGS.map((log, i) => (
+                                            <div key={i} className={`p-6 rounded-[1.5rem] border border-white/5 ${isChiTheme ? 'bg-white text-slate-800 shadow-sm' : 'glass bg-white/5'}`}>
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <h4 className="font-bold text-base tracking-widest">{log.title}</h4>
+                                                    <span className="text-[10px] font-mono opacity-30 mt-1">{log.date}</span>
+                                                </div>
+                                                <p className="text-xs opacity-60 leading-relaxed font-light">{log.desc}</p>
                                             </div>
                                         ))}
                                     </div>
                                 </section>
+
                                 <section className="pt-10 border-t border-white/5 space-y-6">
                                     <button onClick={() => setIsAdminAuthModalOpen(true)} className="w-full py-4 glass rounded-[1.5rem] text-[11px] font-bold opacity-30 hover:opacity-100 flex items-center justify-center gap-2 transition-all uppercase tracking-[0.2em]">管理員進階設定 <Icon name="Chevron" size={12} className={isSettingOpen ? 'rotate-180' : ''} /></button>
                                     {isSettingOpen && (
