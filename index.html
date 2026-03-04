@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>大阿爾克納 - 靈性指引</title>
+    <title>大阿爾克納 - 靈性指引 (OpenAI 版)</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -121,10 +121,9 @@
         }, {});
 
         const UPDATE_LOGS = [
+            { date: "2026/03/04", title: "AI 引擎升級", desc: "正式對接 OpenAI API。將解說引擎切換為 GPT-4o 系列，提供更細膩的人文關懷。" },
             { date: "2026/02/06", title: "百科與更新日誌優化", desc: "完成所有牌組的正逆位領域解析。新增宇宙觀測日誌。" },
-            { date: "2026/02/06", title: "視覺強化與功能升級", desc: "優化對比度，解決區塊被背景吃掉的問題。提升複製功能顯眼度。加大解說區標題字體。優化重新占卜按鈕。" },
-            { date: "2026/02/05", title: "動態場景技術升級", desc: "卡牌隨日夜模式自動配色。優化輸入框在星空背景下的辨識度。" },
-            { date: "2026/02/04", title: "介面風格全面翻新", desc: "採用毛玻璃與動態星塵特效。優化行動端按鈕觸控。" }
+            { date: "2026/02/06", title: "視覺強化與功能升級", desc: "優化對比度，解決區塊被背景吃掉的問題。提升複製功能顯眼度。" }
         ];
 
         // --- 子組件 ---
@@ -268,7 +267,6 @@
             const [isLoadingAi, setIsLoadingAi] = useState(false);
             const [history, setHistory] = useState(JSON.parse(localStorage.getItem('tarot_history') || '[]'));
             const [secretCount, setSecretCount] = useState(0);
-            
             const [systemMsg, setSystemMsg] = useState(null); 
 
             // 管理員參數
@@ -319,7 +317,7 @@
                         setMasterApiKey(res[0]); 
                         setMasterPass(res[1]);
                         window.history.replaceState({}, '', window.location.pathname);
-                        showMsg("授權金鑰同步成功！宇宙連結已就緒。", "success");
+                        showMsg("OpenAI 授權金鑰同步成功！", "success");
                     }
                 }
             }, []);
@@ -368,25 +366,37 @@
             const fetchAiInterpretation = async () => {
                 const key = masterApiKey || localStorage.getItem('arcanum_master_key');
                 const pass = masterPass || localStorage.getItem('arcanum_master_pass');
-                if (!key || key.trim() === '') { showMsg("尚未配置 API 金鑰。", "error"); return; }
+                if (!key || key.trim() === '') { showMsg("尚未配置 OpenAI API 金鑰。", "error"); return; }
                 if (!unlockInput) { showMsg("請輸入訪問密碼。", "error"); return; }
                 if (unlockInput !== pass) { showMsg("密碼不正確。", "error"); return; }
                 
                 setIsUnlocked(true);
                 setIsLoadingAi(true);
                 const cardDesc = selectedCards.map(c => `${c.title}(${c.isReversed?'逆位':'正位'})`).join('、');
-                const prompt = `你是一位資深的靈性塔羅大師。使用者問：${userQuestion}。抽出的牌：${cardDesc}。請提供一段溫柔解析，約 300 字。直接提供內容，嚴禁 Markdown 符號。`;
+                const prompt = `你是一位資深的靈性塔羅大師。使用者問：${userQuestion}。抽出的牌：${cardDesc}。請提供一段溫柔解析，約 300 字。直接提供內容，嚴禁使用 Markdown 符號或任何標籤。`;
 
                 try {
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`, {
-                        method: 'POST', headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                    // 切換為 OpenAI Chat Completion API
+                    const res = await fetch(`https://api.openai.com/v1/chat/completions`, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${key}`
+                        },
+                        body: JSON.stringify({ 
+                            model: "gpt-4o-mini", // 經濟實惠且高品質的模型
+                            messages: [
+                                { role: "system", content: "你是一位充滿智慧且語氣溫柔的塔羅解讀大師。" },
+                                { role: "user", content: prompt }
+                            ],
+                            temperature: 0.7
+                        })
                     });
                     const data = await res.json();
                     if (data.error) throw new Error(data.error.message);
-                    setAiResponse(data.candidates?.[0]?.content?.parts?.[0]?.text || "啟示目前顯得模糊。");
+                    setAiResponse(data.choices?.[0]?.message?.content || "啟示目前顯得模糊。");
                 } catch (e) {
-                    showMsg("連線失敗：" + e.message, "error");
+                    showMsg("OpenAI 連結失敗：" + e.message, "error");
                     setIsUnlocked(false);
                 } finally {
                     setIsLoadingAi(false);
@@ -416,7 +426,7 @@
             };
 
             const saveSettings = () => {
-                if(!masterApiKey) { showMsg("請先輸入 API Key 再儲存。", "error"); return; }
+                if(!masterApiKey) { showMsg("請先輸入 OpenAI Key 再儲存。", "error"); return; }
                 localStorage.setItem('arcanum_master_key', masterApiKey);
                 localStorage.setItem('arcanum_master_pass', masterPass);
                 showMsg("設定儲存成功！", "success");
@@ -558,7 +568,7 @@
                                         <div className={`rounded-[3rem] p-8 md:p-14 space-y-8 shadow-2xl border ${ (isChiTheme || theme === 'day') ? 'bg-white border-slate-200 text-slate-800' : 'bg-slate-900 border-white/10 text-white'}`}>
                                             <div className="flex justify-between items-center border-b border-black/5 pb-4">
                                                 <div className="flex items-center gap-2 opacity-50 text-xs font-bold tracking-widest uppercase italic">
-                                                    <Icon name="Sparkles" size={14} /> 宇宙的深度啟示
+                                                    <Icon name="Sparkles" size={14} /> 宇宙的深度啟示 (OpenAI GPT-4o)
                                                 </div>
                                                 {isUnlocked && aiResponse && (
                                                     <button onClick={copyAiInterpretation} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest opacity-60 hover:opacity-100 transition-all btn-active">
@@ -604,7 +614,6 @@
                                             ))}
                                         </div>
                                         
-                                        {/* 強化版重新啟動占卜按鈕 */}
                                         <button 
                                             onClick={() => setGameState('idle')} 
                                             className={`w-full py-6 rounded-full font-bold uppercase tracking-[0.4em] btn-active transition-all shadow-2xl flex items-center justify-center gap-3 border-2 border-white/10 ${themeStyles.btn}`}
@@ -656,7 +665,7 @@
                                 <section className="pt-16 space-y-8 border-t border-white/5">
                                     <div className="flex items-center gap-3 opacity-50">
                                         <Icon name="Clock" size={24} />
-                                        <h3 className="text-xl font-serif font-bold tracking-widest uppercase">宇宙觀測日誌 (Update Log)</h3>
+                                        <h3 className="text-xl font-serif font-bold tracking-widest uppercase">宇宙觀測日誌</h3>
                                     </div>
                                     <div className="space-y-6">
                                         {UPDATE_LOGS.map((log, i) => (
@@ -676,9 +685,9 @@
                                     {isSettingOpen && (
                                         <div className={`p-8 rounded-[2.5rem] space-y-10 animate-fade-up border border-white/20 ${isChiTheme ? 'bg-white text-slate-800 shadow-xl' : 'bg-slate-900 shadow-2xl border-white/10'}`}>
                                             <div className="space-y-6 text-center">
-                                                <div className="space-y-2"><p className="text-sm font-bold tracking-widest uppercase text-current">系統核心設定</p><p className="text-[11px] opacity-40 leading-relaxed italic">設定您的 Gemini API 金鑰與訪問密碼。</p></div>
+                                                <div className="space-y-2"><p className="text-sm font-bold tracking-widest uppercase text-current">系統核心設定 (OpenAI)</p><p className="text-[11px] opacity-40 leading-relaxed italic">請設定 OpenAI API 金鑰 (sk-...) 與您的訪問密碼。</p></div>
                                                 <div className="space-y-3">
-                                                    <input type="password" placeholder="Gemini API Key" value={masterApiKey} onChange={e => setMasterApiKey(e.target.value)} className={`w-full border rounded-2xl px-4 py-5 text-center focus:outline-none transition-all text-sm ${isChiTheme ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-black/20 border-white/10 text-white'}`} />
+                                                    <input type="password" placeholder="OpenAI API Key (sk-...)" value={masterApiKey} onChange={e => setMasterApiKey(e.target.value)} className={`w-full border rounded-2xl px-4 py-5 text-center focus:outline-none transition-all text-sm ${isChiTheme ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-black/20 border-white/10 text-white'}`} />
                                                     <input type="text" placeholder="設定訪問密碼" value={masterPass} onChange={e => setMasterPass(e.target.value)} className={`w-full border rounded-2xl px-4 py-5 text-center focus:outline-none transition-all text-sm ${isChiTheme ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-black/20 border-white/10 text-white'}`} />
                                                 </div>
                                                 <div className="flex gap-3 pt-2">
