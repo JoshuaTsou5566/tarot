@@ -314,4 +314,57 @@
                         )}
                         {activeTab === 'history' && (
                             <div className="animate-fade-up space-y-8 py-10 pb-20">
-                                <h2 className="text-3xl font-serif font-bold
+                                <h2 className="text-3xl font-serif font-bold tracking-widest">歷史感應紀錄</h2>
+                                {history.length === 0 ? <div className="py-32 text-center opacity-20 italic">尚未記錄任何靈魂足跡</div> : (
+                                    <div className="space-y-6">{history.map(h => (
+                                        <div key={h.id} className={`rounded-[2rem] p-8 flex flex-col gap-6 border border-white/5 ${isChiTheme ? 'bg-white text-slate-800' : 'bg-slate-900 shadow-xl'}`}>
+                                            <div className="flex justify-between items-start">
+                                                <div className="space-y-2"><div className="text-[10px] opacity-30 uppercase font-mono">{h.timestamp}</div><div className="font-bold text-lg">問：{h.question}</div></div>
+                                                <div className="flex gap-2 flex-wrap">{h.cards.map((c, i) => <div key={i} className="px-3 py-1 rounded-lg text-[10px] border border-white/10">{c.title} {c.isReversed ? '↓' : '↑'}</div>)}</div>
+                                            </div>
+                                            {h.interpretation && (
+                                                <div className="p-5 rounded-2xl bg-black/20 border-l-4 border-indigo-500 text-sm italic opacity-80 leading-relaxed">
+                                                    <div className="text-[10px] font-bold uppercase tracking-widest mb-2 text-indigo-400">大師啟示</div>
+                                                    {h.interpretation}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}</div>
+                                )}
+                            </div>
+                        )}
+                        {activeTab === 'guide' && (
+                            <div className="animate-fade-up space-y-10 py-10 pb-20">
+                                <h3 className="text-2xl font-serif font-bold border-l-4 border-amber-400 pl-4">阿爾克納百科</h3>
+                                <div className="grid grid-cols-1 gap-5">{TAROT_DATA.map(c => <EncyclopediaItem key={c.id} card={c} theme={theme} styles={themeStyles} />)}</div>
+                                <div className="pt-16 border-t border-white/5 space-y-6">
+                                    <h3 className="text-xl font-serif font-bold opacity-50 uppercase">宇宙觀測日誌</h3>
+                                    {UPDATE_LOGS.map((log, i) => <div key={i} className={`p-6 rounded-[1.5rem] border border-white/10 ${isChiTheme ? 'bg-white' : 'bg-slate-900'}`}><h4 className="font-bold">{log.title}</h4><p className="text-xs opacity-60 mt-2">{log.desc}</p></div>)}
+                                    <button onClick={() => setIsAdminAuthModalOpen(true)} className="w-full py-4 glass rounded-[1.5rem] text-[11px] font-bold opacity-30 hover:opacity-100 uppercase tracking-widest">管理員進階設定</button>
+                                    {isSettingOpen && (
+                                        <div className={`p-8 rounded-[2.5rem] space-y-10 animate-fade-up border border-white/20 ${isChiTheme ? 'bg-white text-slate-800' : 'bg-slate-900'}`}>
+                                            <div className="space-y-6 text-center">
+                                                <p className="text-sm font-bold tracking-widest uppercase">系統核心設定</p>
+                                                <input type="password" placeholder="宇宙連結金鑰 (sk-...)" value={masterApiKey} onChange={e => setMasterApiKey(e.target.value)} className="w-full border rounded-2xl px-4 py-5 text-center bg-black/20 text-white" />
+                                                <input type="text" placeholder="設定訪問密碼" value={masterPass} onChange={e => setMasterPass(e.target.value)} className="w-full border rounded-2xl px-4 py-5 text-center bg-black/20 text-white" />
+                                                <button onClick={() => {localStorage.setItem('arcanum_master_key', masterApiKey); localStorage.setItem('arcanum_master_pass', masterPass); showMsg("儲存成功", "success")}} className="w-full py-5 bg-indigo-600 text-white rounded-2xl font-bold uppercase">儲存設定</button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </main>
+                    <nav className="fixed bottom-0 left-0 w-full glass border-t border-white/10 py-6 px-10 flex justify-around items-center z-50">
+                        {[{ id: 'divination', label: '占卜', icon: 'Sparkles' }, { id: 'history', label: '紀錄', icon: 'History' }, { id: 'guide', label: '百科', icon: 'Book' }].map(tab => (
+                            <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === tab.id ? 'opacity-100' : 'opacity-25'}`} style={{ color: activeTab === tab.id ? themeStyles.accent : 'currentColor' }}><Icon name={tab.icon} size={26} /><span className="text-[11px] font-bold uppercase">{tab.label}</span></button>
+                        ))}
+                    </nav>
+                </div>
+            );
+        };
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
