@@ -78,8 +78,8 @@
         }, {});
 
         const UPDATE_LOGS = [
-            { date: "2026/03/04", title: "紀錄系統升級", desc: "歷史紀錄現在不只會記下問題與卡牌，還會完整保留茶几菩提大師的靈性啟示。新增「一鍵複製紀錄」功能。" },
-            { date: "2026/03/04", title: "大師交接：茶几菩提登場", desc: "前任大師已離職去炸雞排了。今日起，請到了風格既暖心又犀利的「茶几菩提」大師正式進駐。" }
+            { date: "2026/03/04", title: "大師人格模組升級", desc: "茶几菩提大師現在引進了『金字塔架構』思維：先說結論，再分析邏輯，最後指引行動。風格依然暖心，但犀利程度更上一層樓。" },
+            { date: "2026/03/04", title: "紀錄系統優化", desc: "歷史紀錄現在完美支援大師的分段啟示，不再擠成一團。新增占卜後立即複製功能。" }
         ];
 
         const Icon = ({ name, size = 24, className = "" }) => (
@@ -106,7 +106,7 @@
                                 <div className={`flex-1 flex flex-col items-center justify-center space-y-4 ${styles.text}`}>
                                     <div className="text-xs font-serif opacity-40">{card.numeral}</div>
                                     <Icon name="Sparkles" size={40} className={styles.cardIcon} />
-                                    <div className={`font-bold tracking-widest ${styles.cardTitleText}`}>{card.title}</div>
+                                    <div className={`font-bold tracking-widest`}>{card.title}</div>
                                 </div>
                             )}
                             <div className="absolute bottom-0 w-full py-2 bg-black/60 backdrop-blur-md text-center"><span className="text-[10px] text-white/50 tracking-[0.3em] font-bold">ARCANA</span></div>
@@ -123,7 +123,7 @@
             return (
                 <div className={`rounded-[1.5rem] border overflow-hidden transition-all duration-300 ${isOpen ? 'shadow-2xl' : 'hover:scale-[1.01] shadow-md'} ${(isChi || theme === 'day') ? 'bg-white text-slate-800 border-slate-200 shadow-lg' : `${styles.panel} border-white/20 shadow-lg`}`}>
                     <button onClick={() => setIsOpen(!isOpen)} className="w-full p-6 flex items-center gap-6 text-left focus:outline-none">
-                        <div className="w-14 h-14 rounded-full glass flex items-center justify-center font-serif opacity-30 text-sm border-2 border-white/10 shrink-0">{card.numeral}</div>
+                        <div className="w-14 h-14 rounded-full glass flex items-center justify-center font-serif opacity-30 text-sm border-2 border-white/10">{card.numeral}</div>
                         <div className="flex-1"><span className="font-bold text-lg tracking-widest block">{card.title}</span><span className="text-xs opacity-40">{card.meaning}</span></div>
                         <Icon name="Chevron" size={20} className={`opacity-20 transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`} />
                     </button>
@@ -177,8 +177,8 @@
             const isChiTheme = theme.startsWith('chiikawa');
             const themeStyles = useMemo(() => {
                 const map = {
-                    night: { bg: 'bg-[#020617]', text: 'text-slate-100', accent: '#818cf8', panel: 'bg-slate-900/90', btn: 'bg-indigo-600 text-white', input: 'bg-slate-900 text-white shadow-inner', cardBg: 'bg-slate-900', cardIcon: 'text-amber-300 opacity-60', cardTitleText: 'text-white' },
-                    day: { bg: 'bg-[#fffbeb]', text: 'text-slate-800', accent: '#ea580c', panel: 'bg-white/95', btn: 'bg-slate-900 text-white', input: 'bg-white text-slate-800 border-slate-200 shadow-inner', cardBg: 'bg-white', cardIcon: 'text-amber-500 opacity-80', cardTitleText: 'text-slate-900' },
+                    night: { bg: 'bg-[#020617]', text: 'text-slate-100', accent: '#818cf8', panel: 'bg-slate-900/90', btn: 'bg-indigo-600 text-white', input: 'bg-slate-900 text-white shadow-inner', cardBg: 'bg-slate-900', cardIcon: 'text-amber-300 opacity-60' },
+                    day: { bg: 'bg-[#fffbeb]', text: 'text-slate-800', accent: '#ea580c', panel: 'bg-white/95', btn: 'bg-slate-900 text-white', input: 'bg-white text-slate-800 border-slate-200 shadow-inner', cardBg: 'bg-white', cardIcon: 'text-amber-500 opacity-80' },
                     'chiikawa-pink': { bg: 'bg-[#FADDE9]', text: 'text-[#D64E8B]', accent: '#D64E8B', panel: 'bg-white/95', btn: 'bg-[#D64E8B] text-white', input: 'bg-white text-slate-800' },
                     'chiikawa-blue': { bg: 'bg-[#D1DCEE]', text: 'text-[#3D5A80]', accent: '#3D5A80', panel: 'bg-white/95', btn: 'bg-[#3D5A80] text-white', input: 'bg-white text-slate-800' },
                     'chiikawa-yellow': { bg: 'bg-[#FEF5BC]', text: 'text-[#96831A]', accent: '#96831A', panel: 'bg-white/95', btn: 'bg-[#96831A] text-white', input: 'bg-white text-slate-800' }
@@ -188,19 +188,18 @@
 
             const showMsg = (text, type = 'info') => setSystemMsg({ text, type });
 
-            // 一鍵複製紀錄函式
-            const copyHistoryItem = (item) => {
-                const cardText = item.cards.map(c => `${c.title}(${c.isReversed ? '逆位' : '正位'})`).join('、');
-                const interpretationText = item.interpretation || "（尚未感應大師訊息）";
-                const shareContent = `【大阿爾克納 - 茶几菩提大師啟示】\n時間：${item.timestamp}\n問題：${item.question}\n牌組：${cardText}\n\n大師啟示：\n${interpretationText}`;
+            // 格式化複製函式
+            const copyContent = (question, cards, interpretation) => {
+                const cardText = cards.map(c => `${c.title}(${c.isReversed ? '逆位' : '正位'})`).join('、');
+                const content = `【大阿爾克納 - 茶几菩提大師啟示】\n問題：${question}\n牌組：${cardText}\n\n大師啟示：\n${interpretation || "（尚未生成）"}`;
                 
                 const textArea = document.createElement("textarea");
-                textArea.value = shareContent;
+                textArea.value = content;
                 document.body.appendChild(textArea);
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    showMsg("紀錄內容已複製到剪貼簿。", "success");
+                    showMsg("啟示已成功複製。", "success");
                 } catch (err) {
                     showMsg("複製失敗。", "error");
                 }
@@ -210,8 +209,8 @@
             const fetchAiInterpretation = async () => {
                 const key = masterApiKey || localStorage.getItem('arcanum_master_key');
                 const pass = masterPass || localStorage.getItem('arcanum_master_pass');
-                if (!key) { showMsg("尚未配置核心金鑰。", "error"); return; }
-                if (unlockInput !== pass) { showMsg("訪問密碼不正確。", "error"); return; }
+                if (!key) { showMsg("尚未配置連結金鑰。", "error"); return; }
+                if (unlockInput !== pass) { showMsg("密碼不正確。", "error"); return; }
                 
                 setIsUnlocked(true);
                 setIsLoadingAi(true);
@@ -224,8 +223,14 @@
                         body: JSON.stringify({ 
                             model: "gpt-4o-mini",
                             messages: [
-                                { role: "system", content: "你是一位名為『茶几菩提』的靈性塔羅大師。風格溫暖厚實，但面對問題核心時會一針見血、直指痛處。你的建議充滿人文關懷，卻不虛浮討好，是那種「為你好才說重話」的智者。" },
-                                { role: "user", content: `問題：${userQuestion}。抽牌：${cardDesc}。請以大師身分給予約 300 字解析，嚴禁使用 Markdown。` }
+                                { 
+                                    role: "system", 
+                                    content: "你是一位名為『茶几菩提』的靈性塔羅大師。風格溫暖厚實，但邏輯嚴密，採用麥肯錫式的『金字塔原理』：1.先直接說出結論。2.接著分點進行結構性分析。3.最後給出具體的行動指引。語氣溫柔但一針見血，是那種「為你好才說重話」的智者。" 
+                                },
+                                { 
+                                    role: "user", 
+                                    content: `問題：${userQuestion}。抽牌：${cardDesc}。請給予一段結構嚴謹且溫暖的解析，直接提供內容，嚴禁使用 Markdown。` 
+                                }
                             ],
                             temperature: 0.7
                         })
@@ -320,7 +325,14 @@
                                     <div className="space-y-16 animate-fade-up pb-12">
                                         <div className="flex flex-wrap justify-center gap-6 md:gap-12">{selectedCards.map((c, i) => <TarotCard key={i} card={c} theme={theme} styles={themeStyles} />)}</div>
                                         <div className={`rounded-[3rem] p-8 md:p-14 space-y-8 shadow-2xl border ${(isChiTheme || theme === 'day') ? 'bg-white border-slate-200 text-slate-800' : 'bg-slate-900 border-white/10 text-white'}`}>
-                                            <div className="flex justify-between items-center border-b border-black/5 pb-4"><div className="flex items-center gap-2 opacity-50 text-xs font-bold uppercase italic"><Icon name="Sparkles" size={14} /> 宇宙的深度啟示</div></div>
+                                            <div className="flex justify-between items-center border-b border-black/5 pb-4">
+                                                <div className="flex items-center gap-2 opacity-50 text-xs font-bold uppercase italic"><Icon name="Sparkles" size={14} /> 宇宙的深度啟示</div>
+                                                {isUnlocked && aiResponse && !isLoadingAi && (
+                                                    <button onClick={() => copyContent(userQuestion, selectedCards, aiResponse)} className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100 transition-all btn-active">
+                                                        <Icon name="Copy" size={14} /> 複製啟示
+                                                    </button>
+                                                )}
+                                            </div>
                                             {!isUnlocked ? (
                                                 <div className="flex flex-col items-center py-10 space-y-8">
                                                     <Icon name="Lock" size={48} className="opacity-20 animate-pulse" />
@@ -346,7 +358,7 @@
                                                 <div className="flex-1 space-y-2">
                                                     <div className="flex items-center justify-between">
                                                         <div className="text-[10px] opacity-30 uppercase font-mono">{h.timestamp}</div>
-                                                        <button onClick={() => copyHistoryItem(h)} className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100 transition-all btn-active">
+                                                        <button onClick={() => copyContent(h.question, h.cards, h.interpretation)} className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100 transition-all btn-active">
                                                             <Icon name="Copy" size={14} /> 複製啟示
                                                         </button>
                                                     </div>
@@ -355,7 +367,7 @@
                                                 <div className="flex gap-2 flex-wrap">{h.cards.map((c, i) => <div key={i} className="px-3 py-1 rounded-lg text-[10px] border border-white/10 opacity-60">{c.title} {c.isReversed ? '↓' : '↑'}</div>)}</div>
                                             </div>
                                             {h.interpretation && (
-                                                <div className="p-6 rounded-2xl bg-black/10 border-l-4 border-indigo-500 text-sm italic opacity-80 leading-relaxed transition-all">
+                                                <div className="p-6 rounded-2xl bg-black/10 border-l-4 border-indigo-500 text-sm italic opacity-80 leading-relaxed whitespace-pre-wrap transition-all">
                                                     <div className="text-[10px] font-bold uppercase tracking-widest mb-2 text-indigo-400">茶几菩提大師的啟示</div>
                                                     {h.interpretation}
                                                 </div>
