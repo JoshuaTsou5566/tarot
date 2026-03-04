@@ -44,8 +44,8 @@
             X: <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>,
             Shield: <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>,
             Copy: <><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></>,
-            ChiikawaHead: <path d="M12 22C6.5 22 2 17.5 2 12C2 8.5 4.5 5.5 8 4.5V2A1.5 1.5 0 0 1 11 2v2c.3-.1.6-.1.9-.1s.7 0 1 .1V2a1.5 1.5 0 0 1 3 0v2.5c3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" fill="currentColor" />,
-            Share: <><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></>
+            Share: <><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></>,
+            ChiikawaHead: <path d="M12 22C6.5 22 2 17.5 2 12C2 8.5 4.5 5.5 8 4.5V2A1.5 1.5 0 0 1 11 2v2c.3-.1.6-.1.9-.1s.7 0 1 .1V2a1.5 1.5 0 0 1 3 0v2.5c3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" fill="currentColor" />
         };
 
         const TAROT_DATA = [
@@ -58,7 +58,7 @@
             { id: 6, numeral: "VI", title: "戀人", meaning: "選擇與契合", keywords: ["結合", "吸引力", "和諧", "交融"], love: ["完美和諧的愛情，做出正確的結合。", "面臨選擇困難，感情中出現第三者誘惑。"], social: ["建立深厚的友誼，合作無間。", "價值觀衝突，容易發生爭吵。"], work: ["適合合夥或團隊協作，目標一致。", "決策猶豫，團隊內部產生嫌隙。"], finance: ["正確的投資決策，財運平順。", "因情感因素導致不智的財務決定。"] },
             { id: 7, numeral: "VII", title: "戰車", meaning: "意志與勝利", keywords: ["意志", "衝刺", "克服", "掌控"], love: ["積極主動，成功克服情感上的障礙。", "情緒失控，關係中出現激烈的爭執。"], social: ["極具個人魅力，帶領團隊前進。", "剛愎自用，容易招致他人的反感。"], work: ["意志堅定，事業取得重大突破。", "目標迷失，因焦躁而導致計畫失敗。"], finance: ["積極開源，目標明確收益增長。", "收支失衡，因魯貌擴張而負債。"] },
             { id: 8, numeral: "VIII", title: "力量", meaning: "勇氣與慈悲", keywords: ["韌性", "不屈", "馴服", "溫和"], love: ["以柔克剛，成功導引對方的情緒。", "信心動搖，感到無力維持這段關係。"], social: ["待人真誠，擁有強大的親和力。", "容易受他人情緒勒索而感到疲憊。"], work: ["不畏挑戰，以耐性化解危機。", "能力受限，面對壓力時顯得軟弱。"], finance: ["量入為出，擁有良好的財務自制力。", "財務失控，被慾望牽著鼻子走。"] },
-            { id: 9, numeral: "IX", title: "隱者", meaning: "內省與智慧", keywords: ["探索", "孤獨", "引導", "心靈"], love: ["享受獨處，或與伴侶進行深度心靈對話。", "過度孤立，拒絕對外溝通而產生隔閡。"], social: ["淡泊社交，專注於內在的成長。", "被邊緣化或感到寂寞，拒絕社交。"], work: ["深耕專業領域，智慧將帶來成功。", "進度遲緩，過於專注細節而忽略大局。"], finance: ["淡欲理財，財務狀況尚可。", "過於小氣或因封閉資訊錯失商機。"] },
+            { id: 9, numeral: "IX", title: "隱者", meaning: "內省與智慧", keywords: ["探索", "孤獨", "引導", "心靈"], love: ["享受獨處，或與伴侶進行深度心靈對話。", "過度孤立，拒絕對外溝通而產生隔閡。"], social: ["淡泊社交，專注於內在的成長。", "被邊緣化或感到寂蹟，拒絕社交。"], work: ["深耕專業領域，智慧將帶來成功。", "進度遲緩，過於專注細節而忽略大局。"], finance: ["淡欲理財，財務狀況尚可。", "過於小氣或因封閉資訊錯失商機。"] },
             { id: 10, numeral: "X", title: "命運之輪", meaning: "週期與轉機", keywords: ["轉折", "輪迴", "週期", "契機"], love: ["命運的安排，關係迎來正向轉折。", "運氣不佳，情感進入停滯的低潮期。"], social: ["社交圈更迭，迎來有助益的新朋友。", "人際關係反覆無常，難以捉摸。"], work: ["時來運轉，掌握關鍵的晉升機會。", "阻礙重重，現狀難以被自己掌控。"], finance: ["財運回升，有意外的中獎機會。", "投資虧損，財務週期陷入不順。"] },
             { id: 11, numeral: "XI", title: "正義", meaning: "公平與平衡", keywords: ["平衡", "裁決", "真相", "責任"], love: ["誠實對待彼此，做出公平的決策。", "面臨冷戰，關係中存在明顯的不平等。"], social: ["處事公正，成為朋友間的調解人。", "遭受偏見或誤解，感到委屈。"], work: ["一切照制度執行，獲得應有的回饋。", "決策失準，需承擔過去錯誤的後學。"], finance: ["財務平衡，收支帳目清晰。", "財務爭議，可能面臨官司或合約問題。"] },
             { id: 12, numeral: "XII", title: "倒吊人", meaning: "犧牲與覺醒", keywords: ["等待", "奉獻", "新視角", "暫緩"], love: ["換位思考，在等待中獲得情感昇華。", "徒勞無功的犧牲，被動接受痛苦。"], social: ["寧願吃嘔也要成就大局的慷慨。", "感到被周圍的人利用，內心抑鬱。"], work: ["暫時的沉寂是為了蓄積更大的能量。", "計畫停滯，做再多也看不到回報。"], finance: ["財務緩慢發展，需保持耐心。", "資金凍結，因判斷導致財務困境。"] },
@@ -69,7 +69,7 @@
             { id: 17, numeral: "XVII", title: "星星", meaning: "希望與療癒", keywords: ["靈感", "展望", "治癒", "平靜"], love: ["充滿未來的憧憬，感情得到治癒。", "願景破裂，對愛情感到失望與評憊。"], social: ["展現真實自我，吸引志同道合者。", "感到孤傲或被外界忽視，失去光芒。"], work: ["靈感豐沛，找到長遠發展的方向。", "計畫不切實際，淪為空談。"], finance: ["財運平順，理財方向充滿希望。", "財務願景遙不可及，需回歸現實。"] },
             { id: 18, numeral: "XVIII", title: "月亮", meaning: "不安與潛意識", keywords: ["焦慮", "模糊", "夢境", "欺瞞"], love: ["情感模糊不清，存在隱瞞或幻覺。", "迷霧散去，看清了感情中的真相。"], social: ["小人作祟，人際關係充滿猜忌。", "內心的焦慮減寫，不再疑神疑鬼。"], work: ["資訊不明，需警惕隱藏的陷阱。", "解決了工作中的曖昧地帶。"], finance: ["財務狀況模糊，不宜進行投資。", "發現帳目上的漏洞或欺詐。"] },
             { id: 19, numeral: "XIX", title: "太陽", meaning: "光明與成功", keywords: ["喜悅", "活力", "成功", "光明"], love: ["戀情公開受祝福，關係充滿活力。", "過於自負，光芒刺眼讓伴侶感到壓抑。"], social: ["廣受歡迎，人際關係燦爛奪目。", "為了面子而強顏歡笑，內心疲累。"], work: ["事業如日中天，獲得顯著的成就感。", "成功後的倦怠，或遭遇短暫的挫敗。"], finance: ["收入豐厚，財運旺盛且穩定。", "暫時性的財務吃緊，需開節約流。"] },
-            { id: 20, numeral: "XX", title: "復活與感召", keywords: ["覺醒", "反省", "再生", "決定"], love: ["破鏡重圓，或關係升級到新高度。", "重蹈覆轍，拒絕面對過去。"], social: ["透過自我反省，改善了與人的關係。", "遭受輿論批評或他人的負面指點。"], work: ["獲知關鍵消息，事業獲得新生機會。", "錯師良機，無法從過去的失敗中學習。"], finance: ["財務狀況結算，獲得正向果實。", "財務審計出問題，需承擔過去後果。"] },
+            { id: 20, numeral: "XX", title: "審判", meaning: "復活與感召", keywords: ["覺醒", "反省", "再生", "決定"], love: ["破鏡重圓，或關係升級到新高度。", "重蹈覆轍，拒絕面對過去。"], social: ["透過自我反省，改善了與人的關係。", "遭受輿論批評或他人的負面指點。"], work: ["獲知關鍵消息，事業獲得新生機會。", "錯師良機，無法從過去的失敗中學習。"], finance: ["財務狀況結算，獲得正向果實。", "財務審計出問題，需承擔過去後果。"] },
             { id: 21, numeral: "XXI", title: "世界", meaning: "圓滿與整合", keywords: ["圓滿", "整合", "完美", "達成"], love: ["靈魂伴侶，情感生活達到完美境地。", "差一點點就圓滿，存在未竟之志。"], social: ["擁有廣闊的人脈，社交無往不利。", "人際圈雖然大，但感到心靈空虛。"], work: ["計畫圓滿達成，贏得業界極高聲譽。", "進度即將完成最後關頭產生拖延。"], finance: ["財富達到預期目標，財務自由。", "財富累積受阻，無法突破最後瓶頸。"] }
         ];
 
@@ -79,7 +79,7 @@
         }, {});
 
         const UPDATE_LOGS = [
-            { date: "2026/03/04", title: "授權機制與風格全面進化", desc: "引進麥肯錫金字塔式解讀。新增『授權邀請連結』，一鍵同步金鑰給親友使用。" }
+            { date: "2026/03/04", title: "大師人格與功能升級", desc: "引進麥肯錫金字塔式解讀：結論先行。新增一鍵複製啟示，以及邀請連結同步機制。" }
         ];
 
         const App = () => {
@@ -92,7 +92,6 @@
             const [aiResponse, setAiResponse] = useState('');
             const [isLoadingAi, setIsLoadingAi] = useState(false);
             const [currentSessionId, setCurrentSessionId] = useState(null);
-
             const [history, setHistory] = useState(() => {
                 const saved = localStorage.getItem('tarot_history');
                 return saved ? JSON.parse(saved) : [];
@@ -100,5 +99,237 @@
 
             const [masterApiKey, setMasterApiKey] = useState(localStorage.getItem('arcanum_master_key') || '');
             const [masterPass, setMasterPass] = useState(localStorage.getItem('arcanum_master_pass') || '5566');
-            
-            const
+            const [unlockInput, setUnlockInput] = useState('');
+            const [isUnlocked, setIsUnlocked] = useState(false);
+            const [isSettingOpen, setIsSettingOpen] = useState(false);
+            const [isAdminAuthModalOpen, setIsAdminAuthModalOpen] = useState(false);
+            const [adminSecretInput, setAdminSecretInput] = useState('');
+            const [systemMsg, setSystemMsg] = useState(null); 
+
+            const isChiTheme = theme.startsWith('chiikawa');
+            const themeStyles = useMemo(() => {
+                const map = {
+                    night: { bg: 'bg-[#020617]', text: 'text-slate-100', accent: '#818cf8', panel: 'bg-slate-900/90', btn: 'bg-indigo-600 text-white', input: 'bg-slate-900 text-white shadow-inner', cardBg: 'bg-slate-900', cardIcon: 'text-amber-300 opacity-60' },
+                    day: { bg: 'bg-[#fffbeb]', text: 'text-slate-800', accent: '#ea580c', panel: 'bg-white/95', btn: 'bg-slate-900 text-white', input: 'bg-white text-slate-800 border-slate-200 shadow-inner', cardBg: 'bg-white', cardIcon: 'text-amber-500 opacity-80' },
+                    'chiikawa-pink': { bg: 'bg-[#FADDE9]', text: 'text-[#D64E8B]', accent: '#D64E8B', panel: 'bg-white/95', btn: 'bg-[#D64E8B] text-white', input: 'bg-white text-slate-800' },
+                    'chiikawa-blue': { bg: 'bg-[#D1DCEE]', text: 'text-[#3D5A80]', accent: '#3D5A80', panel: 'bg-white/95', btn: 'bg-[#3D5A80] text-white', input: 'bg-white text-slate-800' },
+                    'chiikawa-yellow': { bg: 'bg-[#FEF5BC]', text: 'text-[#96831A]', accent: '#96831A', panel: 'bg-white/95', btn: 'bg-[#96831A] text-white', input: 'bg-white text-slate-800' }
+                };
+                return map[theme] || map.night;
+            }, [theme]);
+
+            const showMsg = (text, type = 'info') => setSystemMsg({ text, type });
+
+            // 核心：授權網址解析
+            useEffect(() => {
+                const params = new URLSearchParams(window.location.search);
+                const auth = params.get('auth');
+                if (auth) {
+                    try {
+                        const decoded = decodeURIComponent(atob(auth)).split('|');
+                        if (decoded.length === 2) {
+                            localStorage.setItem('arcanum_master_key', decoded[0]);
+                            localStorage.setItem('arcanum_master_pass', decoded[1]);
+                            setMasterApiKey(decoded[0]); setMasterPass(decoded[1]);
+                            window.history.replaceState({}, '', window.location.pathname);
+                            showMsg("授權完成！茶几菩提大師已就位。", "success");
+                        }
+                    } catch(e) { showMsg("授權連結解析失敗。", "error"); }
+                }
+            }, []);
+
+            const copyContent = (q, cards, interp) => {
+                const cardStr = cards.map(c => `${c.title}(${c.isReversed ? '逆位' : '正位'})`).join('、');
+                const content = `【大阿爾克納 - 茶几菩提大師啟示】\n問題：${q}\n牌組：${cardStr}\n\n大師啟示：\n${interp || "（尚未生成）"}`;
+                const el = document.createElement("textarea"); el.value = content; document.body.appendChild(el); el.select();
+                try { document.execCommand('copy'); showMsg("啟示已成功複製。", "success"); } catch(e) { showMsg("複製失敗。", "error"); }
+                document.body.removeChild(el);
+            };
+
+            const fetchAiInterpretation = async () => {
+                if (!masterApiKey) { showMsg("尚未配置核心金鑰。請由授權連結進入。", "error"); return; }
+                if (unlockInput !== masterPass) { showMsg("密碼不正確。", "error"); return; }
+                setIsUnlocked(true); setIsLoadingAi(true);
+                const cardDesc = selectedCards.map(c => `${c.title}(${c.isReversed?'逆位':'正位'})`).join('、');
+                try {
+                    const res = await fetch(`https://api.openai.com/v1/chat/completions`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${masterApiKey}` },
+                        body: JSON.stringify({ 
+                            model: "gpt-4o-mini",
+                            messages: [
+                                { role: "system", content: "你是一位名為『茶几菩提』的靈性大師。採用麥肯錫式的『金字塔原理』：1.先直接說出結論。2.接著分段落進行結構性分析。3.最後給出具體的行動指引。風格溫柔厚實但犀利，請確保回答分段明確且有條理。" },
+                                { role: "user", content: `問題：${userQuestion}。抽牌：${cardDesc}。解析約 300 字，嚴禁 Markdown。` }
+                            ],
+                            temperature: 0.7
+                        })
+                    });
+                    const data = await res.json();
+                    if (data.error) throw new Error(data.error.message);
+                    const result = data.choices[0].message.content;
+                    setAiResponse(result);
+                    setHistory(prev => {
+                        const updated = prev.map(item => item.id === currentSessionId ? { ...item, interpretation: result } : item);
+                        localStorage.setItem('tarot_history', JSON.stringify(updated));
+                        return updated;
+                    });
+                } catch (e) { showMsg("感應失敗：" + e.message, "error"); setIsUnlocked(false); } finally { setIsLoadingAi(false); }
+            };
+
+            const startDivination = () => {
+                if (!userQuestion.trim()) { showMsg("請先輸入您的疑惑。", "error"); return; }
+                const sessionId = Date.now(); setCurrentSessionId(sessionId);
+                setGameState('shuffling'); setIsUnlocked(false); setAiResponse('');
+                setTimeout(() => {
+                    const count = spreadType === 'one' ? 1 : 3;
+                    const result = [...TAROT_DATA].sort(() => Math.random() - 0.5).slice(0, count).map(c => ({ ...c, isReversed: Math.random() > 0.4 }));
+                    setSelectedCards(result); setGameState('revealed');
+                    setHistory(prev => {
+                        const updated = [{ id: sessionId, question: userQuestion, cards: result, timestamp: new Date().toLocaleString(), interpretation: null }, ...prev].slice(0, 10);
+                        localStorage.setItem('tarot_history', JSON.stringify(updated));
+                        return updated;
+                    });
+                }, 2000);
+            };
+
+            const generateInviteLink = () => {
+                if (!masterApiKey) { showMsg("請先設定金鑰再產生連結。", "error"); return; }
+                const authCode = btoa(encodeURIComponent(`${masterApiKey}|${masterPass}`));
+                const link = `${window.location.origin}${window.location.pathname}?auth=${authCode}`;
+                const el = document.createElement("textarea"); el.value = link; document.body.appendChild(el); el.select();
+                try { document.execCommand('copy'); showMsg("授權邀請連結已複製！傳給親友點開後即可直接使用。", "success"); } catch(e) { showMsg("複製失敗。", "error"); }
+                document.body.removeChild(el);
+            };
+
+            return (
+                <div className={`min-h-screen ${themeStyles.bg} ${themeStyles.text} transition-all duration-1000 pb-24 relative overflow-hidden`}>
+                    <StarField />
+                    {systemMsg && (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 modal-overlay no-select">
+                            <div className="w-full max-w-sm glass rounded-[3rem] p-10 text-center space-y-6 bg-slate-900/95 text-white shadow-2xl">
+                                <Icon name={systemMsg.type === 'error' ? 'X' : 'Sparkles'} size={28} className="mx-auto" />
+                                <p className="text-sm opacity-80 leading-relaxed">{systemMsg.text}</p>
+                                <button onClick={() => setSystemMsg(null)} className={`w-full py-4 rounded-2xl font-bold ${themeStyles.btn} btn-active shadow-lg`}>確定</button>
+                            </div>
+                        </div>
+                    )}
+                    {isAdminAuthModalOpen && (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 modal-overlay no-select">
+                            <div className="w-full max-w-sm glass rounded-[3rem] p-10 text-center space-y-8 bg-slate-900 text-white">
+                                <Icon name="Shield" size={40} className="mx-auto text-amber-400" />
+                                <input type="password" value={adminSecretInput} onChange={e => setAdminSecretInput(e.target.value)} placeholder="管理密碼" className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-5 text-center focus:outline-none" onKeyDown={e => e.key === 'Enter' && (btoa(adminSecretInput) === "NTU2Ng==" ? (setIsAdminAuthModalOpen(false), setIsSettingOpen(true)) : showMsg("密碼錯誤", "error"))}/>
+                                <div className="flex gap-3"><button onClick={() => setIsAdminAuthModalOpen(false)} className="flex-1 py-4 opacity-40">取消</button><button onClick={() => btoa(adminSecretInput) === "NTU2Ng==" ? (setIsAdminAuthModalOpen(false), setIsSettingOpen(true)) : showMsg("密碼錯誤", "error")} className={`flex-1 py-4 rounded-2xl font-bold ${themeStyles.btn} btn-active`}>進入</button></div>
+                            </div>
+                        </div>
+                    )}
+                    <header className="max-w-4xl mx-auto px-6 py-8 flex justify-between items-center relative z-20">
+                        <div className="flex items-center gap-3 cursor-pointer no-select" onClick={() => setGameState('idle')}>
+                            <div className="p-2.5 rounded-2xl glass bg-white/10"><Icon name={isChiTheme ? "ChiikawaHead" : "Sparkles"} size={26} className={isChiTheme ? "text-white" : "text-amber-300"} /></div>
+                            <h1 className="text-xl md:text-2xl font-serif font-bold tracking-widest">{isChiTheme ? "大阿爾克納 & Chiikawa" : "大阿爾克納"}</h1>
+                        </div>
+                        <button onClick={() => setTheme(isChiTheme ? 'night' : (theme === 'night' ? 'day' : 'chiikawa-pink'))} className="w-12 h-12 rounded-full glass bg-white/5 flex items-center justify-center btn-active">
+                            <Icon name={theme === 'night' ? "Moon" : (theme === 'day' ? "Sun" : "ChiikawaHead")} size={18} />
+                        </button>
+                    </header>
+                    <main className="max-w-4xl mx-auto px-6 relative z-10">
+                        {activeTab === 'divination' && (
+                            <div className="space-y-12">
+                                {gameState === 'idle' && (
+                                    <div className="animate-fade-up flex flex-col items-center text-center space-y-10 py-12">
+                                        <h2 className="text-3xl md:text-4xl font-serif font-bold italic leading-tight">「閉上雙眼，深呼吸，<br/>讓您的困惑在此浮現。」</h2>
+                                        <textarea value={userQuestion} onChange={e => setUserQuestion(e.target.value)} placeholder="在此輸入您想問的事情..." className={`w-full max-w-2xl h-40 border-2 rounded-[2rem] p-8 focus:outline-none transition-all text-lg resize-none shadow-xl ${themeStyles.input}`} />
+                                        <div className="flex gap-4 w-full max-w-md">
+                                            <button onClick={() => setSpreadType('one')} className={`flex-1 py-4 rounded-2xl glass border-2 transition-all ${spreadType === 'one' ? 'border-amber-400/60 bg-amber-400/10' : 'border-transparent opacity-40'}`}>一牌直覺</button>
+                                            <button onClick={() => setSpreadType('three')} className={`flex-1 py-4 rounded-2xl glass border-2 transition-all ${spreadType === 'three' ? 'border-amber-400/60 bg-amber-400/10' : 'border-transparent opacity-40'}`}>聖三角</button>
+                                        </div>
+                                        <button onClick={startDivination} className={`px-12 py-5 ${themeStyles.btn} rounded-full font-bold tracking-[0.5em] shadow-2xl uppercase btn-active`}>啟動靈性感應</button>
+                                    </div>
+                                )}
+                                {gameState === 'shuffling' && <div className="flex flex-col items-center py-32 animate-pulse"><div className="w-40 h-60 glass bg-slate-800 rounded-2xl card-shuffle border-2 border-white/10" /><p className="text-xl font-serif italic tracking-[0.3em] mt-10 opacity-60">正在搜尋命運軌跡...</p></div>}
+                                {gameState === 'revealed' && (
+                                    <div className="space-y-16 animate-fade-up pb-12">
+                                        <div className="flex flex-wrap justify-center gap-6 md:gap-12">{selectedCards.map((c, i) => <TarotCard key={i} card={c} theme={theme} styles={themeStyles} />)}</div>
+                                        <div className={`rounded-[3rem] p-8 md:p-14 space-y-8 shadow-2xl border ${(isChiTheme || theme === 'day') ? 'bg-white border-slate-200 text-slate-800' : 'bg-slate-900 border-white/10 text-white'}`}>
+                                            <div className="flex justify-between items-center border-b border-black/5 pb-4">
+                                                <div className="flex items-center gap-2 opacity-50 text-xs font-bold uppercase italic"><Icon name="Sparkles" size={14} /> 宇宙的深度啟示</div>
+                                                {isUnlocked && aiResponse && !isLoadingAi && (
+                                                    <button onClick={() => copyContent(userQuestion, selectedCards, aiResponse)} className="flex items-center gap-1.5 text-[10px] font-bold uppercase opacity-40 hover:opacity-100 btn-active">
+                                                        <Icon name="Copy" size={14} /> 複製啟示
+                                                    </button>
+                                                )}
+                                            </div>
+                                            {!isUnlocked ? (
+                                                <div className="flex flex-col items-center py-10 space-y-8">
+                                                    <Icon name="Lock" size={48} className="opacity-20 animate-pulse" />
+                                                    <input type="text" value={unlockInput} onChange={e => setUnlockInput(e.target.value)} placeholder="訪問密碼" className={`w-full max-w-xs border rounded-2xl px-4 py-5 text-center ${themeStyles.input}`} />
+                                                    <button onClick={fetchAiInterpretation} disabled={isLoadingAi} className={`w-full max-w-xs py-5 ${themeStyles.btn} rounded-2xl font-bold uppercase btn-active`}>感應大師訊息</button>
+                                                </div>
+                                            ) : (
+                                                <div className="min-h-[200px] leading-relaxed text-lg italic opacity-90 animate-fade-up whitespace-pre-wrap">{isLoadingAi ? "大師正在感應中..." : aiResponse}</div>
+                                            )}
+                                        </div>
+                                        <button onClick={() => setGameState('idle')} className={`w-full py-6 rounded-full font-bold uppercase tracking-[0.4em] ${themeStyles.btn} btn-active shadow-2xl`}>重新啟動占卜</button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        {activeTab === 'history' && (
+                            <div className="animate-fade-up space-y-8 py-10 pb-20">
+                                <h2 className="text-3xl font-serif font-bold tracking-widest">歷史感應紀錄</h2>
+                                {history.length === 0 ? <div className="py-32 text-center opacity-20 italic">尚未記錄任何靈魂足跡</div> : (
+                                    <div className="space-y-6">{history.map(h => (
+                                        <div key={h.id} className={`rounded-[2rem] p-8 flex flex-col gap-6 border border-white/5 ${(isChiTheme || theme === 'day') ? 'bg-white text-slate-800' : 'bg-slate-900 shadow-xl'}`}>
+                                            <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+                                                <div className="flex-1 space-y-2">
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="text-[10px] opacity-30 uppercase font-mono">{h.timestamp}</div>
+                                                        <button onClick={() => copyContent(h.question, h.cards, h.interpretation)} className="flex items-center gap-1.5 text-[10px] font-bold uppercase opacity-40 hover:opacity-100 btn-active"><Icon name="Copy" size={14} /> 複製紀錄</button>
+                                                    </div>
+                                                    <div className="font-bold text-lg">問：{h.question}</div>
+                                                </div>
+                                                <div className="flex gap-2 flex-wrap">{h.cards.map((c, i) => <div key={i} className="px-3 py-1 rounded-lg text-[10px] border border-white/10 opacity-60">{c.title} {c.isReversed ? '↓' : '↑'}</div>)}</div>
+                                            </div>
+                                            {h.interpretation && <div className="p-6 rounded-2xl bg-black/10 border-l-4 border-indigo-500 text-sm italic opacity-80 leading-relaxed whitespace-pre-wrap">{h.interpretation}</div>}
+                                        </div>
+                                    ))}</div>
+                                )}
+                            </div>
+                        )}
+                        {activeTab === 'guide' && (
+                            <div className="animate-fade-up space-y-10 py-10 pb-20">
+                                <h3 className="text-2xl font-serif font-bold border-l-4 border-amber-400 pl-4 tracking-widest">阿爾克納百科</h3>
+                                <div className="grid grid-cols-1 gap-5">{TAROT_DATA.map(c => <div key={c.id} className="p-4 glass rounded-2xl opacity-80">{c.title} - {c.meaning}</div>)}</div>
+                                <div className="pt-16 border-t border-white/5 space-y-6">
+                                    <h3 className="text-xl font-serif font-bold opacity-50 uppercase tracking-widest">宇宙系統管理</h3>
+                                    <button onClick={() => setIsAdminAuthModalOpen(true)} className="w-full py-4 glass rounded-[1.5rem] text-[11px] font-bold opacity-30 hover:opacity-100 uppercase transition-all">核心金鑰配置</button>
+                                    {isSettingOpen && (
+                                        <div className={`p-8 rounded-[2.5rem] space-y-10 animate-fade-up border border-white/20 ${(isChiTheme || theme === 'day') ? 'bg-slate-50 text-slate-800' : 'bg-slate-900'}`}>
+                                            <div className="space-y-6 text-center">
+                                                <input type="password" placeholder="OpenAI Key (sk-...)" value={masterApiKey} onChange={e => setMasterApiKey(e.target.value)} className="w-full border rounded-2xl px-4 py-5 text-center bg-black/20 text-white" />
+                                                <input type="text" placeholder="設定訪問密碼" value={masterPass} onChange={e => setMasterPass(e.target.value)} className="w-full border rounded-2xl px-4 py-5 text-center bg-black/20 text-white" />
+                                                <div className="flex gap-2">
+                                                    <button onClick={() => {localStorage.setItem('arcanum_master_key', masterApiKey); localStorage.setItem('arcanum_master_pass', masterPass); showMsg("儲存成功", "success")}} className="flex-1 py-5 bg-indigo-600 text-white rounded-2xl font-bold btn-active">儲存設定</button>
+                                                    <button onClick={generateInviteLink} className="flex-1 py-5 bg-emerald-600 text-white rounded-2xl font-bold btn-active">產生邀請連結</button>
+                                                </div>
+                                                <button onClick={() => {localStorage.removeItem('tarot_history'); setHistory([]); showMsg("紀錄已清空", "success")}} className="w-full py-3 opacity-30 text-xs">清空歷史紀錄</button>
+                                                <button onClick={() => setIsSettingOpen(false)} className="text-[10px] opacity-30 uppercase font-bold">關閉設定</button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </main>
+                    <nav className="fixed bottom-0 left-0 w-full glass border-t border-white/10 py-6 px-10 flex justify-around items-center z-50">
+                        {[{ id: 'divination', label: '占卜', icon: 'Sparkles' }, { id: 'history', label: '紀錄', icon: 'History' }, { id: 'guide', label: '百科', icon: 'Book' }].map(tab => (
+                            <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === tab.id ? 'opacity-100 scale-110' : 'opacity-25'}`} style={{ color: activeTab === tab.id ? themeStyles.accent : 'currentColor' }}><Icon name={tab.icon} size={26} /><span className="text-[11px] font-bold uppercase">{tab.label}</span></button>
+                        ))}
+                    </nav>
+                </div>
+            );
+        };
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
